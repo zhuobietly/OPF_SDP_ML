@@ -1,0 +1,26 @@
+# --- 数据/日志/中间产物 ---
+data/
+log/
+runs/
+output_*.log
+
+# --- 结果目录：默认全忽略，只保留 figure 下的 PNG 图 ---
+result/**
+!result/figure/
+result/figure/**
+!result/figure/**/*.png
+
+# --- Julia ---
+*.jl.cov
+*.jl.mem
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- 编辑器/系统 ---
+.vscode/
+.idea/
+.DS_Store
