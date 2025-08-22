@@ -1,6 +1,6 @@
-import Pkg
-Pkg.activate(joinpath(@__DIR__, ".."))   # activates the repo root as the project
-Pkg.instantiate()
+# import Pkg
+# Pkg.activate(joinpath(@__DIR__, ".."))   # activates the repo root as the project
+# Pkg.instantiate()
 include("../src_jl/solver_wrappers.jl")
 using PowerModels
 Base.eval(PowerModels, :(Memento.setlevel!(Memento.getlogger(PowerModels), "error")))
@@ -72,7 +72,7 @@ current_dir = @__DIR__
 println("Current directory: ", current_dir)
 
 # 基础案例与输入目录
-case_file  = "case2746wop.m"      
+case_file  = "case14.m"      
 case_name  = replace(case_file, ".m" => "")
 input_dir  = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/", case_name)
 
@@ -169,7 +169,8 @@ for json_file in readdir(input_dir)
                 try
                     println("Solving with formulation: ", fm, " | merging: ", merging, " | alpha: ", alpha)
                     save_name = "$(case_name)_$(fm)_$(merging)_$(id)"
-                    result = SolverWrappers.solve(data, fm, merging, save_name; alpha=alpha)
+                    result = SolverWrappers.solve(data, fm, merging, save_name; 
+                    alpha=alpha, id_name = json_file, tokens = tokens, perturbation = perturbation, id_detect = id_detect)
                     solve_time  = get(result, "solve_time", NaN)
                     term_status = string(get(result, "termination_status", ""))
                     obj_val     = get(result, "objective", NaN)
