@@ -1,6 +1,6 @@
-# import Pkg
-# Pkg.activate(joinpath(@__DIR__, ".."))   # activates the repo root as the project
-# Pkg.instantiate()
+import Pkg
+Pkg.activate(joinpath(@__DIR__, ".."))   # activates the repo root as the project
+Pkg.instantiate()
 include("../src_jl/solver_wrappers.jl")
 using PowerModels
 Base.eval(PowerModels, :(Memento.setlevel!(Memento.getlogger(PowerModels), "error")))
@@ -72,14 +72,14 @@ current_dir = @__DIR__
 println("Current directory: ", current_dir)
 
 # 基础案例与输入目录
-case_file  = "case14.m"      
+case_file  = "case1888rte.m"      
 case_name  = replace(case_file, ".m" => "")
 input_dir  = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/", case_name)
 
 # 三种 chordal formulation + 是否合并团
 formulations = [Chordal_MFI, Chordal_AMD, Chordal_MD]
 merging_opts = [true, false]
-alpha_values = [3.0, 4.0, 5.0]
+alpha_values = [3.0, 5.0]
 # 解析文件名：case14_0.30_perturbation_301_2.json
 # 返回 (k, seed, id)
 function parse_k_seed_id_from_filename(fname::String)

@@ -79,11 +79,11 @@ function create_load_profiles_from_case(
     data::Dict{String,Any},
     N::Int,
     outputDIR::AbstractString;
-    σ_max::Vector{<:Real}=[0.05,0.07],  # 修改这里
+    σ_max::Vector{<:Real}=[0.07],  # 修改这里
     emit_pure::Bool=false,
     sigmas::Union{Real,AbstractVector{<:Real}}=σ_max,
     couple_pq::Bool=false,
-    coeffs::AbstractVector{<:Real}=collect(0.8:0.05:1.2),
+    coeffs::AbstractVector{<:Real}=collect(0.8:0.2:1.2),
     start_index::Union{Nothing,Int}=nothing
 )::Nothing
 

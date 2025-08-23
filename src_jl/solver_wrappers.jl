@@ -223,10 +223,15 @@ function solve(data, model, clique_merging, case_name; alpha = 3, id_name = noth
     PowerModels.ref_add_core!(pm.ref)
     nw = collect(InfrastructureModels.nw_ids(pm, pm_it_sym))[1]
     adj, cadj, lookup_index, sigma, q = PowerModels._chordal_extension(pm, nw, clique_merging, alpha)
-
-
+    @assert q == invperm(sigma) "置换不一致：按理应当满足 q == invperm(sigma)"
+    #原始矩阵画图
     save_path = joinpath("result", "figure", "graph", "$(case_name)", "$(other_info)_fillin.png")
     visualize_fillin(adj, cadj; q=q, savepath=save_path)
+    println("✅ 绘制完成原始顺序）：", save_path)
+    # Step 3: PEO 顺序的图
+    save_path_peo = joinpath("result", "figure", "graph", case_name, "$(other_info)_fillin_peo.png")
+    ChordalVisualizer.visualize_fillin(adj, cadj; q=sigma, savepath=save_path_peo)
+    println("✅ 绘制完成（PEO 顺序）：", save_path_peo)
     cliques = PowerModels._maximal_cliques(cadj)
     lookup_bus_index = Dict((reverse(p) for p = pairs(lookup_index)))
     groups = [[lookup_bus_index[gi] for gi in g] for g in cliques]
