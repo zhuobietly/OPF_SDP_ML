@@ -8,12 +8,14 @@ using CSV
 using Ipopt
 using JuMP
 include("../src_jl/chordalvisual.jl")
-import .ChordalVisualizer: visualize_fillin, edge_lists
+using .ChordalVisualizer: visualize_fillin, edge_lists
 include("../src_jl/ChordalStatsLite.jl")
 using .ChordalStatsLite: compute_stats_from_vars,
                         cliques_from_peo,
                         stats_dataframe,
                         append_stats_csv
+include("../src_jl/LightGC.jl")
+using .LightGC: cleanup!, safe_close
 
 export solve, solve_opf
 # 用 Pipe 捕获 stdout/stderr（跨 Julia 版本稳）
@@ -256,21 +258,26 @@ function solve(data, model, clique_merging, case_name; alpha = 3, id_name = noth
     end
 
     # -- MOI 读取迭代步（优先用 MOI；拿不到再用日志） （// NEW）
-    log_iters, log_pr, log_dr, log_rg = parse_mosek_log_all(mosek_log)
+    log_iters, log_pr, log_dr, log_rg, log_time = parse_mosek_log_all(mosek_log)
 
     iterations = log_iters
     primal_res = log_pr
     dual_res   = log_dr
     rel_gap    = log_rg
+    mosektime  = log_time
 
     # （可选）把日志写文件，方便你确认到底捕到了什么
+    
     try
+        # 你的主逻辑
         mkpath("runs/chordalstats_logs")
         open(joinpath("runs","chordalstats_logs","$(case_name)_$(other_info).log"), "w") do io
             write(io, mosek_log)
         end
-    catch
+    finally
+        cleanup!(Ref(pm), Ref(adj), Ref(cadj), Ref(mosek_log))
     end
+    
     # —— 兼容 Symbol / String 键 —— 
     _get(r, ks, default=missing) = begin
         for k in ks
@@ -308,6 +315,7 @@ function solve(data, model, clique_merging, case_name; alpha = 3, id_name = noth
         Merge           = [clique_merging],
         A_parameter     = [alpha],
         SolveTime       = [solve_time],
+        mosektime       = [mosektime],
         Status          = [term_status],
         objective       = [obj_val],
         SolutionStatus  = [sol_status],
@@ -358,20 +366,5 @@ function solve_opf(data, model, solver)
     return PowerModels.solve_opf(data, model, solver)
 end
 
-#以下函数没有启用
-function save_result(relax, result, case_name, perturbation, clique_merging, formulation, result_path)
-    df = DataFrame(Case = [case_name],
-                   Perturbation = [perturbation],
-                   relaxation = [relax],
-                   Merge = [clique_merging],
-                   Formulation = [formulation],
-                   SolveTime = [result["solve_time"]],
-                   Status = [result["termination_status"]],
-                   objective = [result["objective"]],
-                   SolutionStatus = [result["primal_status"]],
-                   SolutionStatusD = [result["dual_status"]])
-    mkpath(joinpath(result_path, case_name))
-    file_path = joinpath(result_path, case_name, case_name * string(relax) * string(formulation) * string(clique_merging) * ".csv")
-    CSV.write(file_path, df; append=true, header=false)
-end
+
 end # module
