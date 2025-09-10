@@ -1,6 +1,6 @@
-# import Pkg
-# Pkg.activate(joinpath(@__DIR__, ".."))
-# Pkg.instantiate()
+import Pkg
+Pkg.activate(joinpath(@__DIR__, ".."))
+Pkg.instantiate()
 
 include("../src_jl/solver_wrappers.jl")
 using CSV, DataFrames
@@ -77,10 +77,10 @@ function main()
     alpha     = 3.5
     run_one_case(case_file, json_file, fm, merging, alpha)
 end
-main()
+#main()
 
 
 # ---- CLI entry ----
-# case_name, json_file, fm, merging_str, alpha_str = ARGS
-# run_one_case(case_name, json_file, fm, merging_str == "true", parse(Float64, alpha_str))
+case_name, json_file, fm, merging_str, alpha_str = ARGS
+run_one_case(case_name, json_file, fm, merging_str == "true", parse(Float64, alpha_str))
 
