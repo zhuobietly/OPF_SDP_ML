@@ -95,7 +95,7 @@ def safe_log_time(arr):
     a = np.asarray(arr, dtype=float)
     out = np.full_like(a, np.nan, dtype=float)
     mask = a > 0
-    out[mask] = np.log(a[mask])
+    out[mask] = a[mask]
     return out
 
 # ---- Strategy 合成 ----
@@ -134,40 +134,40 @@ def binned_line(ax, x, y, label, bins=6):
 
 def box_A_case(df, case, out_path):
     """图 A：单 Case，Strategy vs 绝对 log(SolveTime)（箱线+叠点）"""
-    sub = df[(df["Case"] == case) & df["log_time"].notna()].copy()
+    sub = df[(df["Case"] == case) & df["SolveTime"].notna()].copy()
     if sub.empty:
-        print(f"[跳过] {case} 没有可用 log_time")
+        print(f"[跳过] {case} 没有可用 SolveTime")
         return
     strategies = sorted(sub["Strategy"].unique().tolist())
-    data = [sub.loc[sub["Strategy"]==s, "log_time"].values for s in strategies]
+    data = [sub.loc[sub["Strategy"]==s, "SolveTime"].values for s in strategies]
     plt.figure(figsize=(max(7.5, 1.2*len(strategies)), 4.8))
     plt.boxplot(data, showfliers=False)
     plt.xticks(range(1, len(strategies)+1), strategies, rotation=18)
-    plt.ylabel("log(SolveTime)")
+    plt.ylabel("SolveTime")
     plt.title(f"[A] Absolute time by Strategy — {case}")
     xs = [strategies.index(s)+1 for s in sub["Strategy"]]
-    plt.scatter(xs, sub["log_time"], s=12, alpha=0.35)
+    plt.scatter(xs, sub["SolveTime"], s=12, alpha=0.35)
     plt.tight_layout(); plt.savefig(out_path, dpi=160); plt.close()
     print(f"[图] {out_path}")
 
 def pq_B_case(df, case, out_path):
     """图 B：单 Case，ΣP/ΣQ vs 绝对 log(SolveTime)，按 Strategy 画分箱中位线"""
-    sub = df[(df["Case"] == case) & df["log_time"].notna()
+    sub = df[(df["Case"] == case) & df["SolveTime"].notna()
              & df["P_sum"].notna() & df["Q_sum"].notna()].copy()
     if sub.empty:
-        print(f"[跳过] {case} 没有可用 ΣP/ΣQ 或 log_time")
+        print(f"[跳过] {case} 没有可用 ΣP/ΣQ 或 SolveTime")
         return
     strategies = sorted(sub["Strategy"].unique().tolist())
     fig, axes = plt.subplots(1,2, figsize=(12,4.8), sharey=True)
     has1 = has2 = False
     for s in strategies:
         g = sub[sub["Strategy"]==s]
-        has1 |= binned_line(axes[0], g["P_sum"], g["log_time"], s)
-        has2 |= binned_line(axes[1], g["Q_sum"], g["log_time"], s)
-    axes[0].set_xlabel("ΣP_load"); axes[0].set_ylabel("log(SolveTime)")
+        has1 |= binned_line(axes[0], g["P_sum"], g["SolveTime"], s)
+        has2 |= binned_line(axes[1], g["Q_sum"], g["SolveTime"], s)
+    axes[0].set_xlabel("ΣP_load"); axes[0].set_ylabel("SolveTime")
     axes[1].set_xlabel("ΣQ_load")
-    axes[0].set_title(f"[B1] {case} — ΣP vs log(time)")
-    axes[1].set_title(f"[B2] {case} — ΣQ vs log(time)")
+    axes[0].set_title(f"[B1] {case} — ΣP vs SolveTime")
+    axes[1].set_title(f"[B2] {case} — ΣQ vs SolveTime")
     if has1 or has2:
         axes[1].legend(title="Strategy", loc="best")
     plt.tight_layout(); plt.savefig(out_path, dpi=160); plt.close()
@@ -178,9 +178,9 @@ def struct_C_case(df, case, struct_col, out_path):
     if struct_col not in df.columns:
         print(f"[跳过] {case} 缺少结构列 {struct_col}")
         return
-    sub = df[(df["Case"] == case) & df[struct_col].notna() & df["log_time"].notna()].copy()
+    sub = df[(df["Case"] == case) & df[struct_col].notna() & df["SolveTime"].notna()].copy()
     if sub.empty:
-        print(f"[跳过] {case} 没有 {struct_col} 或 log_time")
+        print(f"[跳过] {case} 没有 {struct_col} 或 SolveTime")
         return
     strategies = sorted(sub["Strategy"].unique().tolist())
     plt.figure(figsize=(8.0,5.0))
@@ -189,10 +189,10 @@ def struct_C_case(df, case, struct_col, out_path):
     for s in strategies:
         g = sub[sub["Strategy"]==s]
         if len(g) == 0: continue
-        plt.scatter(g[struct_col], g["log_time"], s=16, alpha=0.65, label=s, color=colors[s])
+        plt.scatter(g[struct_col], g["SolveTime"], s=16, alpha=0.65, label=s, color=colors[s])
         has_label = True
-    plt.xlabel(struct_col); plt.ylabel("log(SolveTime)")
-    plt.title(f"[C] {case} — {struct_col} vs log(SolveTime)")
+    plt.xlabel(struct_col); plt.ylabel("SolveTime")
+    plt.title(f"[C] {case} — {struct_col} vs SolveTime")
     if has_label:
         plt.legend(markerscale=1.1, fontsize=8, ncol=2)
     plt.tight_layout(); plt.savefig(out_path, dpi=160); plt.close()
@@ -250,7 +250,7 @@ def main(in_dir: Path, out_dir: Path):
     df["P_cv"] = P_cv;   df["P_max_frac"] = P_max_frac; df["__load_json__"] = J
 
     # 5) 绝对 log 时间
-    df["log_time"] = safe_log_time(df["SolveTime"])
+    df["SolveTime"] = safe_log_time(df["SolveTime"])
 
     # 6) 结构列可用性
     struct_col = "sum_r_cu" if "sum_r_cu" in df.columns else ("fillin" if "fillin" in df.columns else None)
@@ -263,7 +263,7 @@ def main(in_dir: Path, out_dir: Path):
     # 8) 诊断：JSON 匹配与有效时间
     n_total = len(df)
     n_match = df["P_sum"].notna().sum()
-    n_pos_time = np.isfinite(df["log_time"]).sum()
+    n_pos_time = np.isfinite(df["SolveTime"]).sum()
     print(f"[匹配统计] 负荷 JSON 命中：{n_match}/{n_total}，有效 SolveTime(>0)：{n_pos_time}/{n_total}")
     miss_json = df[df["P_sum"].isna()][["Case","Strategy","Perturbation","ID","__source_csv__"]]
     if len(miss_json):
@@ -281,15 +281,15 @@ def main(in_dir: Path, out_dir: Path):
             print("[提示] 未检测到 sum_r_cu/fillin，图C跳过。")
 
     # 10) ALL 合并 ABC 图
-    df_all = df.dropna(subset=["log_time"]).copy()
+    df_all = df.dropna(subset=["SolveTime"]).copy()
     if df_all.empty:
-        print("[跳过] 没有有效 log_time，ALL 图不生成。")
+        print("[跳过] 没有有效 SolveTime，ALL 图不生成。")
         return
 
     # ALL_A：箱线 + 叠点（marker 按 Case）
     strategies = sorted(df_all["Strategy"].unique().tolist())
     plt.figure(figsize=(max(9.5, 1.2*len(strategies)), 5.4))
-    data = [df_all.loc[df_all["Strategy"]==s, "log_time"].values for s in strategies]
+    data = [df_all.loc[df_all["Strategy"]==s, "SolveTime"].values for s in strategies]
     plt.boxplot(data, showfliers=False)
     plt.xticks(range(1, len(strategies)+1), strategies, rotation=18)
     plt.ylabel("log(SolveTime)")
@@ -300,25 +300,25 @@ def main(in_dir: Path, out_dir: Path):
     for c in case_list:
         sub = df_all[df_all["Case"]==c]
         xs = [strategies.index(s)+1 for s in sub["Strategy"]]
-        plt.scatter(xs, sub["log_time"], s=12, alpha=0.3, marker=case2m[c], label=str(c))
+        plt.scatter(xs, sub["SolveTime"], s=12, alpha=0.3, marker=case2m[c], label=str(c))
     if len(case_list) > 0:
         plt.legend(title="Case", markerscale=1.3, ncol=min(4, len(case_list)))
     plt.tight_layout(); plt.savefig(fig_dir / "ALL_A_box_abs_time.png", dpi=160); plt.close()
     print(f"[图] {fig_dir / 'ALL_A_box_abs_time.png'}")
 
     # ALL_B：ΣP/ΣQ vs log_time（按 Strategy 画分箱中位线）
-    need_cols = ["P_sum","Q_sum","log_time","Strategy"]
+    need_cols = ["P_sum","Q_sum","SolveTime","Strategy"]
     if all(col in df_all.columns for col in need_cols):
         fig, axes = plt.subplots(1,2, figsize=(12.5,5.0), sharey=True)
         has1 = has2 = False
         for s in strategies:
             g = df_all[df_all["Strategy"]==s]
-            has1 |= binned_line(axes[0], g["P_sum"], g["log_time"], s)
-            has2 |= binned_line(axes[1], g["Q_sum"], g["log_time"], s)
-        axes[0].set_xlabel("ΣP_load"); axes[0].set_ylabel("log(SolveTime)")
+            has1 |= binned_line(axes[0], g["P_sum"], g["SolveTime"], s)
+            has2 |= binned_line(axes[1], g["Q_sum"], g["SolveTime"], s)
+        axes[0].set_xlabel("ΣP_load"); axes[0].set_ylabel("SolveTime")
         axes[1].set_xlabel("ΣQ_load")
-        axes[0].set_title("[ALL-B1] ΣP vs log(time)")
-        axes[1].set_title("[ALL-B2] ΣQ vs log(time)")
+        axes[0].set_title("[ALL-B1] ΣP vs SolveTime")
+        axes[1].set_title("[ALL-B2] ΣQ vs SolveTime")
         if has1 or has2:
             axes[1].legend(title="Strategy", loc="best")
         plt.tight_layout(); plt.savefig(fig_dir / "ALL_B_PQ_vs_abs_time.png", dpi=160); plt.close()
@@ -335,12 +335,12 @@ def main(in_dir: Path, out_dir: Path):
             color_map = {s: plt.cm.tab20(i % 20) for i, s in enumerate(strategies)}
             case2m = {c: markers[i % len(markers)] for i, c in enumerate(case_list)}
             for (s, c), g in sub.groupby(["Strategy","Case"]):
-                plt.scatter(g[struct_col], g["log_time"], s=16,
+                plt.scatter(g[struct_col], g["SolveTime"], s=16,
                             color=color_map.get(s, None),
                             marker=case2m.get(c,'o'), alpha=0.7,
                             label=f"{s} | {c}")
-            plt.xlabel(struct_col); plt.ylabel("log(SolveTime)")
-            plt.title(f"[ALL] {struct_col} vs log(SolveTime)")
+            plt.xlabel(struct_col); plt.ylabel("SolveTime")
+            plt.title(f"[ALL] {struct_col} vs SolveTime")
             # legend 去重（组合多时可以注释掉）
             handles, labels = plt.gca().get_legend_handles_labels()
             uniq = dict(zip(labels, handles))

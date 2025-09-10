@@ -1,7 +1,4 @@
-name = "Lanyue"
-uuid = "e6d58d2f-1c23-4b2f-b2b7-8b3243a5b0de"
-authors = ["lanyue tang <lanyue.tang@polymtl.ca>"]
-version = "0.1.0"
+
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

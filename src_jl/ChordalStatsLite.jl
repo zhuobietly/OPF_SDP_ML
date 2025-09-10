@@ -15,6 +15,7 @@ export ChordalStats,
 Base.@kwdef struct ChordalStats
     # PSD 块结构
     r_max::Int = 0
+    r_var::Float64 = 0.0
     t::Int = 0
     sum_r_sq::Float64 = 0.0
     sum_r_cu::Float64 = 0.0
@@ -164,6 +165,7 @@ function compute_stats_from_vars(; cadj::AbstractMatrix{<:Float64},
 
     rs = map(length, cliques)
     rmax = maximum(rs)
+    rvar = var(rs)
     t    = length(rs)
     s2   = sum(r->r^2, rs)
     s3   = sum(r->r^3, rs)
@@ -200,6 +202,7 @@ function compute_stats_from_vars(; cadj::AbstractMatrix{<:Float64},
     return ChordalStats(;
         r_max = rmax,
         t = t,
+        r_var = rvar,
         sum_r_sq = s2,
         sum_r_cu = s3,
         sep_max = sep_max,
@@ -218,6 +221,7 @@ end
 function stats_dataframe(stats::ChordalStats; meta::Dict{Symbol,Any}=Dict{Symbol,Any}())
     row = (;  # 关键指标
         r_max        = stats.r_max,
+        r_var        = stats.r_var,
         t            = stats.t,
         sum_r_sq     = stats.sum_r_sq,
         sum_r_cu     = stats.sum_r_cu,

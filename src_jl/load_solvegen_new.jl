@@ -2,7 +2,7 @@ using CSV, DataFrames, Printf
 
 # 与现有 CSV 一致的列顺序（按你现在的表头）
 const EXPECTED_ORDER = [
-    "Formulation","Perturbation","Case","Merge","A_parameter","SolveTime",
+    "network_type","Formulation","Perturbation","Case","Merge","A_parameter","SolveTime",
     "Status","objective","SolutionStatus","ID","load_id",
     "Iterations","PrimalRes","DualRes","RelGap","KKTCondProxy","ActiveLimits",
     "r_max","t","sum_r_sq","sum_r_cu","sep_max","sep_mean","sum_sep_sq",
@@ -46,13 +46,13 @@ function _write_status_row!(results_csv::String; fm, case_name, merging, alpha, 
 end
 
 
-case_name  = "case1888rte"
+case_name  = "case118"
 input_dir  = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/", case_name)
 
 # 策略组合
 formulations = ["Chordal_MD", "Chordal_MFI", "Chordal_AMD"]
 merging_opts = ["false", "true"]
-alpha_values = [2.0, 3.0, 5.0]
+alpha_values = [2.0,2.5,3.0,3.5,4,4.5,5.0]
 # —— 自动检测机器内存，给每个子进程加软上限 ——
 mem_total_gb = try Sys.total_memory() / 1024^3 catch; 16.0 end
 
@@ -63,21 +63,17 @@ mem_soft_gb     = max(6.0, min(mem_soft_frac * mem_total_gb, mem_total_gb - mem_
 
 mem_kb = 19689532 # ulimit 以 KB 为单位
 # mem_kb = Int(floor(mem_soft_gb * 1024^2))  # 转成 KB
-println("RAM=", round(mem_total_gb,digits=2)," GB, cap=", round(mem_soft_gb,digits=2)," GB")
-
+println("RAM=", round(mem_total_gb,digits=2)," GB, cap=", round(mem_soft_gb,digits=2)," GB, ulimit -Sv=", mem_kb, " KB ")
 
 for json_file in readdir(input_dir)
     endswith(json_file, ".json") || continue
     filepath = joinpath(input_dir, json_file)
-
     for fm in formulations
         for merging in merging_opts
             alphas = (merging == "true") ? alpha_values : [0.0]
             for alpha in alphas
-                println("Launching:", (filepath, fm, merging, alpha), "  [RAM=",
-                        round(mem_total_gb, digits=2), " GB, cap=", round(mem_soft_gb, digits=2), " GB]")
                 # 用 bash 设置 ulimit -Sv（虚拟内存软上限，单位 KB），然后 exec 进入 julia 子进程
-                shcmd = "ulimit -Sv $(mem_kb); exec julia --project=.. src_jl/run_one_case.jl '$(filepath)' $(fm) $(merging) $(alpha)"
+                shcmd = "ulimit -Sv $(mem_kb); exec julia --project=.. src_jl/run_one_case.jl '$case_name' '$filepath' $(fm) $(merging) $(alpha)"
                 try
                     run(`bash -lc $shcmd`)
                 catch e
@@ -88,8 +84,6 @@ for json_file in readdir(input_dir)
                     k, seed, idno = _parse_k_seed_id(fname)
 
                     # 如果你的 solver_wrappers 写到 data/solve_time/…，把 "clique_stats" 改成 "solve_time"
-                    case_file  = "case1888rte.m"
-                    case_name  = replace(case_file, ".m" => "")
                     k_tok = isnan(k) ? nothing : @sprintf("%.2f", k)
                     tokens = ["pglib_opf", case_name]
                     if k_tok !== nothing && !ismissing(idno)

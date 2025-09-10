@@ -8,7 +8,8 @@ using CSV
 using Ipopt
 using JuMP
 include("../src_jl/chordalvisual.jl")
-using .ChordalVisualizer: visualize_fillin, edge_lists
+using .ChordalVisualizer: visualize_fillin, edge_lists, visualize_fillin3, edge_lists3
+
 include("../src_jl/ChordalStatsLite.jl")
 using .ChordalStatsLite: compute_stats_from_vars,
                         cliques_from_peo,
@@ -16,8 +17,9 @@ using .ChordalStatsLite: compute_stats_from_vars,
                         append_stats_csv
 include("../src_jl/LightGC.jl")
 using .LightGC: cleanup!, safe_close
-
-export solve, solve_opf
+include("../src_jl/network_perturbation.jl")
+using .ChordalPerturb
+export solve
 # 用 Pipe 捕获 stdout/stderr（跨 Julia 版本稳）
 # ---------------- 捕获 stdout/stderr：管道优先，缺失则用临时文件 ----------------
 const _HAS_PIPE = isdefined(Base, :pipe)
@@ -215,155 +217,181 @@ function _count_active_limits(result, data; tol=1e-4)
     return cnt
 end
 
-function solve(data, model, clique_merging, case_name; alpha = 3, id_name = nothing, tokens = nothing, perturbation = nothing, id_detect = -1)
+function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = nothing, tokens = nothing, perturbation = nothing, id_detect = -1)
     #case_name = "$(case_name)_$(formulation)_$(clique_merging)",请帮我把case_name和其他东西分开
     original_case_name = case_name
     # 从原始名称中拆分
     case_name = split(original_case_name, "_")[1]  # 只取第一部分，如 "case14"
     other_info = join(split(original_case_name, "_")[2:end], "_")  # 剩下的部分
-    pm = InfrastructureModels.InitializeInfrastructureModel(model, data, PowerModels._pm_global_keys, PowerModels.pm_it_sym)
-    PowerModels.ref_add_core!(pm.ref)
-    nw = collect(InfrastructureModels.nw_ids(pm, pm_it_sym))[1]
-    adj, cadj, lookup_index, sigma, q = PowerModels._chordal_extension(pm, nw, clique_merging, alpha)
-    @assert q == invperm(sigma) "置换不一致：按理应当满足 q == invperm(sigma)"
-    #原始矩阵画图
-    save_path = joinpath("result", "figure", "graph", "$(case_name)", "$(other_info)_fillin.png")
-    visualize_fillin(adj, cadj; q=q, savepath=save_path)
-    println("✅ 绘制完成原始顺序）：", save_path)
-    # Step 3: PEO 顺序的图
-    save_path_peo = joinpath("result", "figure", "graph", case_name, "$(other_info)_fillin_peo.png")
-    ChordalVisualizer.visualize_fillin(adj, cadj; q=sigma, savepath=save_path_peo)
-    println("✅ 绘制完成（PEO 顺序）：", save_path_peo)
-    cliques = PowerModels._maximal_cliques(cadj)
-    lookup_bus_index = Dict((reverse(p) for p = pairs(lookup_index)))
-    groups = [[lookup_bus_index[gi] for gi in g] for g in cliques]
-    pm.ext[:SDconstraintDecomposition] = PowerModels._SDconstraintDecomposition(groups, lookup_index, sigma)
-    # ========= 结构统计（求解前已完成）=========
-    stats = compute_stats_from_vars(; cadj=cadj, sigma=sigma, cliques=cliques, cadj0=adj)
 
-    PowerModels.build_opf(pm)
-    #result = optimize_model!(pm, optimizer=Mosek.Optimizer)
-    # ===== 求解 =====
-    # 用 optimizer_with_attributes 确保 Mosek 输出日志（不要依赖 set_optimizer_attribute）
-    opt = optimizer_with_attributes(
-        Mosek.Optimizer,
-        "MSK_IPAR_LOG" => 1,
-        "MSK_IPAR_LOG_INTPNT" => 1,
-        "QUIET" => 0,          # JuMP 层静音开关
-    )
+    # --- 仅用于生成扰动候选：临时 pm（不建模） ---
+    pm0 = InfrastructureModels.InitializeInfrastructureModel(model, data, PowerModels._pm_global_keys, PowerModels.pm_it_sym)
+    PowerModels.ref_add_core!(pm0.ref)
+    nw0 = collect(InfrastructureModels.nw_ids(pm0, pm_it_sym))[1]
+    #在这之前添加网络扰动
+    # === 在这里生成 1+6+3 个候选图（不做分解与合并，这一步只负责“扰动”与元信息） ===
+    perturbs = ChordalPerturb.generate_perturbations(pm0, nw0)
+    # 之后你可以选择一个（或循环多个）来做分解：
+    # 举例：先对原始网络继续：
+    A0 = perturbs[1].adj
+    for pg in perturbs
+        # 1) 为该扰动新建 pm
+        pm = InfrastructureModels.InitializeInfrastructureModel(model, data, PowerModels._pm_global_keys, PowerModels.pm_it_sym)
+        PowerModels.ref_add_core!(pm.ref)
+        nw = collect(InfrastructureModels.nw_ids(pm, pm_it_sym))[1]
+        # 2) 在该扰动图上做 chordal extension / clique 提取
+        adj_use, lookup_index = pg.adj, pg.lookup_index
+        adj, cadj, lookup_index, sigma, q =
+            PowerModels._chordal_extension(pm, adj_use, lookup_index, clique_merging, alpha)
+        @assert q == invperm(sigma) "置换不一致：应满足 q == invperm(sigma)"
 
-    # 运行并捕获日志
-    result, mosek_log = _run_with_capture() do
-        optimize_model!(pm, optimizer=opt)
-    end
+        cliques = PowerModels._maximal_cliques(cadj)
+        lookup_bus_index = Dict(reverse(p) for p in pairs(lookup_index))
+        groups = [[lookup_bus_index[gi] for gi in g] for g in cliques]
 
-    # -- MOI 读取迭代步（优先用 MOI；拿不到再用日志） （// NEW）
-    log_iters, log_pr, log_dr, log_rg, log_time = parse_mosek_log_all(mosek_log)
+        # 3) **在建模前**把分解写入 pm.ext（关键！）
+        pm.ext[:SDconstraintDecomposition] =
+            PowerModels._SDconstraintDecomposition(groups, lookup_index, sigma)
 
-    iterations = log_iters
-    primal_res = log_pr
-    dual_res   = log_dr
-    rel_gap    = log_rg
-    mosektime  = log_time
+        # ---------- 三色可视化：原序 ----------
+        network_type = "$(pg.kind)_$(pg.idx)"
+        save_name = "$(network_type)_$(model)_$(clique_merging)_$(alpha)_$(id_detect)"
+        save_path = joinpath("result", "figure", "graph", "$(case_name)", "$(save_name)_fillin.png")
+        visualize_fillin3(A0, adj, cadj; q=q, savepath=save_path)
+        println("✅ 绘制完成原始顺序）：", save_path)
 
-    # （可选）把日志写文件，方便你确认到底捕到了什么
-    
-    try
-        # 你的主逻辑
-        mkpath("runs/chordalstats_logs")
-        open(joinpath("runs","chordalstats_logs","$(case_name)_$(other_info).log"), "w") do io
-            write(io, mosek_log)
+        # ---------- 三色可视化：PEO 顺序 ----------
+        save_path_peo = joinpath("result", "figure", "graph", "$(case_name)", "$(save_name)_fillin_peo.png")
+        ChordalVisualizer.visualize_fillin3(A0, adj, cadj; q=sigma, savepath=save_path_peo)
+        println("✅ 绘制完成（PEO 顺序）：", save_path_peo)
+
+        cliques = PowerModels._maximal_cliques(cadj)
+        lookup_bus_index = Dict((reverse(p) for p = pairs(lookup_index)))
+        groups = [[lookup_bus_index[gi] for gi in g] for g in cliques]
+        pm.ext[:SDconstraintDecomposition] = PowerModels._SDconstraintDecomposition(groups, lookup_index, sigma)
+        # ========= 结构统计（求解前已完成）=========
+        stats = compute_stats_from_vars(; cadj=cadj, sigma=sigma, cliques=cliques, cadj0=adj)
+        #result = optimize_model!(pm, optimizer=Mosek.Optimizer)
+        # ===== 求解 =====
+        PowerModels.build_opf(pm)
+        # 用 optimizer_with_attributes 确保 Mosek 输出日志（不要依赖 set_optimizer_attribute）
+        opt = optimizer_with_attributes(
+            Mosek.Optimizer,
+            "MSK_IPAR_LOG" => 1,
+            "MSK_IPAR_LOG_INTPNT" => 1,
+            "QUIET" => 0,          # JuMP 层静音开关
+        )
+
+        # 运行并捕获日志
+        result, mosek_log = _run_with_capture() do
+            optimize_model!(pm, optimizer=opt)
         end
-    finally
-        cleanup!(Ref(pm), Ref(adj), Ref(cadj), Ref(mosek_log))
-    end
-    
-    # —— 兼容 Symbol / String 键 —— 
-    _get(r, ks, default=missing) = begin
-        for k in ks
-            if haskey(r, k); return r[k]; end
+
+        # -- MOI 读取迭代步（优先用 MOI；拿不到再用日志） （// NEW）
+        log_iters, log_pr, log_dr, log_rg, log_time = parse_mosek_log_all(mosek_log)
+
+        iterations = log_iters
+        primal_res = log_pr
+        dual_res   = log_dr
+        rel_gap    = log_rg
+        mosektime  = log_time
+
+        # （可选）把日志写文件，方便你确认到底捕到了什么
+        
+        try
+            # 你的主逻辑
+            mkpath("runs/chordalstats_logs")
+            open(joinpath("runs","chordalstats_logs","$(case_name)_$(other_info).log"), "w") do io
+                write(io, mosek_log)
+            end
+        finally
+            cleanup!(Ref(pm), Ref(adj), Ref(cadj), Ref(mosek_log))
         end
-        return default
-    end
-
-    solve_time  = _get(result, ["solve_time", :solve_time], NaN)
-    term_status = string(_get(result, ["termination_status", :termination_status, "status", :status], ""))
-    obj_val     = _get(result, ["objective", :objective, "obj_val", :obj_val], NaN)
-    sol_status  = string(_get(result, ["solution_status", :solution_status, "primal_status", :primal_status], ""))
-    ##
-    # 若没直接给相对间隙，尝试用上下界/对偶目标估计
-    if rel_gap === missing
-        obj_lb = _getnum(result, ["objective_lb", :objective_lb, "best_bound", :best_bound,
-                                  "dual_objective", :dual_objective])
-        if !(obj_val === missing || obj_lb === missing)
-            denom = max(1.0, abs(obj_val))
-            rel_gap = abs(obj_val - obj_lb) / denom
+        
+        # —— 兼容 Symbol / String 键 —— 
+        _get(r, ks, default=missing) = begin
+            for k in ks
+                if haskey(r, k); return r[k]; end
+            end
+            return default
         end
-    end
-    # KKT 条件 proxy（基于数据的量纲范围）
-    kkt_cond_proxy = _coeff_ratio_from_data(data)
 
-    # 贴边数量统计（有解且数据齐全才会返回 Int，否则 missing）
-    active_limits = _count_active_limits(result, data; tol=1e-4)
+        solve_time  = _get(result, ["solve_time", :solve_time], NaN)
+        term_status = string(_get(result, ["termination_status", :termination_status, "status", :status], ""))
+        obj_val     = _get(result, ["objective", :objective, "obj_val", :obj_val], NaN)
+        sol_status  = string(_get(result, ["solution_status", :solution_status, "primal_status", :primal_status], ""))
+        ##
+        # 若没直接给相对间隙，尝试用上下界/对偶目标估计
+        if rel_gap === missing
+            obj_lb = _getnum(result, ["objective_lb", :objective_lb, "best_bound", :best_bound,
+                                    "dual_objective", :dual_objective])
+            if !(obj_val === missing || obj_lb === missing)
+                denom = max(1.0, abs(obj_val))
+                rel_gap = abs(obj_val - obj_lb) / denom
+            end
+        end
+        # KKT 条件 proxy（基于数据的量纲范围）
+        kkt_cond_proxy = _coeff_ratio_from_data(data)
+
+        # 贴边数量统计（有解且数据齐全才会返回 Int，否则 missing）
+        active_limits = _count_active_limits(result, data; tol=1e-4)
 
 
-    # —— 你要的“求解结果”列（放前面）——
-    df_core = DataFrame(
-        Formulation     = [string(model)],
-        Perturbation    = [perturbation],     # 例：(σ, seed)
-        Case            = [case_name],
-        Merge           = [clique_merging],
-        A_parameter     = [alpha],
-        SolveTime       = [solve_time],
-        mosektime       = [mosektime],
-        Status          = [term_status],
-        objective       = [obj_val],
-        SolutionStatus  = [sol_status],
-        ID              = [id_detect],
-        load_id         = [id_name],
-        # 新增数值/收敛列
-        Iterations      = [iterations],
-        PrimalRes       = [primal_res],
-        DualRes         = [dual_res],
-        RelGap          = [rel_gap],
-        KKTCondProxy    = [kkt_cond_proxy],
-        ActiveLimits    = [active_limits],
-    )
+        # —— 你要的“求解结果”列（放前面）——
+        df_core = DataFrame(
+            network_type    = [network_type], # 例：original_0, light_1, heavy_2
+            Formulation     = [string(model)],
+            Perturbation    = [perturbation],     # 例：(σ, seed)
+            Case            = [case_name],
+            Merge           = [clique_merging],
+            A_parameter     = [alpha],
+            SolveTime       = [solve_time],
+            mosektime       = [mosektime],
+            Status          = [term_status],
+            objective       = [obj_val],
+            SolutionStatus  = [sol_status],
+            ID              = [id_detect],
+            load_id         = [id_name],
+            # 新增数值/收敛列
+            Iterations      = [iterations],
+            PrimalRes       = [primal_res],
+            DualRes         = [dual_res],
+            RelGap          = [rel_gap],
+            KKTCondProxy    = [kkt_cond_proxy],
+            ActiveLimits    = [active_limits],
+        )
 
-    # —— 结构统计（紧跟在后面）——
-    df_stats = DataFrame(
-        r_max        = [stats.r_max],
-        t            = [stats.t],
-        sum_r_sq     = [stats.sum_r_sq],
-        sum_r_cu     = [stats.sum_r_cu],
-        sep_max      = [stats.sep_max],
-        sep_mean     = [stats.sep_mean],
-        sum_sep_sq   = [stats.sum_sep_sq],
-        tree_max_deg = [stats.tree_max_degree],
-        tree_h       = [stats.tree_height],
-        fillin       = [stats.fillin_ratio],
-        coupling     = [stats.coupling_proxy],
-    )
+        # —— 结构统计（紧跟在后面）——
+        df_stats = DataFrame(
+            r_max        = [stats.r_max],
+            t            = [stats.t],
+            r_var        = [stats.r_var],
+            sum_r_sq     = [stats.sum_r_sq],
+            sum_r_cu     = [stats.sum_r_cu],
+            sep_max      = [stats.sep_max],
+            sep_mean     = [stats.sep_mean],
+            sum_sep_sq   = [stats.sum_sep_sq],
+            tree_max_deg = [stats.tree_max_degree],
+            tree_h       = [stats.tree_height],
+            fillin       = [stats.fillin_ratio],
+            coupling     = [stats.coupling_proxy],
+        )
 
-    # —— 合并成一行 —— 
-    df = hcat(df_core, df_stats)
+        # —— 合并成一行 —— 
+        df = hcat(df_core, df_stats)
 
-    # —— 生成 CSV 路径（修正逻辑）——
-    stats_csv_path = joinpath("data", "clique_stats", case_name, join(tokens, "_"))
-    mkpath(dirname(stats_csv_path))
+        # —— 生成 CSV 路径（修正逻辑）——
+        stats_csv_path = joinpath("data", "clique_stats", case_name, join(tokens, "_"))
+        mkpath(dirname(stats_csv_path))
 
-    # —— 追加写入 —— 
-    if isfile(stats_csv_path)
-        CSV.write(stats_csv_path, df; append=true)
-    else
-        CSV.write(stats_csv_path, df)
-    end
-
-    return result
-end
-
-function solve_opf(data, model, solver)
-    return PowerModels.solve_opf(data, model, solver)
+        # —— 追加写入 —— 
+        if isfile(stats_csv_path)
+            CSV.write(stats_csv_path, df; append=true)
+        else
+            CSV.write(stats_csv_path, df)
+        end
+    end # for pg in perturbs
+    return nothing
 end
 
 

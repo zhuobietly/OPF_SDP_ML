@@ -65,7 +65,7 @@ reg.fit(tr_set, va_set, verbose=True)
 # ===== 4) 预测与最优方案索引 =====
 Y_val_pred = reg.predict(va_set)            # (num_val, K)
 preds      = reg.predict_argmin(va_set)     # (num_val,)
-print("Pred shape:", Y_val_pred.shape, "Argmin preds shape:", preds.shape)
+print("Pred :", Y_val_pred, "Argmin preds:", preds)
 
 # ===== 5) 保存学习曲线图 =====
 curve_path = reg.plot_learning_curves()
