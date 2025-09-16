@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import DataLoader
-from .gcn_utils.logging import log
+from gcn_utils.logging import log
 
 def train_epoch(model, loader, optimizer, loss_fn, device):
     model.train()
