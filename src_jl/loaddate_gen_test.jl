@@ -1,7 +1,7 @@
 using PowerModels            # 为了 parse_file 读取 .m
 include("loaddata_gen.jl")
 using .LoadProfileGen
-case_name = "case2868rte"
+case_name = "case"
 m_path = joinpath("/home/goatoine/Documents/Lanyue/data/raw_data/$(case_name).m")    
 N = 2
 outdir = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/$(case_name)")

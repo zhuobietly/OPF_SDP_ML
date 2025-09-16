@@ -15,7 +15,7 @@ df = pd.read_csv(file_path)
 # --------- 2) Select features and target ---------
 features = [
     "Iterations", "PrimalRes", "DualRes", "RelGap", 
-    "ActiveLimits", "r_max", "t", "sum_r_sq", "sum_r_cu",
+    "ActiveLimits", "r_max", "t", "r_var","sum_r_sq", "sum_r_cu",
     "sep_max", "sep_mean", "sum_sep_sq", "tree_max_deg",
     "tree_h", "fillin", "coupling"
 ]

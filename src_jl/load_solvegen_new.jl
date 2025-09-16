@@ -46,7 +46,7 @@ function _write_status_row!(results_csv::String; fm, case_name, merging, alpha, 
 end
 
 
-case_name  = "case118"
+case_name  = "case118"  # "case300_ieee"  # "case1354pegase"  # "case2383wp"  # "case6468rte"  # "case9241pegase"
 input_dir  = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/", case_name)
 
 # 策略组合

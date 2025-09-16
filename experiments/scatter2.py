@@ -36,7 +36,7 @@ if missing:
 df["Case"] = df["Case"].astype(str)
 
 # Map numeric alpha to {0,2,3,5} by nearest value (robust to floats like 3.0)
-allowed_alpha = np.array([0, 2, 3, 5])
+allowed_alpha = np.array([0.0, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0])
 def canon_alpha(a):
     try:
         v = float(a)
@@ -45,14 +45,14 @@ def canon_alpha(a):
     idx = np.abs(allowed_alpha - v).argmin()
     return int(allowed_alpha[idx])
 
-df["alpha"] = df["A_parameter"].apply(canon_alpha)
+df["alpha"] = df["A_parameter"]
 df = df.dropna(subset=["alpha"]).copy()
-df["alpha"] = df["alpha"].astype(int)
+df["alpha"] = df["alpha"]
 
 # ========= Case → base hue mapping =========
 CASE_BASE_COLORS = {
     "case2764": "tab:orange",  # 指定：橙色系
-    "case1888": "tab:blue",    # 指定：蓝色系
+    "case1888rte": "tab:blue",    # 指定：蓝色系
 }
 fallback_cycle = ["tab:green", "tab:red", "tab:purple", "tab:brown",
                   "tab:gray", "tab:pink", "tab:olive", "tab:cyan"]
@@ -68,9 +68,8 @@ for c in cases:
         k += 1
 
 # ========= α-value → shade (mix with white) =========
-# 0=deep, 2=次深, 3=次浅, 5=最浅
-SHADE_BY_ALPHA = {0: 0.10, 5: 0.35, 3: 0.55, 2: 0.75}
-alpha_order = [0, 5, 3, 2]
+SHADE_BY_ALPHA = {0: 0.2, 5: 0.3, 4.5: 0.4, 4.0: 0.5, 3.5: 0.6, 3.0: 0.7, 2.5: 0.8, 2.0: 0.9}
+alpha_order = [0.0, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0]
 
 def mix_with_white(color_name, amount):
     r, g, b = to_rgb(color_name)
@@ -92,7 +91,7 @@ for i, feat in enumerate(selected_features, 1):
     for c in cases:
         subc = df[df["Case"] == c]
         # loop α in fixed order so shades are consistent
-        for a in [0, 2, 3, 5]:
+        for a in [0.0, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0]:
             sub = subc[subc["alpha"] == a]
             if sub.empty:
                 continue
@@ -131,8 +130,8 @@ ax_leg.legend(handles=alpha_handles, title="α value (shade)",
 
 # Case-Alpha legend (shade levels) — 每个case的每个α都展示
 # 指定alpha顺序
-alpha_order = [0, 5, 3, 2]  # 0最深，2最浅
-shade_levels = [0.2, 0.4, 0.6, 0.8]  # 0.2最深，0.8最浅（举例）
+alpha_order = [0.0, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0]  # 0最深，2最浅
+shade_levels = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]  # 0.2最深，0.8最浅（举例）
 alpha_to_shade = dict(zip(alpha_order, shade_levels))
 
 case_alpha_handles = []

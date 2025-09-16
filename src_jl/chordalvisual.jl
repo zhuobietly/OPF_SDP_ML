@@ -207,7 +207,7 @@ function visualize_fillin3(A0::SparseMatrixCSC, A1::SparseMatrixCSC, C::SparseMa
 
     matplotlib = pyimport("matplotlib")
     # 白 / 灰 / 蓝 / 红
-    cmap = matplotlib.colors.ListedColormap(["white", "#b0b0b0", "#1f77b4", "#d62728"])
+    cmap = matplotlib.colors.ListedColormap(["white", "#b0b0b0", "#1f77b4", "white"])
 
     figure(figsize=(w_in,h_in), dpi=dpi)
     imshow(M[end:-1:1, :], cmap=cmap, interpolation="none", vmin=0, vmax=3)
