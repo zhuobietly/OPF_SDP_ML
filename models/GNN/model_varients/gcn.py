@@ -35,3 +35,39 @@ class GCN(GNNBase):
             H = conv(H, A_hat)
         H_mean = H.mean(dim=1)
         return self.head(H_mean)
+
+@register("GCN_global")
+class GCNGlobal(nn.Module):
+    """
+    X: [B, N, F0], A: [B, N, N], gvec: [B, G]
+    -> H: [B, N, Fk]
+    -> pooling: [B, Fk]
+    -> concat gvec: [B, Fk+G]
+    -> MLP -> [B, out_dim]
+    """
+    def __init__(self, in_dim, hidden, out_dim, g_dim, dropout=0.0, readout="mean"):
+        super().__init__()
+        fin = in_dim
+        layers = []
+        for h in hidden:
+            layers.append(GraphConv(fin, h, dropout))
+            fin = h
+        self.gnn = nn.ModuleList(layers)
+        self.readout = readout
+        self.mlp = nn.Sequential(
+            nn.Linear(fin + g_dim, max(64, (fin + g_dim)//2)),
+            nn.ReLU(),
+            nn.Linear(max(64, (fin + g_dim)//2), out_dim),
+        )
+    def _readout(self, H):
+        if self.readout == "mean": return H.mean(1)
+        if self.readout == "sum":  return H.sum(1)
+        if self.readout == "max":  return H.max(1).values
+        raise ValueError("bad readout")
+    def forward(self, A_hat, X, gvec):
+        H = X
+        for layer in self.gnn:
+            H = layer(H, A_hat)
+        h = self._readout(H)               # [B,Hd]
+        z = torch.cat([h, gvec], dim=-1)   # [B,Hd+G]
+        return self.mlp(z)

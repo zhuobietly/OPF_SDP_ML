@@ -1,0 +1,12 @@
+seed: 42
+model:
+  name: "GCN_global"
+  hidden: [64, 64]
+  dropout: 0.2
+  out_dim: 24
+train:
+  epochs: 8
+  batch_size: 8
+  lr: 0.001
+global:
+  norm: zscore  # "zscore"|"minmax"|"robust"|"none"

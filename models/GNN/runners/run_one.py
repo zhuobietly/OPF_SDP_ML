@@ -1,16 +1,12 @@
 
 import os, sys, yaml, torch
 from pathlib import Path
-
-# === 让“直接运行脚本”也能找到 models.GNN 包 ===
-PROJECT_ROOT = Path(__file__).resolve().parents[1]   # 指向包含 models/ 的目录
+import random
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-
-# === 这里写默认配置路径，直接改这一行就能换实验 ===
 CONFIG_PATH = PROJECT_ROOT /"configs" / "exp_toy.yaml"
 #path :/home/goatoine/Documents/Lanyue/models/GNN/configs/exp_tol.yaml
-# === 统一导入（注意：如果你的文件夹叫 feaatures，请先改名为 features）===
 from model_varients.registry import build as build_model
 from graph_builders.original import OriginalGraph
 try:
@@ -18,10 +14,10 @@ try:
 except ModuleNotFoundError:
     from features.loads_phys_topo import LoadsPhysTopo
 
-from data_loader.dataset_opf import OPFGraphDataset, collate_fn
+from data_loader.dataset_opf import OPFGraphDataset, make_collate_fn
 from trainers.supervised import fit
 from gcn_utils.seed import set_seed
-
+from gcn_utils.global_normalize import normalize_inplace
 # === the kind of gcn model structure ===
 BUILDERS = {
     "original": OriginalGraph,
@@ -30,51 +26,66 @@ BUILDERS = {
 }
 
 
-def build_samples_debug_toy(num=60, N=10):
-    """最小可跑的 toy 数据（你先用它验证流程；之后换成真实 raw 数据加载）"""
-    def make_sample(label):
-        A = (torch.rand(N, N) > 0.8).float()
+def build_samples_debug_toy(num=80, minN=8, maxN=28, K=24):
+    out = []
+    for i in range(num):
+        N = maxN
+        # 邻接矩阵
+        A = (torch.rand(N, N) > 0.82).float()
         A = torch.triu(A, 1); A = A + A.t()
+        y_reg = torch.randn(K).abs() 
+        y_cls = torch.argmin(y_reg).long()
+        global_vec = torch.randn(16)
         raw = {
-            "A": A,                                    # (N,N) 0/1 邻接
-            "node_load": torch.randn(N, 2),            # 节点特征示例
-            "degree": A.sum(dim=1, keepdim=True),      # 度
-            "label": torch.tensor([label], dtype=torch.float32),  # 回归标签
+            "A": A,
+            "node_load": torch.randn(N, 2),
+            "degree": A.sum(dim=1, keepdim=True),
+            "global_vec": global_vec,
+            "y_reg": y_reg,
+            "y_cls": y_cls,
         }
-        return raw
-    return [make_sample(float(i % 5)) for i in range(num)]
-
+        out.append(raw)
+    return out
 
 def main():
     cfg = yaml.safe_load(open(CONFIG_PATH, "r"))
     set_seed(cfg.get("seed", 42))
-    samples = build_samples_debug_toy(num=60, N=10)
+    samples = build_samples_debug_toy()
     #samples = load_from_csv_or_jld2(...)
-    # 3) 选择图构建 & 特征流水线（这里可以打断点，看 raw/g 的结构）
+    # 3) Setup graph builder and feature pipeline
     builder = BUILDERS[cfg["builder"]]()
     pipeline = LoadsPhysTopo()
+    mode_name = cfg.get("global",{}).get("norm","zscore")
+    norm = normalize_inplace(samples, mode=mode_name, key="global_vec")
 
-    # 4) 切分数据并创建 Dataset
+    # 4) split and generate Dataset
+    # notes that the samples are already shuffled
     split = int(0.8 * len(samples))
-    train_ds = OPFGraphDataset(samples[:split], builder.build, pipeline.node_features)
-    val_ds   = OPFGraphDataset(samples[split:], builder.build, pipeline.node_features)
-    # 简单 collate（等大小图）。变尺寸图后续可换 PyG 的 Batch
-    train_ds.collate_fn = collate_fn
-    val_ds.collate_fn = collate_fn
+    train_ds = OPFGraphDataset(samples[:split], builder.build, pipeline.node_features, norm)
+    val_ds   = OPFGraphDataset(samples[split:], builder.build, pipeline.node_features, norm)
+    # simple model, that every graph is has the same size, so we can batch them directly
+    # collate_fn is used to merge a list of samples to a batch
+    
+    train_ds.collate_fn = make_collate_fn(train_ds)
+    val_ds.collate_fn = make_collate_fn(val_ds)
 
-    # 5) 构建模型
+    # 5) build model
     in_dim = train_ds[0]["X"].shape[1]
-    model = build_model(
-        cfg["model"]["name"],
-        in_dim=in_dim,
-        hidden=cfg["model"].get("hidden", [128, 128]),
-        out_dim=1,
-        dropout=cfg["model"].get("dropout", 0.2),
-    )
+    model_args = {
+    "name": cfg["model"]["name"],
+    "in_dim": in_dim,
+    "hidden": cfg["model"].get("hidden", [128, 128]),
+    "out_dim": cfg["model"].get("out_dim", 24),
+    "dropout": cfg["model"].get("dropout", 0.2),
+    }
+    if "g_dim" in cfg["model"]:
+        model_args["g_dim"] = cfg["model"]["g_dim"]
+
+    model = build_model(**model_args) 
 
     # ---- 调试建议：首次 batch 打印一下形状，确认输入无误 ----
     first = train_ds[0]
-    print("[dbg] A_hat:", first["A_hat"].shape, "X:", first["X"].shape, "y:", first["y"].shape)
+    print("[dbg] A_hat:", first["A_hat"].shape, "X:", first["X"].shape, "y_reg:", first["y_reg"].shape, "y_cls:", first["y_cls"].shape)
 
     # 6) 训练
     fit(
@@ -86,7 +97,7 @@ def main():
         lr=cfg["train"].get("lr", 3e-4),
         device="cpu",
     )
-
+    # the metric of Y visualization
     print("Done.")
 
 
