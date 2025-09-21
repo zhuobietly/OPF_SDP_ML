@@ -9,16 +9,15 @@ using InfrastructureModels
 using JSON
 using Printf
 
-# --- parse <case>_<k>_perturbation_<seed>_<id>.json → (k, seed, id) ---
-function _parse_k_seed_id(fname::String)
-    m = match(r"^[A-Za-z0-9]+_([0-9]+(?:\.[0-9]+)?)_perturbation_([0-9]+)_([0-9]+)\.json$", fname)
+
+function _parse_k_id(fname::String)
+    m = match(r"^pglib_opf_[A-Za-z0-9]+_k_([0-9]+(?:\.[0-9]+)?)_([0-9]+)_perturbation\.json$", fname)
     if m === nothing
-        return (NaN, missing, missing)
+        return (NaN, missing)
     end
     k     = try parse(Float64, m.captures[1]) catch; NaN; end
-    seed  = try parse(Int,     m.captures[2]) catch; missing; end
-    idno  = try parse(Int,     m.captures[3]) catch; missing; end
-    return (k, seed, idno)
+    idno  = try parse(Int,     m.captures[2]) catch; missing; end
+    return (k, idno)  
 end
 
 _fmt_k(k::Float64) = isnan(k) ? nothing : @sprintf("%.2f", k)
@@ -41,7 +40,7 @@ function run_one_case(case_name::String, json_path::String, fm::String, merging:
     end
     # 输出文件命名 token（保持与你之前一致）
     fname = basename(json_path)
-    k, seed, idno = _parse_k_seed_id(fname)
+    k,  idno = _parse_k_id(fname)
     k_tok = _fmt_k(k)
     tokens = ["pglib_opf", case_name]
     if k_tok !== nothing && !ismissing(idno)
@@ -51,14 +50,14 @@ function run_one_case(case_name::String, json_path::String, fm::String, merging:
     end
 
 
-    perturbation = (isnan(k) ? NaN : k, seed)
+    perturbation = (isnan(k) ? NaN : k, idno)
 
     # 调用求解；结果 CSV 在 SolverWrappers.solve 内部按原格式写入
     SolverWrappers.solve(
         data,
         eval(Symbol(fm)),
         merging,
-        fname;
+        case_name;
         alpha = alpha,
         id_name = fname,
         tokens = tokens,
@@ -71,13 +70,14 @@ end
 function main()
     # 手动指定参数，方便 debug
     case_file = "case118"
-    json_file = "/home/goatoine/Documents/Lanyue/data/load_profiles/case118/case118_0.07_perturbation_70_1.json"
+    json_file = "/home/goatoine/Documents/Lanyue/data/load_profiles/case118/pglib_opf_case118_k_0.07_1_perturbation.json"
     fm        = "Chordal_MD"
     merging   = true
     alpha     = 3.5
     run_one_case(case_file, json_file, fm, merging, alpha)
 end
 #main()
+
 
 
 # ---- CLI entry ----

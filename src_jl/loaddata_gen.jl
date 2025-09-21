@@ -187,7 +187,7 @@ function create_load_profiles_from_case(
 
                 out_dict = Dict("load" => new_loads)
                 σstr = @sprintf("%.2f", σ)
-                fname = @sprintf("%s_%s_perturbation_%d_%d.json", case_tag, σstr, seed, file_id)
+                fname = @sprintf("pglib_opf_%s_k_%s_%d_perturbation.json", case_tag, σstr, file_id)
 
                 _write_json(joinpath(outputDIR, fname), out_dict)
                 file_id += 1

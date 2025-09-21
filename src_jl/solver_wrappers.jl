@@ -221,8 +221,7 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
     #case_name = "$(case_name)_$(formulation)_$(clique_merging)",请帮我把case_name和其他东西分开
     original_case_name = case_name
     # 从原始名称中拆分
-    case_name = split(original_case_name, "_")[1]  # 只取第一部分，如 "case14"
-    other_info = join(split(original_case_name, "_")[2:end], "_")  # 剩下的部分
+
 
     # --- 仅用于生成扰动候选：临时 pm（不建模） ---
     pm0 = InfrastructureModels.InitializeInfrastructureModel(model, data, PowerModels._pm_global_keys, PowerModels.pm_it_sym)
@@ -283,6 +282,7 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
         )
 
         # 运行并捕获日志
+        println("🔷 开始求解：$(case_name) / $(network_type) / $(model) / $(clique_merging) / α=$(alpha) / id=$(id_detect) / perturb=$(pg.kind)_$(pg.idx)" )
         result, mosek_log = _run_with_capture() do
             optimize_model!(pm, optimizer=opt)
         end
@@ -298,15 +298,7 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
 
         # （可选）把日志写文件，方便你确认到底捕到了什么
         
-        try
-            # 你的主逻辑
-            mkpath("runs/chordalstats_logs")
-            open(joinpath("runs","chordalstats_logs","$(case_name)_$(other_info).log"), "w") do io
-                write(io, mosek_log)
-            end
-        finally
-            cleanup!(Ref(pm), Ref(adj), Ref(cadj), Ref(mosek_log))
-        end
+
         
         # —— 兼容 Symbol / String 键 —— 
         _get(r, ks, default=missing) = begin
@@ -382,6 +374,7 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
 
         # —— 生成 CSV 路径（修正逻辑）——
         stats_csv_path = joinpath("data", "clique_stats", case_name, join(tokens, "_"))
+        println("✅ 生成 CSV 路径：", stats_csv_path)
         mkpath(dirname(stats_csv_path))
 
         # —— 追加写入 —— 

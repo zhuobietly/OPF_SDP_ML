@@ -9,16 +9,14 @@ const EXPECTED_ORDER = [
     "tree_max_deg","tree_h","fillin","coupling"
 ]
 
-# 解析 <case>_<k>_perturbation_<seed>_<id>.json
-function _parse_k_seed_id(fname::String)
-    m = match(r"^[A-Za-z0-9]+_([0-9]+(?:\\.[0-9]+)?)_perturbation_([0-9]+)_([0-9]+)\\.json$", fname)
+function _parse_k_id(fname::String)
+    m = match(r"^pglib_opf_[A-Za-z0-9]+_k_([0-9]+(?:\.[0-9]+)?)_([0-10000]+)_perturbation\.json$", fname)
     if m === nothing
-        return (NaN, missing, missing)
+        return (NaN,  missing)
     end
     k     = try parse(Float64, m.captures[1]) catch; NaN; end
-    seed  = try parse(Int,     m.captures[2]) catch; missing; end
-    idno  = try parse(Int,     m.captures[3]) catch; missing; end
-    return (k, seed, idno)
+    idno  = try parse(Int,     m.captures[2]) catch; missing; end
+    return (k, idno)
 end
 
 # 往目标 CSV 里追加一行状态记录（status 可为 "killed_mem" / "skipped_mem"）
@@ -52,7 +50,7 @@ input_dir  = joinpath("/home/goatoine/Documents/Lanyue/data/load_profiles/", cas
 # 策略组合
 formulations = ["Chordal_MD", "Chordal_MFI", "Chordal_AMD"]
 merging_opts = ["false", "true"]
-alpha_values = [2.0,2.5,3.0,3.5,4,4.5,5.0]
+alpha_values = [2.0,2.5]
 # —— 自动检测机器内存，给每个子进程加软上限 ——
 mem_total_gb = try Sys.total_memory() / 1024^3 catch; 16.0 end
 
@@ -81,7 +79,7 @@ for json_file in readdir(input_dir)
 
                     # —— 构造与 run_one_case/solver_wrappers 相同的 CSV 路径 ——
                     fname = basename(filepath)
-                    k, seed, idno = _parse_k_seed_id(fname)
+                    k, idno = _parse_k_id(fname)
 
                     # 如果你的 solver_wrappers 写到 data/solve_time/…，把 "clique_stats" 改成 "solve_time"
                     k_tok = isnan(k) ? nothing : @sprintf("%.2f", k)
@@ -96,7 +94,7 @@ for json_file in readdir(input_dir)
                     results_csv = joinpath(results_dir, join(tokens, "_"))
 
                     # 写一行状态：运行期被内存限制/系统杀掉
-                    perturbation_tuple = (isnan(k) ? NaN : k, seed)
+                    perturbation_tuple = (isnan(k) ? NaN : k, idno)
                     _write_status_row!(results_csv;
                         fm = fm,
                         case_name = case_name,
