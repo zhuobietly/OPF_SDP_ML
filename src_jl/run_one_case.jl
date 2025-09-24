@@ -53,6 +53,7 @@ function run_one_case(case_name::String, json_path::String, fm::String, merging:
     perturbation = (isnan(k) ? NaN : k, idno)
 
     # 调用求解；结果 CSV 在 SolverWrappers.solve 内部按原格式写入
+    file_name = splitext(basename(json_path))[1]
     SolverWrappers.solve(
         data,
         eval(Symbol(fm)),
@@ -63,6 +64,7 @@ function run_one_case(case_name::String, json_path::String, fm::String, merging:
         tokens = tokens,
         perturbation = perturbation,
         id_detect = (ismissing(idno) ? -1 : idno),
+        file_name = file_name
     )
 end
 
@@ -73,7 +75,7 @@ function main()
     json_file = "/home/goatoine/Documents/Lanyue/data/load_profiles/case118/pglib_opf_case118_k_0.07_1_perturbation.json"
     fm        = "Chordal_MD"
     merging   = true
-    alpha     = 3.5
+    alpha     = 2.0
     run_one_case(case_file, json_file, fm, merging, alpha)
 end
 #main()

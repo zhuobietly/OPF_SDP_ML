@@ -29,11 +29,14 @@ class OPFGraphDataset(Dataset):
         I = torch.eye(N)
         D_inv_sqrt = torch.diag((A.sum(dim=1)+1e-8).pow(-0.5))
         A_hat = D_inv_sqrt @ (A + I) @ D_inv_sqrt
-        y_reg = torch.as_tensor(raw.get("y_reg", raw.get("y")), dtype=torch.float32).view(-1)  # (K,)
+        y_reg = torch.as_tensor(raw.get("y_reg"), dtype=torch.float32).view(-1)  # (K,)
         y_cls = torch.argmin(y_reg).long()
+        y_arr_reg = torch.as_tensor(raw.get("y_arr_reg"), dtype=torch.float32).view(-1)  # (K,)
+        
         data = {"A_hat": A_hat.float(), "X": X.float(),
-            "y_reg": y_reg,     
-            "y_cls": y_cls
+            "y_reg": y_reg,
+            "y_cls": y_cls,
+            "y_arr_reg": y_arr_reg
         }
         if self.has_global:
             gvec = torch.as_tensor(raw["global_vec"], dtype=torch.float32).view(-1)
@@ -42,15 +45,12 @@ class OPFGraphDataset(Dataset):
     
 def make_collate_fn(dataset):
     def collate_fn(batch):
-        A = torch.stack([b["A_hat"] for b in batch], dim=0)
-        X = torch.stack([b["X"] for b in batch], dim=0)
-        y_reg = torch.stack([b["y_reg"].view(-1) for b in batch], dim=0)
-        y_cls = torch.stack([b["y_cls"] for b in batch], dim=0)
         out = {
                 "A_hat": torch.stack([b["A_hat"] for b in batch], 0),
                 "X":     torch.stack([b["X"]     for b in batch], 0),
                 "y_reg": torch.stack([b["y_reg"].view(-1) for b in batch], 0),
                 "y_cls": torch.stack([b["y_cls"] for b in batch], 0),
+                "y_arr_reg": torch.stack([b["y_arr_reg"].view(-1) for b in batch], 0),
             }
         if dataset.has_global:
                 out["gvec"] = torch.stack([b["gvec"] for b in batch], 0)

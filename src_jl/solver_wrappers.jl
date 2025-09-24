@@ -7,6 +7,8 @@ using DataFrames
 using CSV
 using Ipopt
 using JuMP
+using NPZ
+using SparseArrays
 include("../src_jl/chordalvisual.jl")
 using .ChordalVisualizer: visualize_fillin, edge_lists, visualize_fillin3, edge_lists3
 
@@ -217,7 +219,7 @@ function _count_active_limits(result, data; tol=1e-4)
     return cnt
 end
 
-function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = nothing, tokens = nothing, perturbation = nothing, id_detect = -1)
+function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = nothing, tokens = nothing, perturbation = nothing, id_detect = -1, file_name = "default")
     #case_name = "$(case_name)_$(formulation)_$(clique_merging)",请帮我把case_name和其他东西分开
     original_case_name = case_name
     # 从原始名称中拆分
@@ -258,12 +260,33 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
         save_path = joinpath("result", "figure", "graph", "$(case_name)", "$(save_name)_fillin.png")
         visualize_fillin3(A0, adj, cadj; q=q, savepath=save_path)
         println("✅ 绘制完成原始顺序）：", save_path)
-
+       
         # ---------- 三色可视化：PEO 顺序 ----------
         save_path_peo = joinpath("result", "figure", "graph", "$(case_name)", "$(save_name)_fillin_peo.png")
         ChordalVisualizer.visualize_fillin3(A0, adj, cadj; q=sigma, savepath=save_path_peo)
         println("✅ 绘制完成（PEO 顺序）：", save_path_peo)
 
+        #————————————save the chordal graph matrix————————————
+        # file_name = 
+
+        # scene_id
+        if file_name != "default"
+            scene_id = "$(network_type)_$(alpha)_$(string(model))"
+            save_path_csv = joinpath("data", "chordal_graph_matrix", "$(case_name)", "$(file_name)", "$(scene_id)_chordal_edges.csv")
+            mkpath(dirname(save_path_csv))
+    
+            # 获取边列表并转为 DataFrame
+            I, J, V = findnz(cadj)
+            df_edges = DataFrame(
+                i = I .- 1,  # 转为 0-based 索引
+                j = J .- 1,  # 转为 0-based 索引  
+                w = V
+            )
+    
+            # 保存为 CSV（无表头，匹配你的 Python 读取代码）
+            CSV.write(save_path_csv, df_edges; header=false)
+
+        end
         cliques = PowerModels._maximal_cliques(cadj)
         lookup_bus_index = Dict((reverse(p) for p = pairs(lookup_index)))
         groups = [[lookup_bus_index[gi] for gi in g] for g in cliques]
@@ -386,6 +409,4 @@ function solve(data, model, clique_merging, case_name; alpha = 3.0, id_name = no
     end # for pg in perturbs
     return nothing
 end
-
-
 end # module
