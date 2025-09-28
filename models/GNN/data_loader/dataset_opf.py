@@ -1,11 +1,25 @@
 import torch
 from torch.utils.data import Dataset
+import numpy as np
 """
 The DataLoader first decides which indices to fetch (e.g. [7, 123, 59, ...]).
 For each index i, it calls train_ds.__getitem__(i) to get a single sample.
 These individual samples are then passed to collate_fn, which combines them into a batch (usually a dict or tuple).
 The batch is returned to you, so the batch is the input for the whole iteration.
 """
+def edge_to_A(edge_index, edge_weight, N):
+    """
+    输入:
+      - edge_index: (2,E) int32
+      - edge_weight: (E,) float32
+      - N: number of nodes
+    输出:
+      - A: (N,N) float32 numpy.ndarray
+    """
+    A = np.zeros((N, N), dtype=np.float32)
+    rows, cols = edge_index
+    A[rows, cols] = edge_weight
+    return A
 
 class OPFGraphDataset(Dataset):
     def __init__(self, samples, build_graph, build_features, norm):
@@ -24,8 +38,9 @@ class OPFGraphDataset(Dataset):
         g = self.build_graph(raw)
         # g did not used now,X .shape = torch.Size([N, F])[28,3]
         X = self.build_features(g, raw)
-        N = raw["A"].shape[0]
-        A = raw["A"]
+        N = X.shape[0]
+        (edge_index, edge_weight) = raw["A"]
+        A = edge_to_A(edge_index, edge_weight, N)
         I = torch.eye(N)
         D_inv_sqrt = torch.diag((A.sum(dim=1)+1e-8).pow(-0.5))
         A_hat = D_inv_sqrt @ (A + I) @ D_inv_sqrt

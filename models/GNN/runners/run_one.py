@@ -16,6 +16,7 @@ except ModuleNotFoundError:
 
 from data_loader.dataset_opf import OPFGraphDataset, make_collate_fn
 from trainers.supervised import fit
+from trainers.evaluate import evaluate
 from gcn_utils.seed import set_seed
 from gcn_utils.global_normalize import normalize_inplace
 import pickle
@@ -68,6 +69,9 @@ def convert_samples_to_torch(samples):
     for sample in samples:
         torch_sample = {}
         for key, value in sample.items():
+            if key == "A":
+                edge_index, edge_weight = value
+                torch_sample[key] = (torch.from_numpy(edge_index).long(), torch.from_numpy(edge_weight).float())
             if key == "y_cls":
                     torch_sample[key] = torch.tensor(value).long()
             elif key == "y_reg":
@@ -78,13 +82,30 @@ def convert_samples_to_torch(samples):
                 torch_sample[key] = value
         torch_samples.append(torch_sample)
     return torch_samples
+
+def load_samples_from_npz(npz_path):
+    """从 npz 文件加载 samples"""
+    print(f"📖 Loading samples from {npz_path}")
+    data = np.load(npz_path, allow_pickle=True)
+    num_samples = int(data['num_samples'])
+    
+    samples = []
+    for i in range(num_samples):
+        sample = data[f'sample_{i}'].item()  # .item() 将 numpy 对象转回字典
+        samples.append(sample)
+    
+    print(f"✅ Loaded {len(samples)} samples")
+    return samples
 def main():
     setup_logging()
     cfg = yaml.safe_load(open(CONFIG_PATH, "r"))
     set_seed(cfg.get("seed", 42))
     # samples = build_samples_debug_toy()
-    with open("/home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/samples.pkl", "rb") as f:
-        samples = pickle.load(f)
+    sample_file = "/home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_samples.npz"
+
+    samples = load_samples_from_npz(sample_file)
+    
+    print(f"📊 总计: {len(samples)} 个样本")
     # 转换为 torch tensor
     samples = convert_samples_to_torch(samples)
     
@@ -148,7 +169,23 @@ def main():
         device="cpu",
     )
     # the metric of Y visualization
-    print("Done.")
+    print("Train Done.")
+    from trainers.evaluate import evaluate
+
+    # ... 训练完成后：
+    test_metrics = evaluate(
+        model=model,
+        dataset=test_ds,
+        batch_size=cfg["train"].get("batch_size", 8),
+        device="cpu",
+        save_dir="/home/goatoine/Documents/Lanyue/models/GNN//result/figure",
+        # 可选：传类名；若不传则用 0..C-1
+        class_names=[str(i) for i in range(9)],  # 例如 24 类
+    )
+
+    print("[TEST] acc:", f'{test_metrics["cls_accuracy_top1"]:.4f}')
+    print("[TEST] overall MAE/RMSE:", f'{test_metrics["scalar_reg_mae"]:.6f}', f'{test_metrics["scalar_reg_rmse"]:.6f}')
+    print("CM 图片已保存到: .../result/figure/confusion_matrix.png")
 
 
 if __name__ == "__main__":

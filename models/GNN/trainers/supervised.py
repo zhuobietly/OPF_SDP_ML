@@ -58,8 +58,8 @@ def fit(model, train_ds, val_ds, epochs=50, batch_size=8, lr=3e-4, device="cpu",
 
     # ---- 绘图 ----
     plt.figure()
-    plt.plot(range(1, epochs+1), train_losses, label="train_loss")
-    plt.plot(range(1, epochs+1), val_losses, label="val_loss")
+    plt.plot(range(epochs-50, epochs+1), train_losses[-51:], label="train_loss")
+    plt.plot(range(epochs-50, epochs+1), val_losses[-51:], label="val_loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.title("Training vs Validation Loss")

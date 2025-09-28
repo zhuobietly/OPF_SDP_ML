@@ -17,6 +17,6 @@ def multitask_loss(pred_arr_reg, pred_y_reg, y_arr_reg, y_reg, y_cls, lam: float
     #loss_cls = F.cross_entropy(logits, y_cls)
     loss_cls = F.cross_entropy(-pred_arr_reg, y_cls)
 
-    loss = lam * loss_reg + (1.0 - lam) * loss_cls
+    loss = lam * loss_arr_reg + (1.0 - lam) * loss_cls
     #loss_reg.detach(), loss_cls.detach()
     return loss
