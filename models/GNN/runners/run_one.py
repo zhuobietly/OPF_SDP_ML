@@ -40,6 +40,18 @@ BUILDERS = {
     # "chordal": ChordalGraph,
 }
 
+def save_checkpoint(model: torch.nn.Module, path: str):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    torch.save({"model_state": model.state_dict()}, path)
+    print(f"[CKPT] Saved to {path}")
+
+def load_checkpoint(model_builder, model_args: dict, path: str, device: str = "cpu") -> torch.nn.Module:
+    ckpt = torch.load(path, map_location=device)
+    model = model_builder(**model_args)
+    model.load_state_dict(ckpt["model_state"])
+    model.to(device).eval()
+    print(f"[CKPT] Loaded from {path}")
+    return model
 
 def build_samples_debug_toy(num=80, minN=8, maxN=28, K=24):
     #这个如果再用要+一个变量y_arr_regss
@@ -93,7 +105,6 @@ def load_samples_from_npz(npz_path):
     for i in range(num_samples):
         sample = data[f'sample_{i}'].item()  # .item() 将 numpy 对象转回字典
         samples.append(sample)
-    
     print(f"✅ Loaded {len(samples)} samples")
     return samples
 def main():
@@ -101,14 +112,17 @@ def main():
     cfg = yaml.safe_load(open(CONFIG_PATH, "r"))
     set_seed(cfg.get("seed", 42))
     # samples = build_samples_debug_toy()
-    sample_file = "/home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_samples.npz"
+    sample_file = "/home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_new_samples.npz"
 
     samples = load_samples_from_npz(sample_file)
     
     print(f"📊 总计: {len(samples)} 个样本")
     # 转换为 torch tensor
     samples = convert_samples_to_torch(samples)
-    
+    # 统计 y_cls 的类别分布
+    y_cls_values = [sample['y_cls'].item() for sample in samples]
+    unique, counts = np.unique(y_cls_values, return_counts=True)
+    print(f"📈 y_cls 类别分布: {dict(zip(unique, counts))}")
     #samples = load_from_csv_or_jld2(...)
     # 3) Setup graph builder and feature pipeline
     builder = BUILDERS[cfg["builder"]]()
@@ -170,8 +184,17 @@ def main():
     )
     # the metric of Y visualization
     print("Train Done.")
-    from trainers.evaluate import evaluate
+    # === 保存最终权重（本次训练得到的模型） ===
+    ckpt_path = "/home/goatoine/Documents/Lanyue/models/GNN/checkpoints/final.pt"
+    save_checkpoint(model, ckpt_path)
 
+    # === （演示）重新加载权重再做测试评估 ===
+    # 说明：这一步模拟“另一个进程/之后的时刻”评估；实际使用时，你可以仅保留 load+evaluate 的部分。
+    reloaded_model = load_checkpoint(build_model, model_args, ckpt_path, device="cpu")
+
+
+    from trainers.evaluate import evaluate
+    
     # ... 训练完成后：
     test_metrics = evaluate(
         model=model,
@@ -180,7 +203,7 @@ def main():
         device="cpu",
         save_dir="/home/goatoine/Documents/Lanyue/models/GNN//result/figure",
         # 可选：传类名；若不传则用 0..C-1
-        class_names=[str(i) for i in range(9)],  # 例如 24 类
+        class_names=[str(i) for i in range(15)],  # 最新模型是15类
     )
 
     print("[TEST] acc:", f'{test_metrics["cls_accuracy_top1"]:.4f}')

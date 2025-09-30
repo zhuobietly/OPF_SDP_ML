@@ -61,113 +61,57 @@ def _plot_confusion_matrix(cm: np.ndarray,
     plt.close(fig)
 
 
-# @torch.no_grad()
-# def evaluate(
-#     model,
-#     dataset,
-#     batch_size: int = 8,
-#     device: str = "cpu",
-#     save_dir: Optional[str] = None,
-#     class_names: Optional[Sequence[str]] = None,
-# ) -> Dict[str, Any]:
-#     """模型永远返回 (pred_arr_reg, pred_y_reg, pred_y_cls)
-#        数据永远含 y_cls, y_arr_reg, y_reg
-#     """
-#     model.eval().to(device)
-#     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False,
-#                         collate_fn=getattr(dataset, "collate_fn", None))
+# ====================== 新增：标量回归评估图辅助函数 ======================
+def _plot_scalar_parity(y_true: np.ndarray, y_pred: np.ndarray, out_path: Path,
+                        title: str = "Scalar Regression: y_pred vs y_true") -> None:
+    """Parity plot: y_true on x-axis, y_pred on y-axis, with y=x reference."""
+    fig = plt.figure(figsize=(6.5, 5.5))
+    ax = plt.gca()
+    ax.scatter(y_true, y_pred, s=10, alpha=0.6)
+    # y = x 参考线
+    vmin = min(np.min(y_true), np.min(y_pred))
+    vmax = max(np.max(y_true), np.max(y_pred))
+    ax.plot([vmin, vmax], [vmin, vmax], linestyle="--")
+    ax.set_xlabel("True scalar (y)")
+    ax.set_ylabel("Predicted scalar (ŷ)")
+    ax.set_title(title)
+    ax.set_aspect('equal', adjustable='box')
+    fig.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
 
-#     total = 0
-#     top1  = 0
-#     sum_abs = 0.0
-#     sum_sq  = 0.0
-#     per_dim_abs = None
-#     per_dim_sq  = None
 
-#     all_pred_cls, all_true_cls = [], []
-#     all_pred_reg, all_true_reg = [], []
+def _plot_scalar_residuals(y_true: np.ndarray, y_pred: np.ndarray, out_dir: Path) -> None:
+    """Residual diagnostics: histogram of residuals and residual vs prediction."""
+    residuals = y_pred - y_true
 
-#     for batch in loader:
-#         A   = batch["A_hat"].to(device)
-#         X   = batch["X"].to(device)
-#         gvec = batch.get("gvec")
-#         if gvec is not None:
-#             gvec = gvec.to(device)
+    # 残差直方图
+    fig1 = plt.figure(figsize=(6.5, 5.0))
+    ax1 = plt.gca()
+    ax1.hist(residuals, bins=40)
+    ax1.set_title("Scalar Regression: Residuals Histogram (ŷ - y)")
+    ax1.set_xlabel("Residual")
+    ax1.set_ylabel("Count")
+    fig1.tight_layout()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    fig1.savefig(out_dir / "scalar_reg_residual_hist.png", dpi=150, bbox_inches="tight")
+    plt.close(fig1)
 
-#         # 真值
-#         y_cls = batch["y_cls"].to(device).long()
-#         y_arr_reg = batch["y_arr_reg"].to(device).float()   # [B, K]
-#         y_reg = batch["y_reg"].to(device).float()           # [B, K]
-#         # 前向
-#         pred_arr_reg, pred_y_reg, pred_y_cls = (
-#             model(A, X, gvec) if gvec is not None else model(A, X)
-#         )
+    # 残差 vs 预测
+    fig2 = plt.figure(figsize=(6.5, 5.0))
+    ax2 = plt.gca()
+    ax2.scatter(y_pred, residuals, s=10, alpha=0.6)
+    ax2.axhline(0.0, linestyle="--")
+    ax2.set_title("Scalar Regression: Residuals vs Prediction")
+    ax2.set_xlabel("Predicted scalar (ŷ)")
+    ax2.set_ylabel("Residual (ŷ - y)")
+    fig2.tight_layout()
+    fig2.savefig(out_dir / "scalar_reg_residual_vs_pred.png", dpi=150, bbox_inches="tight")
+    plt.close(fig2)
+# ======================================================================
 
-#         # ---------- 分类 ----------
-#         pred_label = pred_y_cls
-#         top1 += (pred_label == y_cls).sum().item()
 
-#         # ---------- 回归 ----------
-#         diff = pred_arr_reg - y_arr_reg          # [B, K]
-#         sum_abs += diff.abs().sum().item()
-#         sum_sq  += (diff ** 2).sum().item()
-
-#                 # ---------- 回归 ----------
-#         diff = pred_arr_reg - y_arr_reg          # [B, K]
-#         sum_abs += diff.abs().sum().item()
-#         sum_sq  += (diff ** 2).sum().item()
-#         if per_dim_abs is None:
-#             K = diff.shape[1]
-#             per_dim_abs = torch.zeros(K, device=device)
-#             per_dim_sq  = torch.zeros(K, device=device)
-#         per_dim_abs += diff.abs().sum(0)
-#         per_dim_sq  += (diff ** 2).sum(0)
-
-#         # 存档
-#         all_pred_cls.append(pred_label.cpu().numpy())
-#         all_true_cls.append(y_cls.cpu().numpy())
-#         all_pred_reg.append(pred_arr_reg.detach().cpu().numpy())
-#         all_true_reg.append(y_reg.cpu().numpy())
-
-#         total += y_cls.size(0)
-
-#     # ----- 汇总 -----
-#     acc = top1 / total
-#     y_pred_np = np.concatenate(all_pred_cls)
-#     y_true_np = np.concatenate(all_true_cls)
-#     num_classes = int(max(y_true_np.max(), y_pred_np.max())) + 1
-#     cm = _confusion_matrix(y_true_np, y_pred_np, num_classes)
-
-#     mae  = sum_abs / (total * K)
-#     rmse = math.sqrt(sum_sq / (total * K))
-#     per_mae  = (per_dim_abs / total).cpu().tolist()
-#     per_rmse = (torch.sqrt(per_dim_sq / total)).cpu().tolist()
-
-#     metrics = {
-#         "num_samples"      : total,
-#         "num_outputs"      : K,
-#         "cls_accuracy_top1": acc,
-#         "confusion_matrix" : cm.tolist(),
-#         "reg_overall_mae"  : mae,
-#         "reg_overall_rmse" : rmse,
-#         "reg_per_dim_mae"  : per_mae,
-#         "reg_per_dim_rmse" : per_rmse,
-#     }
-
-#     # ----- 保存 -----
-#     if save_dir:
-#         p = Path(save_dir)
-#         p.mkdir(parents=True, exist_ok=True)
-#         np.save(p / "pred_cls.npy", y_pred_np)
-#         np.save(p / "true_cls.npy", y_true_np)
-#         np.save(p / "pred_reg.npy", np.concatenate(all_pred_reg))
-#         np.save(p / "true_reg.npy", np.concatenate(all_true_reg))
-#         with open(p / "metrics.json", "w") as f:
-#             json.dump(metrics, f, indent=2)
-#         _plot_confusion_matrix(cm, class_names, "Confusion Matrix", p / "confusion_matrix.png", False)
-#         _plot_confusion_matrix(cm, class_names, "Confusion Matrix (norm)", p / "confusion_matrix_norm.png", True)
-
-#     return metrics
 @torch.no_grad()
 def evaluate(
     model,
@@ -217,8 +161,7 @@ def evaluate(
         pred_arr_reg, pred_y_reg, pred_y_cls = (
             model(A, X, gvec) if gvec is not None else model(A, X)
         )
-        arr_cls = -pred_arr_reg
-        pred_label = arr_cls.argmax(dim=1)
+        pred_label = pred_arr_reg.argmin(dim=1)
 
         B = y_cls.size(0)
         n += B
@@ -253,7 +196,7 @@ def evaluate(
     acc = top1 / n
     y_pred_np = np.concatenate(all_pred_cls)
     y_true_np = np.concatenate(all_true_cls)
-    num_classes = 9
+    num_classes = 15
     cm = _confusion_matrix(y_true_np, y_pred_np, num_classes)
 
     # 数组回归
@@ -266,6 +209,14 @@ def evaluate(
     mae_scalar  = sum_abs_scalar / n
     rmse_scalar = math.sqrt(sum_sq_scalar / n)
 
+    # === 新增：R^2 ===
+    y_true_scalar_np_full = np.concatenate(all_true_scalar).reshape(-1)
+    y_pred_scalar_np_full = np.concatenate(all_pred_scalar).reshape(-1)
+    ss_res = float(np.sum((y_true_scalar_np_full - y_pred_scalar_np_full) ** 2))
+    y_mean = float(np.mean(y_true_scalar_np_full)) if y_true_scalar_np_full.size else 0.0
+    ss_tot = float(np.sum((y_true_scalar_np_full - y_mean) ** 2))
+    r2_scalar = 1.0 - ss_res / ss_tot if ss_tot > 0 else float("nan")
+
     metrics = {
         "num_samples": n,
         "cls_accuracy_top1": acc,
@@ -276,6 +227,7 @@ def evaluate(
         "arr_reg_per_dim_rmse": per_rmse_arr,
         "scalar_reg_mae": mae_scalar,
         "scalar_reg_rmse": rmse_scalar,
+        "scalar_reg_r2": r2_scalar,  # 新增
     }
 
     # ----- 保存 -----
@@ -294,8 +246,16 @@ def evaluate(
         # 指标
         with open(p / "metrics.json", "w") as f:
             json.dump(metrics, f, indent=2)
-        # 图
+        # 图：混淆矩阵（保留你的）
         _plot_confusion_matrix(cm, class_names, "Confusion Matrix", p / "confusion_matrix.png", False)
         _plot_confusion_matrix(cm, class_names, "Confusion Matrix (norm)", p / "confusion_matrix_norm.png", True)
+        # 图：标量回归（新增的三张）
+        _plot_scalar_parity(
+            y_true_scalar_np_full,
+            y_pred_scalar_np_full,
+            p / "scalar_reg_parity.png",
+            title=f"Scalar Regression Parity (R²={r2_scalar:.4f}, MAE={mae_scalar:.4f}, RMSE={rmse_scalar:.4f})"
+        )
+        _plot_scalar_residuals(y_true_scalar_np_full, y_pred_scalar_np_full, p)
 
     return metrics

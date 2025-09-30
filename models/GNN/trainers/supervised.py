@@ -15,7 +15,24 @@ def train_epoch(model, loader, optimizer, loss_fn, device):
             A, X, y_reg, y_arr_reg, y_cls = batch["A_hat"].to(device), batch["X"].to(device), batch["y_reg"].to(device), batch["y_arr_reg"].to(device), batch["y_cls"].to(device)
             pred_arr_reg, pred_y_reg, pred_y_cls = model(A, X)
         loss = loss_fn(pred_arr_reg, pred_y_reg, y_arr_reg, y_reg, y_cls)
-        optimizer.zero_grad(); loss.backward(); optimizer.step()
+        optimizer.zero_grad(); 
+        loss.backward(); 
+        # === 这里加梯度体检 ===
+        lr = next(iter(optimizer.param_groups))["lr"]
+        for name, p in model.named_parameters():
+            if p.grad is not None and ("scalar_head" in name or "lastmlp" in name):
+                g = p.grad.detach()
+                w = p.detach()
+                g_abs_mean = g.abs().mean().item()
+                g_abs_max  = g.abs().max().item()
+                w_abs_mean = w.abs().mean().item()
+                rel_update = lr * g_abs_mean / (w_abs_mean + 1e-12)
+                print(f"[grad] {name:30s} "
+                      f"|w|mean={w_abs_mean:.3e}  "
+                      f"|g|mean={g_abs_mean:.3e}  |g|max={g_abs_max:.3e}  "
+                      f"rel_update≈{rel_update:.3e}")
+        # =====================
+        optimizer.step()
         total += loss.item() * y_reg.size(0)
     return total / len(loader.dataset)
 
@@ -58,8 +75,8 @@ def fit(model, train_ds, val_ds, epochs=50, batch_size=8, lr=3e-4, device="cpu",
 
     # ---- 绘图 ----
     plt.figure()
-    plt.plot(range(epochs-50, epochs+1), train_losses[-51:], label="train_loss")
-    plt.plot(range(epochs-50, epochs+1), val_losses[-51:], label="val_loss")
+    plt.plot(range(epochs-5, epochs+1), train_losses[-6:], label="train_loss")
+    plt.plot(range(epochs-5, epochs+1), val_losses[-6:], label="val_loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.title("Training vs Validation Loss")

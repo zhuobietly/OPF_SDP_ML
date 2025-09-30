@@ -41,11 +41,13 @@ class OPFGraphDataset(Dataset):
         N = X.shape[0]
         (edge_index, edge_weight) = raw["A"]
         A = edge_to_A(edge_index, edge_weight, N)
-        I = torch.eye(N)
-        D_inv_sqrt = torch.diag((A.sum(dim=1)+1e-8).pow(-0.5))
-        A_hat = D_inv_sqrt @ (A + I) @ D_inv_sqrt
+        A = torch.from_numpy(A).to(dtype=torch.float32)
+        I = torch.eye(N, dtype=A.dtype, device=A.device)
+        deg = (A + I).sum(dim=1).clamp_min(1e-8)
+        D = torch.pow(deg, -0.5)
+        A_hat = D.view(-1,1) * (A + I) * D.view(1,-1)
         y_reg = torch.as_tensor(raw.get("y_reg"), dtype=torch.float32).view(-1)  # (K,)
-        y_cls = torch.argmin(y_reg).long()
+        y_cls = torch.as_tensor(raw.get("y_cls"), dtype=torch.long)
         y_arr_reg = torch.as_tensor(raw.get("y_arr_reg"), dtype=torch.float32).view(-1)  # (K,)
         
         data = {"A_hat": A_hat.float(), "X": X.float(),
