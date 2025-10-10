@@ -1,0 +1,969 @@
+2025-09-30 12:51:22 | INFO | === Log start 2025-09-30 12:51:22 ===
+2025-09-30 12:51:22 | INFO | === Model outline ===
+2025-09-30 12:51:22 | INFO | gnn -> ModuleList
+2025-09-30 12:51:22 | INFO |   gnn.0 -> GraphConv
+2025-09-30 12:51:22 | INFO |     gnn.0.lin -> Linear
+2025-09-30 12:51:22 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 12:51:22 | INFO |     gnn.0.act -> ReLU
+2025-09-30 12:51:22 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 12:51:22 | INFO |     gnn.0.proj -> Linear
+2025-09-30 12:51:22 | INFO |   gnn.1 -> GraphConv
+2025-09-30 12:51:22 | INFO |     gnn.1.lin -> Linear
+2025-09-30 12:51:22 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 12:51:22 | INFO |     gnn.1.act -> ReLU
+2025-09-30 12:51:22 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 12:51:22 | INFO |     gnn.1.proj -> Identity
+2025-09-30 12:51:22 | INFO | att_q -> Linear
+2025-09-30 12:51:22 | INFO | mlp_24 -> Sequential
+2025-09-30 12:51:22 | INFO |   mlp_24.0 -> Linear
+2025-09-30 12:51:22 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 12:51:22 | INFO |   mlp_24.2 -> Linear
+2025-09-30 12:51:22 | INFO | scalar_head -> Sequential
+2025-09-30 12:51:22 | INFO |   scalar_head.0 -> Linear
+2025-09-30 12:51:22 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 12:51:22 | INFO |   scalar_head.2 -> LayerNorm
+2025-09-30 12:51:22 | INFO |   scalar_head.3 -> Linear
+2025-09-30 12:51:22 | INFO |   scalar_head.4 -> ReLU
+2025-09-30 12:51:22 | INFO |   scalar_head.5 -> Linear
+2025-09-30 12:52:59 | INFO | [epoch1] lr=0.001 train_loss=0.557830 | grad_total=9.293e-01 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 3.11e-01, scalar_head.3.weight: 3.04e-01}
+2025-09-30 12:53:28 | INFO | [epoch1] val_loss=0.503865
+2025-09-30 12:55:06 | INFO | [epoch2] lr=0.001 train_loss=0.550202 | grad_total=1.432e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 6.46e-01, scalar_head.3.weight: 3.89e-01}
+2025-09-30 12:55:35 | INFO | [epoch2] val_loss=0.459761
+2025-09-30 12:57:12 | INFO | [epoch3] lr=0.001 train_loss=0.545749 | grad_total=1.410e+01 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 7.31e+00, scalar_head.3.weight: 3.53e+00}
+2025-09-30 12:57:41 | INFO | [epoch3] val_loss=0.453347
+2025-09-30 12:59:18 | INFO | [epoch4] lr=0.001 train_loss=0.539584 | grad_total=1.880e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 9.76e-01, scalar_head.3.weight: 4.56e-01}
+2025-09-30 12:59:47 | INFO | [epoch4] val_loss=0.461760
+2025-09-30 13:01:24 | INFO | [epoch5] lr=0.001 train_loss=0.544764 | grad_total=4.628e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 2.50e+00, scalar_head.3.weight: 1.07e+00}
+2025-09-30 13:01:53 | INFO | [epoch5] val_loss=0.449852
+2025-09-30 13:03:31 | INFO | [epoch6] lr=0.001 train_loss=0.540282 | grad_total=7.815e-01 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 4.27e-01, scalar_head.3.weight: 1.74e-01}
+2025-09-30 13:03:59 | INFO | [epoch6] val_loss=0.449533
+2025-09-30 13:05:37 | INFO | [epoch7] lr=0.001 train_loss=0.536646 | grad_total=3.534e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 1.93e+00, scalar_head.3.weight: 7.58e-01}
+2025-09-30 13:06:05 | INFO | [epoch7] val_loss=0.451142
+2025-09-30 13:07:43 | INFO | [epoch8] lr=0.001 train_loss=0.539517 | grad_total=7.440e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 4.17e+00, scalar_head.3.weight: 1.47e+00}
+2025-09-30 13:08:12 | INFO | [epoch8] val_loss=0.462500
+2025-09-30 13:09:49 | INFO | [epoch9] lr=0.001 train_loss=0.544175 | grad_total=4.920e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 2.62e+00, scalar_head.3.weight: 9.66e-01}
+2025-09-30 13:10:18 | INFO | [epoch9] val_loss=0.462593
+2025-09-30 13:11:56 | INFO | [epoch10] lr=0.001 train_loss=0.534382 | grad_total=9.913e+00 gradNone=6 gradZero=0 | top2 {scalar_head.5.weight: 5.56e+00, scalar_head.3.weight: 1.61e+00}
+2025-09-30 13:12:24 | INFO | [epoch10] val_loss=0.468300
+2025-09-30 13:14:47 | INFO | === Log start 2025-09-30 13:14:47 ===
+2025-09-30 13:14:47 | INFO | === Model outline ===
+2025-09-30 13:14:47 | INFO | gnn -> ModuleList
+2025-09-30 13:14:47 | INFO |   gnn.0 -> GraphConv
+2025-09-30 13:14:47 | INFO |     gnn.0.lin -> Linear
+2025-09-30 13:14:47 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 13:14:47 | INFO |     gnn.0.act -> ReLU
+2025-09-30 13:14:47 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 13:14:47 | INFO |     gnn.0.proj -> Linear
+2025-09-30 13:14:47 | INFO |   gnn.1 -> GraphConv
+2025-09-30 13:14:47 | INFO |     gnn.1.lin -> Linear
+2025-09-30 13:14:47 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 13:14:47 | INFO |     gnn.1.act -> ReLU
+2025-09-30 13:14:47 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 13:14:47 | INFO |     gnn.1.proj -> Identity
+2025-09-30 13:14:47 | INFO | att_q -> Linear
+2025-09-30 13:14:47 | INFO | mlp_24 -> Sequential
+2025-09-30 13:14:47 | INFO |   mlp_24.0 -> Linear
+2025-09-30 13:14:47 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 13:14:47 | INFO |   mlp_24.2 -> Linear
+2025-09-30 13:14:47 | INFO | scalar_head -> Sequential
+2025-09-30 13:14:47 | INFO |   scalar_head.0 -> Linear
+2025-09-30 13:14:47 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 13:14:47 | INFO |   scalar_head.2 -> Linear
+2025-09-30 13:16:24 | INFO | [epoch1] lr=0.001 train_loss=39309978244.237305 | grad_total=3.532e+11 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.28e+11, scalar_head.0.weight: 1.25e+11}
+2025-09-30 13:16:53 | INFO | [epoch1] val_loss=25810526.476190
+2025-09-30 13:18:31 | INFO | [epoch2] lr=0.001 train_loss=4367122.612311 | grad_total=2.185e+10 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.41e+10, scalar_head.0.weight: 7.76e+09}
+2025-09-30 13:18:59 | INFO | [epoch2] val_loss=2797.844719
+2025-09-30 13:20:39 | INFO | [epoch3] lr=0.001 train_loss=597.995928 | grad_total=1.997e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.29e+09, scalar_head.0.weight: 7.10e+08}
+2025-09-30 13:21:07 | INFO | [epoch3] val_loss=101.891521
+2025-09-30 13:22:46 | INFO | [epoch4] lr=0.001 train_loss=139.447159 | grad_total=1.482e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 9.56e+08, scalar_head.0.weight: 5.27e+08}
+2025-09-30 13:23:15 | INFO | [epoch4] val_loss=104.567627
+2025-09-30 13:26:59 | INFO | === Log start 2025-09-30 13:26:59 ===
+2025-09-30 13:26:59 | INFO | === Model outline ===
+2025-09-30 13:26:59 | INFO | gnn -> ModuleList
+2025-09-30 13:26:59 | INFO |   gnn.0 -> GraphConv
+2025-09-30 13:26:59 | INFO |     gnn.0.lin -> Linear
+2025-09-30 13:26:59 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 13:26:59 | INFO |     gnn.0.act -> ReLU
+2025-09-30 13:26:59 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 13:26:59 | INFO |     gnn.0.proj -> Linear
+2025-09-30 13:26:59 | INFO |   gnn.1 -> GraphConv
+2025-09-30 13:26:59 | INFO |     gnn.1.lin -> Linear
+2025-09-30 13:26:59 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 13:26:59 | INFO |     gnn.1.act -> ReLU
+2025-09-30 13:26:59 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 13:26:59 | INFO |     gnn.1.proj -> Identity
+2025-09-30 13:26:59 | INFO | att_q -> Linear
+2025-09-30 13:26:59 | INFO | mlp_24 -> Sequential
+2025-09-30 13:26:59 | INFO |   mlp_24.0 -> Linear
+2025-09-30 13:26:59 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 13:26:59 | INFO |   mlp_24.2 -> Linear
+2025-09-30 13:26:59 | INFO | scalar_head -> Sequential
+2025-09-30 13:26:59 | INFO |   scalar_head.0 -> Linear
+2025-09-30 13:26:59 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 13:26:59 | INFO |   scalar_head.2 -> Linear
+2025-09-30 13:27:00 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:00 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:00 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:00 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:01 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:01 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:01 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:01 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:02 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:02 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:02 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:02 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:03 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:03 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:03 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:03 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:04 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:04 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:04 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:04 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:05 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:05 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:05 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:05 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:06 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:06 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:06 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:06 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:08 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:08 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:08 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:08 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:09 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:09 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:09 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:09 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:10 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:10 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:10 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:10 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:11 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:11 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:11 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:11 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:12 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:12 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:12 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:12 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:13 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:13 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:13 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:13 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:14 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:14 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:14 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:14 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:15 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:15 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:15 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:15 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:16 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:16 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:16 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:16 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:18 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:18 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:18 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:18 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:19 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:19 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:19 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:19 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:20 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:20 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:20 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:20 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:21 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:21 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:21 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:21 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:22 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:22 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:22 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:22 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:23 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:23 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:23 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:23 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:24 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:24 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:24 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:24 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:25 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:25 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:25 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:25 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:26 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:26 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:26 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:26 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:28 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:28 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:28 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:28 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:29 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:29 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:29 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:29 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:30 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:30 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:30 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:30 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:31 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:31 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:31 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:31 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:32 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:32 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:32 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:32 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:33 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:33 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:33 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:33 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:34 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:34 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:34 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:34 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:35 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:35 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:35 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:35 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:36 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:36 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:36 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:36 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:38 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:38 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:38 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:38 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:39 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:39 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:39 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:39 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:40 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:40 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:40 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:40 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:41 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:41 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:41 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:41 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:42 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:42 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:42 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:42 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:43 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:43 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:43 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:43 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:44 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:44 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:44 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:44 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:45 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:45 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:45 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:45 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:46 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:46 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:46 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:46 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:48 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:48 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:48 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:48 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:49 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:49 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:49 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:49 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:50 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:50 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:50 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:50 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:51 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:51 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:51 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:51 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:52 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:52 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:52 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:52 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:53 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:53 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:53 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:53 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:54 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:54 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:54 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:54 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:55 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:55 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:55 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:55 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:56 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:56 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:56 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:56 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:58 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:58 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:58 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:58 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:59 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:27:59 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:27:59 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:27:59 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:00 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:00 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:00 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:00 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:01 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:01 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:01 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:01 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:02 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:02 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:02 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:02 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:03 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:03 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:03 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:03 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:04 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:04 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:04 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:04 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:05 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:05 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:05 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:05 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:06 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:06 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:06 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:06 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:08 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:08 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:08 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:08 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:09 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:09 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:09 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:09 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:10 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:10 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:10 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:10 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:11 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=0 gradNone=10
+2025-09-30 13:28:11 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:28:11 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:28:11 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:30:04 | INFO | === Log start 2025-09-30 13:30:04 ===
+2025-09-30 13:30:04 | INFO | === Model outline ===
+2025-09-30 13:30:04 | INFO | gnn -> ModuleList
+2025-09-30 13:30:04 | INFO |   gnn.0 -> GraphConv
+2025-09-30 13:30:04 | INFO |     gnn.0.lin -> Linear
+2025-09-30 13:30:04 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 13:30:04 | INFO |     gnn.0.act -> ReLU
+2025-09-30 13:30:04 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 13:30:04 | INFO |     gnn.0.proj -> Linear
+2025-09-30 13:30:04 | INFO |   gnn.1 -> GraphConv
+2025-09-30 13:30:04 | INFO |     gnn.1.lin -> Linear
+2025-09-30 13:30:04 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 13:30:04 | INFO |     gnn.1.act -> ReLU
+2025-09-30 13:30:04 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 13:30:04 | INFO |     gnn.1.proj -> Identity
+2025-09-30 13:30:04 | INFO | att_q -> Linear
+2025-09-30 13:30:04 | INFO | mlp_24 -> Sequential
+2025-09-30 13:30:04 | INFO |   mlp_24.0 -> Linear
+2025-09-30 13:30:04 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 13:30:04 | INFO |   mlp_24.2 -> Linear
+2025-09-30 13:30:04 | INFO | scalar_head -> Sequential
+2025-09-30 13:30:04 | INFO |   scalar_head.0 -> Linear
+2025-09-30 13:30:04 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 13:30:04 | INFO |   scalar_head.2 -> Linear
+2025-09-30 13:31:42 | INFO | [epoch1] GRAD[gnn.] total=2.131e+07 params=10 gradNone=0
+2025-09-30 13:31:42 | INFO | [epoch1] GRAD[scalar_head.] total=3.532e+11 params=4 gradNone=0
+2025-09-30 13:31:42 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:31:42 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:31:42 | INFO | [epoch1] lr=0.001 train_loss=39309978244.237305 | grad_total=3.532e+11 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.28e+11, scalar_head.0.weight: 1.25e+11}
+2025-09-30 13:32:11 | INFO | [epoch1] val_loss=25810526.476190
+2025-09-30 13:33:49 | INFO | [epoch2] GRAD[gnn.] total=1.323e+06 params=10 gradNone=0
+2025-09-30 13:33:49 | INFO | [epoch2] GRAD[scalar_head.] total=2.185e+10 params=4 gradNone=0
+2025-09-30 13:33:49 | INFO | [epoch2] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 13:33:49 | INFO | [epoch2] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 13:33:49 | INFO | [epoch2] lr=0.001 train_loss=4367122.612311 | grad_total=2.185e+10 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.41e+10, scalar_head.0.weight: 7.76e+09}
+2025-09-30 13:34:18 | INFO | [epoch2] val_loss=2797.844719
+2025-09-30 17:20:38 | INFO | === Log start 2025-09-30 17:20:38 ===
+2025-09-30 17:20:38 | INFO | === Model outline ===
+2025-09-30 17:20:38 | INFO | gnn -> ModuleList
+2025-09-30 17:20:38 | INFO |   gnn.0 -> GraphConv
+2025-09-30 17:20:38 | INFO |     gnn.0.lin -> Linear
+2025-09-30 17:20:38 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 17:20:38 | INFO |     gnn.0.act -> ReLU
+2025-09-30 17:20:38 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 17:20:38 | INFO |     gnn.0.proj -> Linear
+2025-09-30 17:20:38 | INFO |   gnn.1 -> GraphConv
+2025-09-30 17:20:38 | INFO |     gnn.1.lin -> Linear
+2025-09-30 17:20:38 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 17:20:38 | INFO |     gnn.1.act -> ReLU
+2025-09-30 17:20:38 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 17:20:38 | INFO |     gnn.1.proj -> Identity
+2025-09-30 17:20:38 | INFO | att_q -> Linear
+2025-09-30 17:20:38 | INFO | mlp_24 -> Sequential
+2025-09-30 17:20:38 | INFO |   mlp_24.0 -> Linear
+2025-09-30 17:20:38 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 17:20:38 | INFO |   mlp_24.2 -> Linear
+2025-09-30 17:20:38 | INFO | scalar_head -> Sequential
+2025-09-30 17:20:38 | INFO |   scalar_head.0 -> Linear
+2025-09-30 17:20:38 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 17:20:38 | INFO |   scalar_head.2 -> Linear
+2025-09-30 17:39:38 | INFO | [epoch1] GRAD[gnn.] total=2.131e+07 params=10 gradNone=0
+2025-09-30 17:39:38 | INFO | [epoch1] GRAD[scalar_head.] total=3.532e+11 params=4 gradNone=0
+2025-09-30 17:39:38 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:39:38 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:39:38 | INFO | [epoch1] lr=0.001 train_loss=39309978244.237305 | grad_total=3.532e+11 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.28e+11, scalar_head.0.weight: 1.25e+11}
+2025-09-30 17:40:06 | INFO | [epoch1] val_loss=25810526.476190
+2025-09-30 17:41:44 | INFO | [epoch2] GRAD[gnn.] total=1.323e+06 params=10 gradNone=0
+2025-09-30 17:41:44 | INFO | [epoch2] GRAD[scalar_head.] total=2.185e+10 params=4 gradNone=0
+2025-09-30 17:41:44 | INFO | [epoch2] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:41:44 | INFO | [epoch2] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:41:44 | INFO | [epoch2] lr=0.001 train_loss=4367122.612311 | grad_total=2.185e+10 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.41e+10, scalar_head.0.weight: 7.76e+09}
+2025-09-30 17:42:13 | INFO | [epoch2] val_loss=2797.844719
+2025-09-30 17:43:50 | INFO | [epoch3] GRAD[gnn.] total=1.213e+05 params=10 gradNone=0
+2025-09-30 17:43:50 | INFO | [epoch3] GRAD[scalar_head.] total=1.997e+09 params=4 gradNone=0
+2025-09-30 17:43:50 | INFO | [epoch3] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:43:50 | INFO | [epoch3] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:43:50 | INFO | [epoch3] lr=0.001 train_loss=597.995928 | grad_total=1.997e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.29e+09, scalar_head.0.weight: 7.10e+08}
+2025-09-30 17:44:19 | INFO | [epoch3] val_loss=101.891521
+2025-09-30 17:45:57 | INFO | [epoch4] GRAD[gnn.] total=8.974e+04 params=10 gradNone=0
+2025-09-30 17:45:57 | INFO | [epoch4] GRAD[scalar_head.] total=1.482e+09 params=4 gradNone=0
+2025-09-30 17:45:57 | INFO | [epoch4] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:45:57 | INFO | [epoch4] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:45:57 | INFO | [epoch4] lr=0.001 train_loss=139.447159 | grad_total=1.482e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 9.56e+08, scalar_head.0.weight: 5.27e+08}
+2025-09-30 17:46:25 | INFO | [epoch4] val_loss=104.567627
+2025-09-30 17:48:03 | INFO | [epoch5] GRAD[gnn.] total=1.032e+04 params=10 gradNone=0
+2025-09-30 17:48:03 | INFO | [epoch5] GRAD[scalar_head.] total=1.714e+08 params=4 gradNone=0
+2025-09-30 17:48:03 | INFO | [epoch5] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:48:03 | INFO | [epoch5] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:48:03 | INFO | [epoch5] lr=0.001 train_loss=119.139778 | grad_total=1.714e+08 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.10e+08, scalar_head.0.weight: 6.09e+07}
+2025-09-30 17:48:32 | INFO | [epoch5] val_loss=183.669360
+2025-09-30 17:50:09 | INFO | [epoch6] GRAD[gnn.] total=1.305e+05 params=10 gradNone=0
+2025-09-30 17:50:09 | INFO | [epoch6] GRAD[scalar_head.] total=2.152e+09 params=4 gradNone=0
+2025-09-30 17:50:09 | INFO | [epoch6] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:50:09 | INFO | [epoch6] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:50:09 | INFO | [epoch6] lr=0.001 train_loss=140.017234 | grad_total=2.152e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.39e+09, scalar_head.0.weight: 7.64e+08}
+2025-09-30 17:50:38 | INFO | [epoch6] val_loss=158.614248
+2025-09-30 17:52:16 | INFO | [epoch7] GRAD[gnn.] total=2.444e+05 params=10 gradNone=0
+2025-09-30 17:52:16 | INFO | [epoch7] GRAD[scalar_head.] total=4.024e+09 params=4 gradNone=0
+2025-09-30 17:52:16 | INFO | [epoch7] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:52:16 | INFO | [epoch7] GRAD[mlp_24。.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:52:16 | INFO | [epoch7] lr=0.001 train_loss=123.775596 | grad_total=4.024e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.59e+09, scalar_head.0.weight: 1.43e+09}
+2025-09-30 17:52:44 | INFO | [epoch7] val_loss=134.887511
+2025-09-30 17:54:22 | INFO | [epoch8] GRAD[gnn.] total=1.324e+05 params=10 gradNone=0
+2025-09-30 17:54:22 | INFO | [epoch8] GRAD[scalar_head.] total=2.189e+09 params=4 gradNone=0
+2025-09-30 17:54:22 | INFO | [epoch8] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:54:22 | INFO | [epoch8] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:54:22 | INFO | [epoch8] lr=0.001 train_loss=143.669212 | grad_total=2.189e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.41e+09, scalar_head.0.weight: 7.78e+08}
+2025-09-30 17:54:51 | INFO | [epoch8] val_loss=94.254277
+2025-09-30 17:56:29 | INFO | [epoch9] GRAD[gnn.] total=1.562e+04 params=10 gradNone=0
+2025-09-30 17:56:29 | INFO | [epoch9] GRAD[scalar_head.] total=2.531e+08 params=4 gradNone=0
+2025-09-30 17:56:29 | INFO | [epoch9] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:56:29 | INFO | [epoch9] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:56:29 | INFO | [epoch9] lr=0.001 train_loss=174.757072 | grad_total=2.531e+08 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.63e+08, scalar_head.0.weight: 8.99e+07}
+2025-09-30 17:56:57 | INFO | [epoch9] val_loss=185.560270
+2025-09-30 17:58:35 | INFO | [epoch10] GRAD[gnn.] total=1.407e+05 params=10 gradNone=0
+2025-09-30 17:58:35 | INFO | [epoch10] GRAD[scalar_head.] total=2.335e+09 params=4 gradNone=0
+2025-09-30 17:58:35 | INFO | [epoch10] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 17:58:35 | INFO | [epoch10] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 17:58:35 | INFO | [epoch10] lr=0.001 train_loss=146.195839 | grad_total=2.335e+09 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.51e+09, scalar_head.0.weight: 8.29e+08}
+2025-09-30 17:59:04 | INFO | [epoch10] val_loss=139.776921
+2025-09-30 18:51:15 | INFO | === Log start 2025-09-30 18:51:15 ===
+2025-09-30 18:51:15 | INFO | === Model outline ===
+2025-09-30 18:51:15 | INFO | gnn -> ModuleList
+2025-09-30 18:51:15 | INFO |   gnn.0 -> GraphConv
+2025-09-30 18:51:15 | INFO |     gnn.0.lin -> Linear
+2025-09-30 18:51:15 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 18:51:15 | INFO |     gnn.0.act -> ReLU
+2025-09-30 18:51:15 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 18:51:15 | INFO |     gnn.0.proj -> Linear
+2025-09-30 18:51:15 | INFO |   gnn.1 -> GraphConv
+2025-09-30 18:51:15 | INFO |     gnn.1.lin -> Linear
+2025-09-30 18:51:15 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 18:51:15 | INFO |     gnn.1.act -> ReLU
+2025-09-30 18:51:15 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 18:51:15 | INFO |     gnn.1.proj -> Identity
+2025-09-30 18:51:15 | INFO | att_q -> Linear
+2025-09-30 18:51:15 | INFO | mlp_24 -> Sequential
+2025-09-30 18:51:15 | INFO |   mlp_24.0 -> Linear
+2025-09-30 18:51:15 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 18:51:15 | INFO |   mlp_24.2 -> Linear
+2025-09-30 18:51:15 | INFO | scalar_head -> Sequential
+2025-09-30 18:51:15 | INFO |   scalar_head.0 -> Linear
+2025-09-30 18:51:15 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 18:51:15 | INFO |   scalar_head.2 -> Linear
+2025-09-30 18:54:40 | INFO | === Log start 2025-09-30 18:54:40 ===
+2025-09-30 18:54:40 | INFO | === Model outline ===
+2025-09-30 18:54:40 | INFO | gnn -> ModuleList
+2025-09-30 18:54:40 | INFO |   gnn.0 -> GraphConv
+2025-09-30 18:54:40 | INFO |     gnn.0.lin -> Linear
+2025-09-30 18:54:40 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 18:54:40 | INFO |     gnn.0.act -> ReLU
+2025-09-30 18:54:40 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 18:54:40 | INFO |     gnn.0.proj -> Linear
+2025-09-30 18:54:40 | INFO |   gnn.1 -> GraphConv
+2025-09-30 18:54:40 | INFO |     gnn.1.lin -> Linear
+2025-09-30 18:54:40 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 18:54:40 | INFO |     gnn.1.act -> ReLU
+2025-09-30 18:54:40 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 18:54:40 | INFO |     gnn.1.proj -> Identity
+2025-09-30 18:54:40 | INFO | att_q -> Linear
+2025-09-30 18:54:40 | INFO | mlp_24 -> Sequential
+2025-09-30 18:54:40 | INFO |   mlp_24.0 -> Linear
+2025-09-30 18:54:40 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 18:54:40 | INFO |   mlp_24.2 -> Linear
+2025-09-30 18:54:40 | INFO | scalar_head -> Sequential
+2025-09-30 18:54:40 | INFO |   scalar_head.0 -> Linear
+2025-09-30 18:54:40 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 18:54:40 | INFO |   scalar_head.2 -> Linear
+2025-09-30 18:54:40 | INFO | z_norm -> LayerNorm
+2025-09-30 18:55:37 | INFO | === Log start 2025-09-30 18:55:37 ===
+2025-09-30 18:55:37 | INFO | === Model outline ===
+2025-09-30 18:55:37 | INFO | gnn -> ModuleList
+2025-09-30 18:55:37 | INFO |   gnn.0 -> GraphConv
+2025-09-30 18:55:37 | INFO |     gnn.0.lin -> Linear
+2025-09-30 18:55:37 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 18:55:37 | INFO |     gnn.0.act -> ReLU
+2025-09-30 18:55:37 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 18:55:37 | INFO |     gnn.0.proj -> Linear
+2025-09-30 18:55:37 | INFO |   gnn.1 -> GraphConv
+2025-09-30 18:55:37 | INFO |     gnn.1.lin -> Linear
+2025-09-30 18:55:37 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 18:55:37 | INFO |     gnn.1.act -> ReLU
+2025-09-30 18:55:37 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 18:55:37 | INFO |     gnn.1.proj -> Identity
+2025-09-30 18:55:37 | INFO | att_q -> Linear
+2025-09-30 18:55:37 | INFO | mlp_24 -> Sequential
+2025-09-30 18:55:37 | INFO |   mlp_24.0 -> Linear
+2025-09-30 18:55:37 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 18:55:37 | INFO |   mlp_24.2 -> Linear
+2025-09-30 18:55:37 | INFO | scalar_head -> Sequential
+2025-09-30 18:55:37 | INFO |   scalar_head.0 -> Linear
+2025-09-30 18:55:37 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 18:55:37 | INFO |   scalar_head.2 -> Linear
+2025-09-30 18:55:37 | INFO | z_norm -> LayerNorm
+2025-09-30 18:57:13 | INFO | [epoch1] GRAD[gnn.] total=1.905e-04 params=10 gradNone=0
+2025-09-30 18:57:13 | INFO | [epoch1] GRAD[scalar_head.] total=3.178e+00 params=4 gradNone=0
+2025-09-30 18:57:13 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 18:57:13 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 18:57:13 | INFO | [epoch1] lr=0.001 train_loss=0.540247 | grad_total=3.405e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.78e+00, scalar_head.0.weight: 9.99e-01}
+2025-09-30 18:57:42 | INFO | [epoch1] val_loss=0.452180
+2025-09-30 18:59:18 | INFO | [epoch2] GRAD[gnn.] total=4.027e-05 params=10 gradNone=0
+2025-09-30 18:59:18 | INFO | [epoch2] GRAD[scalar_head.] total=5.560e-01 params=4 gradNone=0
+2025-09-30 18:59:18 | INFO | [epoch2] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 18:59:18 | INFO | [epoch2] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 18:59:18 | INFO | [epoch2] lr=0.001 train_loss=0.536916 | grad_total=5.993e-01 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 3.07e-01, scalar_head.0.weight: 1.76e-01}
+2025-09-30 18:59:46 | INFO | [epoch2] val_loss=0.451534
+2025-09-30 19:01:23 | INFO | [epoch3] GRAD[gnn.] total=1.514e-04 params=10 gradNone=0
+2025-09-30 19:01:23 | INFO | [epoch3] GRAD[scalar_head.] total=1.729e+00 params=4 gradNone=0
+2025-09-30 19:01:23 | INFO | [epoch3] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:01:23 | INFO | [epoch3] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:01:23 | INFO | [epoch3] lr=0.001 train_loss=0.536411 | grad_total=1.869e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 9.50e-01, scalar_head.0.weight: 5.47e-01}
+2025-09-30 19:01:51 | INFO | [epoch3] val_loss=0.451944
+2025-09-30 19:03:28 | INFO | [epoch4] GRAD[gnn.] total=3.779e-04 params=10 gradNone=0
+2025-09-30 19:03:28 | INFO | [epoch4] GRAD[scalar_head.] total=3.726e+00 params=4 gradNone=0
+2025-09-30 19:03:28 | INFO | [epoch4] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:03:28 | INFO | [epoch4] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:03:28 | INFO | [epoch4] lr=0.001 train_loss=0.537290 | grad_total=4.037e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.03e+00, scalar_head.0.weight: 1.18e+00}
+2025-09-30 19:03:56 | INFO | [epoch4] val_loss=0.452278
+2025-09-30 19:05:33 | INFO | [epoch5] GRAD[gnn.] total=3.075e-05 params=10 gradNone=0
+2025-09-30 19:05:33 | INFO | [epoch5] GRAD[scalar_head.] total=1.982e-01 params=4 gradNone=0
+2025-09-30 19:05:33 | INFO | [epoch5] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:05:33 | INFO | [epoch5] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:05:33 | INFO | [epoch5] lr=0.001 train_loss=0.539165 | grad_total=2.161e-01 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.08e-01, scalar_head.0.weight: 6.24e-02}
+2025-09-30 19:06:01 | INFO | [epoch5] val_loss=0.450568
+2025-09-30 19:07:38 | INFO | [epoch6] GRAD[gnn.] total=5.138e-05 params=10 gradNone=0
+2025-09-30 19:07:38 | INFO | [epoch6] GRAD[scalar_head.] total=4.669e-01 params=4 gradNone=0
+2025-09-30 19:07:38 | INFO | [epoch6] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:07:38 | INFO | [epoch6] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:07:38 | INFO | [epoch6] lr=0.001 train_loss=0.536229 | grad_total=5.123e-01 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 2.53e-01, scalar_head.0.weight: 1.47e-01}
+2025-09-30 19:08:06 | INFO | [epoch6] val_loss=0.450752
+2025-09-30 19:09:43 | INFO | [epoch7] GRAD[gnn.] total=3.535e-04 params=10 gradNone=0
+2025-09-30 19:09:43 | INFO | [epoch7] GRAD[scalar_head.] total=2.592e+00 params=4 gradNone=0
+2025-09-30 19:09:43 | INFO | [epoch7] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:09:43 | INFO | [epoch7] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:09:43 | INFO | [epoch7] lr=0.001 train_loss=0.536426 | grad_total=2.848e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.40e+00, scalar_head.0.weight: 8.10e-01}
+2025-09-30 19:10:11 | INFO | [epoch7] val_loss=0.450512
+2025-09-30 19:11:48 | INFO | [epoch8] GRAD[gnn.] total=3.437e-04 params=10 gradNone=0
+2025-09-30 19:11:48 | INFO | [epoch8] GRAD[scalar_head.] total=2.078e+00 params=4 gradNone=0
+2025-09-30 19:11:48 | INFO | [epoch8] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:11:48 | INFO | [epoch8] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:11:48 | INFO | [epoch8] lr=0.001 train_loss=0.537594 | grad_total=2.307e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 1.12e+00, scalar_head.0.weight: 6.48e-01}
+2025-09-30 19:12:16 | INFO | [epoch8] val_loss=0.451634
+2025-09-30 19:13:53 | INFO | [epoch9] GRAD[gnn.] total=2.243e-04 params=10 gradNone=0
+2025-09-30 19:13:53 | INFO | [epoch9] GRAD[scalar_head.] total=1.270e+00 params=4 gradNone=0
+2025-09-30 19:13:53 | INFO | [epoch9] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:13:53 | INFO | [epoch9] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:13:53 | INFO | [epoch9] lr=0.001 train_loss=0.536021 | grad_total=1.397e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 6.81e-01, scalar_head.0.weight: 3.92e-01}
+2025-09-30 19:14:21 | INFO | [epoch9] val_loss=0.451088
+2025-09-30 19:15:58 | INFO | [epoch10] GRAD[gnn.] total=2.148e-04 params=10 gradNone=0
+2025-09-30 19:15:58 | INFO | [epoch10] GRAD[scalar_head.] total=1.275e+00 params=4 gradNone=0
+2025-09-30 19:15:58 | INFO | [epoch10] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:15:58 | INFO | [epoch10] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:15:58 | INFO | [epoch10] lr=0.001 train_loss=0.535977 | grad_total=1.389e+00 gradNone=6 gradZero=0 | top2 {scalar_head.2.weight: 6.81e-01, scalar_head.0.weight: 3.91e-01}
+2025-09-30 19:16:26 | INFO | [epoch10] val_loss=0.456708
+2025-09-30 19:46:41 | INFO | === Log start 2025-09-30 19:46:41 ===
+2025-09-30 19:46:41 | INFO | === Model outline ===
+2025-09-30 19:46:41 | INFO | gnn -> ModuleList
+2025-09-30 19:46:41 | INFO |   gnn.0 -> GraphConv
+2025-09-30 19:46:41 | INFO |     gnn.0.lin -> Linear
+2025-09-30 19:46:41 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 19:46:41 | INFO |     gnn.0.act -> ReLU
+2025-09-30 19:46:41 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 19:46:41 | INFO |     gnn.0.proj -> Linear
+2025-09-30 19:46:41 | INFO |   gnn.1 -> GraphConv
+2025-09-30 19:46:41 | INFO |     gnn.1.lin -> Linear
+2025-09-30 19:46:41 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 19:46:41 | INFO |     gnn.1.act -> ReLU
+2025-09-30 19:46:41 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 19:46:41 | INFO |     gnn.1.proj -> Identity
+2025-09-30 19:46:41 | INFO | att_q -> Linear
+2025-09-30 19:46:41 | INFO | mlp_24 -> Sequential
+2025-09-30 19:46:41 | INFO |   mlp_24.0 -> Linear
+2025-09-30 19:46:41 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 19:46:41 | INFO |   mlp_24.2 -> Linear
+2025-09-30 19:46:41 | INFO | scalar_head -> Sequential
+2025-09-30 19:46:41 | INFO |   scalar_head.0 -> Linear
+2025-09-30 19:46:41 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 19:46:41 | INFO |   scalar_head.2 -> Linear
+2025-09-30 19:46:41 | INFO | z_norm -> LayerNorm
+2025-09-30 19:48:18 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 19:48:18 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 19:48:18 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:48:18 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:48:18 | INFO | [epoch1] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 19:49:37 | INFO | === Log start 2025-09-30 19:49:37 ===
+2025-09-30 19:49:37 | INFO | === Model outline ===
+2025-09-30 19:49:37 | INFO | gnn -> ModuleList
+2025-09-30 19:49:37 | INFO |   gnn.0 -> GraphConv
+2025-09-30 19:49:37 | INFO |     gnn.0.lin -> Linear
+2025-09-30 19:49:37 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 19:49:37 | INFO |     gnn.0.act -> ReLU
+2025-09-30 19:49:37 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 19:49:37 | INFO |     gnn.0.proj -> Linear
+2025-09-30 19:49:37 | INFO |   gnn.1 -> GraphConv
+2025-09-30 19:49:37 | INFO |     gnn.1.lin -> Linear
+2025-09-30 19:49:37 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 19:49:37 | INFO |     gnn.1.act -> ReLU
+2025-09-30 19:49:37 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 19:49:37 | INFO |     gnn.1.proj -> Identity
+2025-09-30 19:49:37 | INFO | att_q -> Linear
+2025-09-30 19:49:37 | INFO | mlp_24 -> Sequential
+2025-09-30 19:49:37 | INFO |   mlp_24.0 -> Linear
+2025-09-30 19:49:37 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 19:49:37 | INFO |   mlp_24.2 -> Linear
+2025-09-30 19:49:37 | INFO | scalar_head -> Sequential
+2025-09-30 19:49:37 | INFO |   scalar_head.0 -> Linear
+2025-09-30 19:49:37 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 19:49:37 | INFO |   scalar_head.2 -> Linear
+2025-09-30 19:49:37 | INFO | z_norm -> LayerNorm
+2025-09-30 19:51:14 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 19:51:14 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 19:51:14 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 19:51:14 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 19:51:14 | INFO | [epoch1] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 19:59:16 | INFO | === Log start 2025-09-30 19:59:16 ===
+2025-09-30 19:59:16 | INFO | === Model outline ===
+2025-09-30 19:59:16 | INFO | gnn -> ModuleList
+2025-09-30 19:59:16 | INFO |   gnn.0 -> GraphConv
+2025-09-30 19:59:16 | INFO |     gnn.0.lin -> Linear
+2025-09-30 19:59:16 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 19:59:16 | INFO |     gnn.0.act -> ReLU
+2025-09-30 19:59:16 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 19:59:16 | INFO |     gnn.0.proj -> Linear
+2025-09-30 19:59:16 | INFO |   gnn.1 -> GraphConv
+2025-09-30 19:59:16 | INFO |     gnn.1.lin -> Linear
+2025-09-30 19:59:16 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 19:59:16 | INFO |     gnn.1.act -> ReLU
+2025-09-30 19:59:16 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 19:59:16 | INFO |     gnn.1.proj -> Identity
+2025-09-30 19:59:16 | INFO | att_q -> Linear
+2025-09-30 19:59:16 | INFO | mlp_24 -> Sequential
+2025-09-30 19:59:16 | INFO |   mlp_24.0 -> Linear
+2025-09-30 19:59:16 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 19:59:16 | INFO |   mlp_24.2 -> Linear
+2025-09-30 19:59:16 | INFO | scalar_head -> Sequential
+2025-09-30 19:59:16 | INFO |   scalar_head.0 -> Linear
+2025-09-30 19:59:16 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 19:59:16 | INFO |   scalar_head.2 -> Linear
+2025-09-30 19:59:16 | INFO | z_norm -> LayerNorm
+2025-09-30 20:00:52 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:00:52 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:00:52 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:00:52 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:00:52 | INFO | [epoch1] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:01:21 | INFO | [epoch1] val_loss=2.380242
+2025-09-30 20:02:57 | INFO | [epoch2] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:02:57 | INFO | [epoch2] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:02:57 | INFO | [epoch2] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:02:57 | INFO | [epoch2] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:02:57 | INFO | [epoch2] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:03:26 | INFO | [epoch2] val_loss=2.380242
+2025-09-30 20:05:02 | INFO | [epoch3] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:05:02 | INFO | [epoch3] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:05:02 | INFO | [epoch3] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:05:02 | INFO | [epoch3] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:05:02 | INFO | [epoch3] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:05:31 | INFO | [epoch3] val_loss=2.380242
+2025-09-30 20:07:07 | INFO | [epoch4] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:07:07 | INFO | [epoch4] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:07:07 | INFO | [epoch4] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:07:07 | INFO | [epoch4] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:07:07 | INFO | [epoch4] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:07:36 | INFO | [epoch4] val_loss=2.380242
+2025-09-30 20:09:13 | INFO | [epoch5] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:09:13 | INFO | [epoch5] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:09:13 | INFO | [epoch5] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:09:13 | INFO | [epoch5] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:09:13 | INFO | [epoch5] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:09:41 | INFO | [epoch5] val_loss=2.380242
+2025-09-30 20:49:54 | INFO | === Log start 2025-09-30 20:49:54 ===
+2025-09-30 20:49:54 | INFO | === Model outline ===
+2025-09-30 20:49:54 | INFO | gnn -> ModuleList
+2025-09-30 20:49:54 | INFO |   gnn.0 -> GraphConv
+2025-09-30 20:49:54 | INFO |     gnn.0.lin -> Linear
+2025-09-30 20:49:54 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 20:49:54 | INFO |     gnn.0.act -> ReLU
+2025-09-30 20:49:54 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 20:49:54 | INFO |     gnn.0.proj -> Linear
+2025-09-30 20:49:54 | INFO |   gnn.1 -> GraphConv
+2025-09-30 20:49:54 | INFO |     gnn.1.lin -> Linear
+2025-09-30 20:49:54 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 20:49:54 | INFO |     gnn.1.act -> ReLU
+2025-09-30 20:49:54 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 20:49:54 | INFO |     gnn.1.proj -> Identity
+2025-09-30 20:49:54 | INFO | att_q -> Linear
+2025-09-30 20:49:54 | INFO | mlp_24 -> Sequential
+2025-09-30 20:49:54 | INFO |   mlp_24.0 -> Linear
+2025-09-30 20:49:54 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 20:49:54 | INFO |   mlp_24.2 -> Linear
+2025-09-30 20:49:54 | INFO | scalar_head -> Sequential
+2025-09-30 20:49:54 | INFO |   scalar_head.0 -> Linear
+2025-09-30 20:49:54 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 20:49:54 | INFO |   scalar_head.2 -> Linear
+2025-09-30 20:49:54 | INFO | z_norm -> LayerNorm
+2025-09-30 20:52:29 | INFO | [epoch1] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:52:29 | INFO | [epoch1] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:52:29 | INFO | [epoch1] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:52:29 | INFO | [epoch1] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:52:29 | INFO | [epoch1] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:52:58 | INFO | [epoch1] val_loss=2.380242
+2025-09-30 20:54:42 | INFO | [epoch2] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:54:42 | INFO | [epoch2] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:54:42 | INFO | [epoch2] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:54:42 | INFO | [epoch2] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:54:42 | INFO | [epoch2] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:55:12 | INFO | [epoch2] val_loss=2.380242
+2025-09-30 20:56:53 | INFO | [epoch3] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:56:53 | INFO | [epoch3] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:56:53 | INFO | [epoch3] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:56:53 | INFO | [epoch3] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:56:53 | INFO | [epoch3] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:57:22 | INFO | [epoch3] val_loss=2.380242
+2025-09-30 20:59:04 | INFO | [epoch4] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 20:59:04 | INFO | [epoch4] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 20:59:04 | INFO | [epoch4] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 20:59:04 | INFO | [epoch4] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 20:59:04 | INFO | [epoch4] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 20:59:34 | INFO | [epoch4] val_loss=2.380242
+2025-09-30 21:01:15 | INFO | [epoch5] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 21:01:15 | INFO | [epoch5] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 21:01:15 | INFO | [epoch5] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 21:01:15 | INFO | [epoch5] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 21:01:15 | INFO | [epoch5] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 21:01:45 | INFO | [epoch5] val_loss=2.380242
+2025-09-30 21:03:26 | INFO | [epoch6] GRAD[gnn.] total=0.000e+00 params=10 gradNone=0
+2025-09-30 21:03:26 | INFO | [epoch6] GRAD[scalar_head.] total=0.000e+00 params=4 gradNone=0
+2025-09-30 21:03:26 | INFO | [epoch6] GRAD[att_q.] total=0.000e+00 params=0 gradNone=2
+2025-09-30 21:03:26 | INFO | [epoch6] GRAD[mlp_24.] total=0.000e+00 params=0 gradNone=4
+2025-09-30 21:03:26 | INFO | [epoch6] lr=0.001 train_loss=2.375444 | grad_total=0.000e+00 gradNone=8 gradZero=14 | top2 {gnn.0.lin.weight: 0.00e+00, gnn.0.lin.bias: 0.00e+00}
+2025-09-30 21:03:56 | INFO | [epoch6] val_loss=2.380242
+2025-09-30 21:05:22 | INFO | === Log start 2025-09-30 21:05:22 ===
+2025-09-30 21:05:22 | INFO | === Model outline ===
+2025-09-30 21:05:22 | INFO | gnn -> ModuleList
+2025-09-30 21:05:22 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:05:22 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:05:22 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:05:22 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:05:22 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:05:22 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:05:22 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:05:22 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:05:22 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:05:22 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:05:22 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:05:22 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:05:22 | INFO | att_q -> Linear
+2025-09-30 21:05:22 | INFO | mlp_24 -> Sequential
+2025-09-30 21:05:22 | INFO |   mlp_24.0 -> Linear
+2025-09-30 21:05:22 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 21:05:22 | INFO |   mlp_24.2 -> Linear
+2025-09-30 21:05:22 | INFO | scalar_head -> Sequential
+2025-09-30 21:05:22 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:05:22 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:05:22 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:05:22 | INFO | z_norm -> LayerNorm
+2025-09-30 21:08:09 | INFO | === Log start 2025-09-30 21:08:09 ===
+2025-09-30 21:08:09 | INFO | === Model outline ===
+2025-09-30 21:08:09 | INFO | gnn -> ModuleList
+2025-09-30 21:08:09 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:08:09 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:08:09 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:08:09 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:08:09 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:08:09 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:08:09 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:08:09 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:08:09 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:08:09 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:08:09 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:08:09 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:08:09 | INFO | att_q -> Linear
+2025-09-30 21:08:09 | INFO | mlp_24 -> Sequential
+2025-09-30 21:08:09 | INFO |   mlp_24.0 -> Linear
+2025-09-30 21:08:09 | INFO |   mlp_24.1 -> ReLU
+2025-09-30 21:08:09 | INFO |   mlp_24.2 -> Linear
+2025-09-30 21:08:09 | INFO | scalar_head -> Sequential
+2025-09-30 21:08:09 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:08:09 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:08:09 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:08:09 | INFO | z_norm -> LayerNorm
+2025-09-30 21:09:48 | INFO | [epoch1] lr=0.001 train_loss=2.375444
+2025-09-30 21:10:16 | INFO | [epoch1] val_loss=2.380242
+2025-09-30 21:11:55 | INFO | [epoch2] lr=0.001 train_loss=2.375444
+2025-09-30 21:26:12 | INFO | === Log start 2025-09-30 21:26:12 ===
+2025-09-30 21:26:12 | INFO | === Model outline ===
+2025-09-30 21:26:12 | INFO | gnn -> ModuleList
+2025-09-30 21:26:12 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:26:12 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:26:12 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:26:12 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:26:12 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:26:12 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:26:12 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:26:12 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:26:12 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:26:12 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:26:12 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:26:12 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:26:12 | INFO | scalar_head -> Sequential
+2025-09-30 21:26:12 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:26:12 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:26:12 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:26:12 | INFO | z_norm -> LayerNorm
+2025-09-30 21:28:03 | INFO | === Log start 2025-09-30 21:28:03 ===
+2025-09-30 21:28:03 | INFO | === Model outline ===
+2025-09-30 21:28:03 | INFO | gnn -> ModuleList
+2025-09-30 21:28:03 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:28:03 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:28:03 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:28:03 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:28:03 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:28:03 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:28:03 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:28:03 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:28:03 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:28:03 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:28:03 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:28:03 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:28:03 | INFO | scalar_head -> Sequential
+2025-09-30 21:28:03 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:28:03 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:28:03 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:28:03 | INFO | z_norm -> LayerNorm
+2025-09-30 21:33:02 | INFO | === Log start 2025-09-30 21:33:02 ===
+2025-09-30 21:33:02 | INFO | === Model outline ===
+2025-09-30 21:33:02 | INFO | gnn -> ModuleList
+2025-09-30 21:33:02 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:33:02 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:33:02 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:33:02 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:33:02 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:33:02 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:33:02 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:33:02 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:33:02 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:33:02 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:33:02 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:33:02 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:33:02 | INFO | scalar_head -> Sequential
+2025-09-30 21:33:02 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:33:02 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:33:02 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:33:02 | INFO | z_norm -> LayerNorm
+2025-09-30 21:36:48 | INFO | === Log start 2025-09-30 21:36:48 ===
+2025-09-30 21:36:48 | INFO | === Model outline ===
+2025-09-30 21:36:48 | INFO | gnn -> ModuleList
+2025-09-30 21:36:48 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:36:48 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:36:48 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:36:48 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:36:48 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:36:48 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:36:48 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:36:48 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:36:48 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:36:48 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:36:48 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:36:48 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:36:48 | INFO | scalar_head -> Sequential
+2025-09-30 21:36:48 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:36:48 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:36:48 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:36:48 | INFO | z_norm -> LayerNorm
+2025-09-30 21:38:57 | INFO | [epoch1] val_loss=82.432106
+2025-09-30 21:41:11 | INFO | [epoch2] val_loss=7.970561
+2025-09-30 21:43:31 | INFO | [epoch3] val_loss=21.743316
+2025-09-30 21:48:21 | INFO | === Log start 2025-09-30 21:48:21 ===
+2025-09-30 21:48:21 | INFO | === Model outline ===
+2025-09-30 21:48:21 | INFO | gnn -> ModuleList
+2025-09-30 21:48:21 | INFO |   gnn.0 -> GraphConv
+2025-09-30 21:48:21 | INFO |     gnn.0.lin -> Linear
+2025-09-30 21:48:21 | INFO |     gnn.0.drop -> Dropout
+2025-09-30 21:48:21 | INFO |     gnn.0.act -> ReLU
+2025-09-30 21:48:21 | INFO |     gnn.0.ln -> LayerNorm
+2025-09-30 21:48:21 | INFO |     gnn.0.proj -> Linear
+2025-09-30 21:48:21 | INFO |   gnn.1 -> GraphConv
+2025-09-30 21:48:21 | INFO |     gnn.1.lin -> Linear
+2025-09-30 21:48:21 | INFO |     gnn.1.drop -> Dropout
+2025-09-30 21:48:21 | INFO |     gnn.1.act -> ReLU
+2025-09-30 21:48:21 | INFO |     gnn.1.ln -> LayerNorm
+2025-09-30 21:48:21 | INFO |     gnn.1.proj -> Identity
+2025-09-30 21:48:21 | INFO | scalar_head -> Sequential
+2025-09-30 21:48:21 | INFO |   scalar_head.0 -> Linear
+2025-09-30 21:48:21 | INFO |   scalar_head.1 -> ReLU
+2025-09-30 21:48:21 | INFO |   scalar_head.2 -> Linear
+2025-09-30 21:48:21 | INFO | z_norm -> LayerNorm
+2025-09-30 21:50:02 | INFO | [epoch1] lr=0.001 train_loss=14186.281142 | grad_total=1.907e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 9.96e+04, scalar_head.0.weight: 4.61e+04}
+2025-09-30 21:50:31 | INFO | [epoch1] val_loss=82.432106
+2025-09-30 22:14:35 | INFO | [epoch2] lr=0.001 train_loss=30.947534 | grad_total=1.498e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 7.69e+04, scalar_head.0.weight: 3.57e+04}
+2025-09-30 22:15:04 | INFO | [epoch2] val_loss=7.970561
+2025-09-30 22:18:46 | INFO | [epoch3] lr=0.001 train_loss=21.224621 | grad_total=5.797e+04 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 2.98e+04, scalar_head.0.weight: 1.39e+04}
+2025-09-30 22:19:15 | INFO | [epoch3] val_loss=21.743316
+2025-09-30 22:20:59 | INFO | [epoch4] lr=0.001 train_loss=24.786594 | grad_total=4.162e+04 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 2.14e+04, scalar_head.0.weight: 9.96e+03}
+2025-09-30 22:21:28 | INFO | [epoch4] val_loss=16.814953
+2025-09-30 22:23:10 | INFO | [epoch5] lr=0.001 train_loss=18.228121 | grad_total=8.269e+04 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 4.25e+04, scalar_head.0.weight: 1.98e+04}
+2025-09-30 22:23:39 | INFO | [epoch5] val_loss=1.412175
+2025-09-30 22:25:15 | INFO | [epoch6] lr=0.001 train_loss=20.479044 | grad_total=1.544e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 7.97e+04, scalar_head.0.weight: 3.70e+04}
+2025-09-30 22:25:44 | INFO | [epoch6] val_loss=5.230399
+2025-09-30 22:27:20 | INFO | [epoch7] lr=0.001 train_loss=21.112072 | grad_total=1.032e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 5.34e+04, scalar_head.0.weight: 2.48e+04}
+2025-09-30 22:27:49 | INFO | [epoch7] val_loss=1.408087
+2025-09-30 22:29:25 | INFO | [epoch8] lr=0.001 train_loss=19.642954 | grad_total=1.188e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 6.15e+04, scalar_head.0.weight: 2.86e+04}
+2025-09-30 22:29:54 | INFO | [epoch8] val_loss=0.876925
+2025-09-30 22:31:31 | INFO | [epoch9] lr=0.001 train_loss=17.926440 | grad_total=8.948e+04 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 4.63e+04, scalar_head.0.weight: 2.16e+04}
+2025-09-30 22:31:59 | INFO | [epoch9] val_loss=6.533921
+2025-09-30 22:33:36 | INFO | [epoch10] lr=0.001 train_loss=22.908476 | grad_total=3.549e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 1.85e+05, scalar_head.0.weight: 8.59e+04}
+2025-09-30 22:34:04 | INFO | [epoch10] val_loss=4.395794

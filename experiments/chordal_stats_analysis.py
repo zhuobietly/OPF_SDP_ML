@@ -15,8 +15,32 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")             # 无图形界面也能保存图片
 import matplotlib.pyplot as plt
+from typing import Optional
+
 
 # ---------------- 工具函数 ----------------
+def find_json_same_stem(in_dir: Path, source_csv_basename: str) -> Optional[Path]:
+
+    """
+    依据 CSV 的文件名直接寻找同名 JSON：
+    <name>.csv  ->  <name>.json
+
+    - 先尝试精确同名
+    - 再做一次不区分大小写的 stem 匹配（以防大小写差异）
+    """
+    stem = Path(source_csv_basename).stem
+    cand = in_dir / (stem + ".json")
+    if cand.exists():
+        return cand
+
+    # case-insensitive 兜底
+    lowstem = stem.lower()
+    for p in in_dir.glob("*.json"):
+        if Path(p).stem.lower() == lowstem:
+            return p
+
+    print(f"[找不到JSON] 期望同名：{stem}.json  于 {in_dir}")
+    return None
 def parse_perturbation(x):
     """从 CSV 的 Perturbation 字段解析 (k, seed)。兼容 '(0.07, 70)'/ '0.07,70' 等"""
     if pd.isna(x): return (np.nan, np.nan)
@@ -204,7 +228,7 @@ def main(in_dir: Path, out_dir: Path):
     fig_dir = out_dir / "figs"; ensure_dir(fig_dir)
 
     # 1) 合并 CSV
-    csv_paths = sorted(glob.glob(str(in_dir / "*.csv")))
+    csv_paths = sorted(glob.glob(str(in_dir / "case2746wop" / "*.csv")))
     if not csv_paths:
         raise SystemExit(f"[错误] 输入目录没有 CSV：{in_dir}")
     df_list = []
@@ -238,7 +262,8 @@ def main(in_dir: Path, out_dir: Path):
     # 4) 读取负荷 JSON（ΣP/ΣQ）
     P_sum, Q_sum, P_cv, P_max_frac, J = [], [], [], [], []
     for _, r in df.iterrows():
-        jp = find_json(in_dir, str(r["Case"]), r["pert_k"], r["pert_seed"], r["ID"])
+        #jp = find_json(in_dir, str(r["Case"]), r["pert_k"], r["pert_seed"], r["ID"])
+        jp = find_json_same_stem(in_dir, r["__source_csv__"])
         if jp and jp.exists():
             st = load_load_stats(jp)
             P_sum.append(st["P_sum"]); Q_sum.append(st["Q_sum"])

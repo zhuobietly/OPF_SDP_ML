@@ -35,8 +35,7 @@ if missing:
 
 # --------- 2) 选择特征与目标（按你之前脚本的列名）---------
 features = [
-    "Iterations", "PrimalRes", "DualRes", "RelGap",
-    "ActiveLimits", "r_max", "t", "sum_r_sq", "sum_r_cu",
+    "Iterations", "PrimalRes", "DualRes", "RelGap","r_max", "t", "sum_r_sq", "sum_r_cu",
     "sep_max", "sep_mean", "sum_sep_sq", "tree_max_deg",
     "tree_h", "fillin", "coupling"
 ]
@@ -49,7 +48,7 @@ if not features_present:
 cols_for_corr = features_present + [target]
 
 # --------- 3) 仅处理指定的两个 case ----------
-cases_to_run = ["case1888rte", "case1951rte","case2746wop"]
+cases_to_run = ["case2746wop"]
 
 # 实用函数：画完整热力图
 def plot_full_heatmap(corr_matrix: pd.DataFrame, title: str, out_path: Path):

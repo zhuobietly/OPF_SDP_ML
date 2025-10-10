@@ -23,16 +23,22 @@
 import torch
 import torch.nn.functional as F
 
-def multitask_loss(pred_arr_reg, pred_y_reg, y_arr_reg, y_reg, y_cls,
-                   w_arr=1.0, w_sca=0.5, w_cls=2.0, tau=0.5):
-    # 1) 数组回归（锚定 pred_arr_reg，防止塌缩）
-    loss_arr = F.mse_loss(pred_arr_reg, y_arr_reg)
+# def multitask_loss(pred_arr_reg, pred_y_reg, y_arr_reg, y_reg, y_cls,
+#                    w_arr=1.0, w_sca=0.5, w_cls=2.0, tau=0.5):
+#     # 1) 数组回归（锚定 pred_arr_reg，防止塌缩）
+#     loss_arr = F.mse_loss(pred_arr_reg, y_arr_reg)
 
+#     # 2) 标量回归（需要就用；不需要可把 w_sca 设为 0）
+#     loss_sca = F.mse_loss(pred_y_reg, y_reg)
+
+#     # 3) 分类（只看相对大小，去掉行偏置）
+#     logits = - (pred_arr_reg - pred_arr_reg.mean(dim=1, keepdim=True)) / tau
+#     loss_cls = F.cross_entropy(logits, y_cls)
+
+#     return loss_sc
+def multitask_loss(pred_y_reg, y_reg,
+                   w_arr=1.0, w_sca=0.5, w_cls=2.0, tau=0.5):
     # 2) 标量回归（需要就用；不需要可把 w_sca 设为 0）
     loss_sca = F.mse_loss(pred_y_reg, y_reg)
-
-    # 3) 分类（只看相对大小，去掉行偏置）
-    logits = - (pred_arr_reg - pred_arr_reg.mean(dim=1, keepdim=True)) / tau
-    loss_cls = F.cross_entropy(logits, y_cls)
 
     return loss_sca

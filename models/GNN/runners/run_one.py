@@ -23,6 +23,10 @@ import pickle
 import torch 
 import numpy as np 
 import logging
+def filter_samples(samples, filter_str="original_0"):
+    filtered = [s for s in samples if filter_str in s.get("scenario_id", "")]
+    
+    return filtered
 
 def setup_logging():
     # 配置日志格式
@@ -119,10 +123,28 @@ def main():
     print(f"📊 总计: {len(samples)} 个样本")
     # 转换为 torch tensor
     samples = convert_samples_to_torch(samples)
+    if cfg.get("filter_str", None):
+        samples = filter_samples(samples, cfg["filter_str"])
+        print(f"🔍 过滤后: {len(samples)} 个样本 (包含 '{cfg['filter_str']}')") 
     # 统计 y_cls 的类别分布
     y_cls_values = [sample['y_cls'].item() for sample in samples]
     unique, counts = np.unique(y_cls_values, return_counts=True)
     print(f"📈 y_cls 类别分布: {dict(zip(unique, counts))}")
+    y_reg_values = [sample['y_reg'].item() for sample in samples]
+
+    # 绘制 y_reg 分布直方图
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(10, 6))
+    plt.hist(y_reg_values, bins=50, alpha=0.7, edgecolor='black')
+    plt.xlabel('y_reg 值')
+    plt.ylabel('频次')
+    plt.title('y_reg 值分布直方图')
+    plt.grid(True, alpha=0.3)
+    
+    # 保存图片
+    plt.savefig('/home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png', dpi=300, bbox_inches='tight')
+    print(f"📈 y_reg 分布图已保存到: /home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png")
+    plt.close()
     #samples = load_from_csv_or_jld2(...)
     # 3) Setup graph builder and feature pipeline
     builder = BUILDERS[cfg["builder"]]()
@@ -181,11 +203,13 @@ def main():
         batch_size=cfg["train"].get("batch_size", 8),
         lr=cfg["train"].get("lr", 3e-4),
         device="cpu",
+        DEBUG_GRAD=True,   # ← 仅当需要时才记录梯度概况
+        PRINT_MODEL_ONCE=True,
     )
     # the metric of Y visualization
     print("Train Done.")
     # === 保存最终权重（本次训练得到的模型） ===
-    ckpt_path = "/home/goatoine/Documents/Lanyue/models/GNN/checkpoints/final.pt"
+    ckpt_path = "/home/goatoine/Documents/Lanyue/models/GNN/checkpoints/final_no_gvec.pt"
     save_checkpoint(model, ckpt_path)
 
     # === （演示）重新加载权重再做测试评估 ===
