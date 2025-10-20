@@ -1,0 +1,19 @@
+# basic model 
+#sample data: every loadfile generate one sample， original_0 generate 15 y_reg, becoming the y_arr_reg
+#input: load_profiles, grid_network
+#output: y_arr, y_cls
+seed: 42
+builder: original
+data:
+  reader: "opf_v1"       # 换成 "opf_v2" 就是另一种读取逻辑
+  data_dir: "/path/to/data"
+model:
+  name: "GCN" #model type: GCN, GAT, GraphSAGE, GIN
+  hidden: [64, 64]
+  dropout: 0.2
+  out_dim: 15
+train:
+  epochs: 10
+  batch_size: 32 # try 16, 32, 64
+  lr: 0.001
+  lam: 0.5 # the weight in loss function lambda * loss_regret + (1-lambda) * loss_cls

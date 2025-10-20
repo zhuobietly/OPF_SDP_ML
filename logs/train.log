@@ -967,3 +967,494 @@
 2025-09-30 22:31:59 | INFO | [epoch9] val_loss=6.533921
 2025-09-30 22:33:36 | INFO | [epoch10] lr=0.001 train_loss=22.908476 | grad_total=3.549e+05 gradNone=2 gradZero=0 | top2 {scalar_head.2.weight: 1.85e+05, scalar_head.0.weight: 8.59e+04}
 2025-09-30 22:34:04 | INFO | [epoch10] val_loss=4.395794
+2025-10-10 01:06:16 | INFO | === Log start 2025-10-10 01:06:16 ===
+2025-10-10 01:06:16 | INFO | === Model outline ===
+2025-10-10 01:06:16 | INFO | gnn -> ModuleList
+2025-10-10 01:06:16 | INFO |   gnn.0 -> GraphConv
+2025-10-10 01:06:16 | INFO |     gnn.0.lin -> Linear
+2025-10-10 01:06:16 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 01:06:16 | INFO |     gnn.0.act -> ReLU
+2025-10-10 01:06:16 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 01:06:16 | INFO |     gnn.0.proj -> Linear
+2025-10-10 01:06:16 | INFO |   gnn.1 -> GraphConv
+2025-10-10 01:06:16 | INFO |     gnn.1.lin -> Linear
+2025-10-10 01:06:16 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 01:06:16 | INFO |     gnn.1.act -> ReLU
+2025-10-10 01:06:16 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 01:06:16 | INFO |     gnn.1.proj -> Identity
+2025-10-10 01:06:16 | INFO | att_q -> Linear
+2025-10-10 01:06:16 | INFO | mlp_arr -> Sequential
+2025-10-10 01:06:16 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 01:06:16 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 01:06:16 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 01:06:16 | INFO | scalar_head -> Sequential
+2025-10-10 01:06:16 | INFO |   scalar_head.0 -> Linear
+2025-10-10 01:06:16 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 01:06:16 | INFO |   scalar_head.2 -> Linear
+2025-10-10 01:06:16 | INFO | z_norm -> LayerNorm
+2025-10-10 01:08:21 | INFO | [epoch1] lr=0.001 train_loss=2166492966129.055420 | grad_total=1.543e+12 gradNone=4 gradZero=0 | top2 {mlp_arr.0.weight: 8.57e+11, mlp_arr.2.weight: 5.23e+11}
+2025-10-10 11:19:22 | INFO | === Log start 2025-10-10 11:19:22 ===
+2025-10-10 11:19:22 | INFO | === Model outline ===
+2025-10-10 11:19:22 | INFO | gnn -> ModuleList
+2025-10-10 11:19:22 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:19:22 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:19:22 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:19:22 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:19:22 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:19:22 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:19:22 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:19:22 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:19:22 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:19:22 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:19:22 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:19:22 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:19:22 | INFO | att_q -> Linear
+2025-10-10 11:19:22 | INFO | mlp_arr -> Sequential
+2025-10-10 11:19:22 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:19:22 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:19:22 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:19:22 | INFO | scalar_head -> Sequential
+2025-10-10 11:19:22 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:19:22 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:19:22 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:19:22 | INFO | z_norm -> LayerNorm
+2025-10-10 11:25:09 | INFO | [epoch1] lr=0.001 train_loss=2166492966129.055420 | grad_total=1.543e+12 gradNone=4 gradZero=0 | top2 {mlp_arr.0.weight: 8.57e+11, mlp_arr.2.weight: 5.23e+11}
+2025-10-10 11:29:57 | INFO | === Log start 2025-10-10 11:29:57 ===
+2025-10-10 11:29:57 | INFO | === Model outline ===
+2025-10-10 11:29:57 | INFO | gnn -> ModuleList
+2025-10-10 11:29:57 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:29:57 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:29:57 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:29:57 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:29:57 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:29:57 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:29:57 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:29:57 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:29:57 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:29:57 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:29:57 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:29:57 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:29:57 | INFO | att_q -> Linear
+2025-10-10 11:29:57 | INFO | mlp_arr -> Sequential
+2025-10-10 11:29:57 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:29:57 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:29:57 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:29:57 | INFO | scalar_head -> Sequential
+2025-10-10 11:29:57 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:29:57 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:29:57 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:29:57 | INFO | z_norm -> LayerNorm
+2025-10-10 11:30:07 | INFO | === Log start 2025-10-10 11:30:07 ===
+2025-10-10 11:30:07 | INFO | === Model outline ===
+2025-10-10 11:30:07 | INFO | gnn -> ModuleList
+2025-10-10 11:30:07 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:30:07 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:30:07 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:30:07 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:30:07 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:30:07 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:30:07 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:30:07 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:30:07 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:30:07 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:30:07 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:30:07 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:30:07 | INFO | att_q -> Linear
+2025-10-10 11:30:07 | INFO | mlp_arr -> Sequential
+2025-10-10 11:30:07 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:30:07 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:30:07 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:30:07 | INFO | scalar_head -> Sequential
+2025-10-10 11:30:07 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:30:07 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:30:07 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:30:07 | INFO | z_norm -> LayerNorm
+2025-10-10 11:31:43 | INFO | [epoch1] lr=0.001 train_loss=2166492966129.055420 | grad_total=1.543e+12 gradNone=4 gradZero=0 | top2 {mlp_arr.0.weight: 8.57e+11, mlp_arr.2.weight: 5.23e+11}
+2025-10-10 11:36:13 | INFO | === Log start 2025-10-10 11:36:13 ===
+2025-10-10 11:36:13 | INFO | === Model outline ===
+2025-10-10 11:36:13 | INFO | gnn -> ModuleList
+2025-10-10 11:36:13 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:36:13 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:36:13 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:36:13 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:36:13 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:36:13 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:36:13 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:36:13 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:36:13 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:36:13 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:36:13 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:36:13 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:36:13 | INFO | att_q -> Linear
+2025-10-10 11:36:13 | INFO | mlp_arr -> Sequential
+2025-10-10 11:36:13 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:36:13 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:36:13 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:36:13 | INFO | scalar_head -> Sequential
+2025-10-10 11:36:13 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:36:13 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:36:13 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:36:13 | INFO | z_norm -> LayerNorm
+2025-10-10 11:37:49 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top2 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11}
+2025-10-10 11:38:17 | INFO | [epoch1] val_loss=1754383774.205291
+2025-10-10 11:39:53 | INFO | [epoch2] lr=0.001 train_loss=191368144.658074 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top2 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09}
+2025-10-10 11:40:23 | INFO | [epoch2] val_loss=314594.524967
+2025-10-10 11:41:43 | INFO | === Log start 2025-10-10 11:41:43 ===
+2025-10-10 11:41:43 | INFO | === Model outline ===
+2025-10-10 11:41:43 | INFO | gnn -> ModuleList
+2025-10-10 11:41:43 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:41:43 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:41:43 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:41:43 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:41:43 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:41:43 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:41:43 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:41:43 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:41:43 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:41:43 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:41:43 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:41:43 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:41:43 | INFO | att_q -> Linear
+2025-10-10 11:41:43 | INFO | mlp_arr -> Sequential
+2025-10-10 11:41:43 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:41:43 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:41:43 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:41:43 | INFO | scalar_head -> Sequential
+2025-10-10 11:41:43 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:41:43 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:41:43 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:41:43 | INFO | z_norm -> LayerNorm
+2025-10-10 11:41:53 | INFO | === Log start 2025-10-10 11:41:53 ===
+2025-10-10 11:41:53 | INFO | === Model outline ===
+2025-10-10 11:41:53 | INFO | gnn -> ModuleList
+2025-10-10 11:41:53 | INFO |   gnn.0 -> GraphConv
+2025-10-10 11:41:53 | INFO |     gnn.0.lin -> Linear
+2025-10-10 11:41:53 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 11:41:53 | INFO |     gnn.0.act -> ReLU
+2025-10-10 11:41:53 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 11:41:53 | INFO |     gnn.0.proj -> Linear
+2025-10-10 11:41:53 | INFO |   gnn.1 -> GraphConv
+2025-10-10 11:41:53 | INFO |     gnn.1.lin -> Linear
+2025-10-10 11:41:53 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 11:41:53 | INFO |     gnn.1.act -> ReLU
+2025-10-10 11:41:53 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 11:41:53 | INFO |     gnn.1.proj -> Identity
+2025-10-10 11:41:53 | INFO | att_q -> Linear
+2025-10-10 11:41:53 | INFO | mlp_arr -> Sequential
+2025-10-10 11:41:53 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 11:41:53 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 11:41:53 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 11:41:53 | INFO | scalar_head -> Sequential
+2025-10-10 11:41:53 | INFO |   scalar_head.0 -> Linear
+2025-10-10 11:41:53 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 11:41:53 | INFO |   scalar_head.2 -> Linear
+2025-10-10 11:41:53 | INFO | z_norm -> LayerNorm
+2025-10-10 11:43:30 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 11:43:58 | INFO | [epoch1] val_loss=1754383774.205291
+2025-10-10 11:45:35 | INFO | [epoch2] lr=0.001 train_loss=191368144.658074 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 11:46:03 | INFO | [epoch2] val_loss=314594.524967
+2025-10-10 11:47:40 | INFO | [epoch3] lr=0.001 train_loss=12098.600288 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 11:48:08 | INFO | [epoch3] val_loss=103223.355688
+2025-10-10 11:49:45 | INFO | [epoch4] lr=0.001 train_loss=397.064080 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 11:50:13 | INFO | [epoch4] val_loss=102091.911152
+2025-10-10 11:51:49 | INFO | [epoch5] lr=0.001 train_loss=402.402896 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 11:52:18 | INFO | [epoch5] val_loss=103647.809053
+2025-10-10 11:53:54 | INFO | [epoch6] lr=0.001 train_loss=394.974748 | grad_total=5.226e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.32e+08, scalar_head.2.weight: 1.62e+08, mlp_arr.0.weight: 8.43e+07, mlp_arr.2.weight: 4.40e+07, gnn.1.lin.weight: 8.10e+03, gnn.0.lin.weight: 5.39e+03, gnn.0.proj.weight: 5.02e+03, gnn.1.ln.bias: 3.19e+03}
+2025-10-10 11:54:23 | INFO | [epoch6] val_loss=103613.029456
+2025-10-10 11:55:59 | INFO | [epoch7] lr=0.001 train_loss=398.406310 | grad_total=2.788e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 9.22e+07, mlp_arr.0.weight: 6.98e+07, scalar_head.2.weight: 6.42e+07, mlp_arr.2.weight: 5.27e+07, gnn.1.lin.weight: 4.33e+03, gnn.0.proj.weight: 2.74e+03, gnn.0.lin.weight: 2.16e+03, gnn.0.proj.bias: 1.52e+03}
+2025-10-10 11:56:28 | INFO | [epoch7] val_loss=104422.693692
+2025-10-10 11:58:04 | INFO | [epoch8] lr=0.001 train_loss=406.077283 | grad_total=2.836e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 1.14e+08, mlp_arr.2.weight: 6.54e+07, scalar_head.0.weight: 6.13e+07, scalar_head.2.weight: 4.27e+07, gnn.1.lin.weight: 4.45e+03, gnn.0.proj.weight: 3.18e+03, gnn.0.lin.weight: 3.15e+03, gnn.1.ln.bias: 2.19e+03}
+2025-10-10 11:58:33 | INFO | [epoch8] val_loss=102599.615608
+2025-10-10 12:00:09 | INFO | [epoch9] lr=0.001 train_loss=407.512504 | grad_total=8.321e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 4.09e+08, scalar_head.2.weight: 2.85e+08, mlp_arr.0.weight: 8.01e+07, mlp_arr.2.weight: 5.85e+07, gnn.1.lin.weight: 1.15e+04, gnn.0.lin.weight: 8.39e+03, gnn.0.proj.weight: 7.53e+03, gnn.1.ln.bias: 5.16e+03}
+2025-10-10 12:00:37 | INFO | [epoch9] val_loss=101935.900331
+2025-10-10 12:02:14 | INFO | [epoch10] lr=0.001 train_loss=417.422228 | grad_total=6.277e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 3.01e+08, scalar_head.2.weight: 2.09e+08, mlp_arr.0.weight: 7.53e+07, mlp_arr.2.weight: 4.25e+07, gnn.1.lin.weight: 9.15e+03, gnn.0.lin.weight: 5.08e+03, gnn.0.proj.weight: 5.01e+03, gnn.1.ln.bias: 4.42e+03}
+2025-10-10 12:02:43 | INFO | [epoch10] val_loss=103315.758036
+2025-10-10 12:04:56 | INFO | === Log start 2025-10-10 12:04:56 ===
+2025-10-10 12:04:56 | INFO | === Model outline ===
+2025-10-10 12:04:56 | INFO | gnn -> ModuleList
+2025-10-10 12:04:56 | INFO |   gnn.0 -> GraphConv
+2025-10-10 12:04:56 | INFO |     gnn.0.lin -> Linear
+2025-10-10 12:04:56 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 12:04:56 | INFO |     gnn.0.act -> ReLU
+2025-10-10 12:04:56 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 12:04:56 | INFO |     gnn.0.proj -> Linear
+2025-10-10 12:04:56 | INFO |   gnn.1 -> GraphConv
+2025-10-10 12:04:56 | INFO |     gnn.1.lin -> Linear
+2025-10-10 12:04:56 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 12:04:56 | INFO |     gnn.1.act -> ReLU
+2025-10-10 12:04:56 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 12:04:56 | INFO |     gnn.1.proj -> Identity
+2025-10-10 12:04:56 | INFO | att_q -> Linear
+2025-10-10 12:04:56 | INFO | mlp_arr -> Sequential
+2025-10-10 12:04:56 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 12:04:56 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 12:04:56 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 12:04:56 | INFO | scalar_head -> Sequential
+2025-10-10 12:04:56 | INFO |   scalar_head.0 -> Linear
+2025-10-10 12:04:56 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 12:04:56 | INFO |   scalar_head.2 -> Linear
+2025-10-10 12:04:56 | INFO | z_norm -> LayerNorm
+2025-10-10 12:06:32 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 12:06:38 | INFO | [epoch1] val_loss=1754365685.760000
+2025-10-10 12:08:15 | INFO | [epoch2] lr=0.001 train_loss=191368144.658074 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 12:08:21 | INFO | [epoch2] val_loss=313671.270000
+2025-10-10 12:09:58 | INFO | [epoch3] lr=0.001 train_loss=12098.600288 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 12:10:03 | INFO | [epoch3] val_loss=102718.097187
+2025-10-10 12:11:40 | INFO | [epoch4] lr=0.001 train_loss=397.064080 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 12:11:46 | INFO | [epoch4] val_loss=101580.745625
+2025-10-10 12:13:23 | INFO | [epoch5] lr=0.001 train_loss=402.402896 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 12:13:29 | INFO | [epoch5] val_loss=103140.077813
+2025-10-10 12:15:05 | INFO | [epoch6] lr=0.001 train_loss=394.974748 | grad_total=5.226e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.32e+08, scalar_head.2.weight: 1.62e+08, mlp_arr.0.weight: 8.43e+07, mlp_arr.2.weight: 4.40e+07, gnn.1.lin.weight: 8.10e+03, gnn.0.lin.weight: 5.39e+03, gnn.0.proj.weight: 5.02e+03, gnn.1.ln.bias: 3.19e+03}
+2025-10-10 12:15:11 | INFO | [epoch6] val_loss=103105.884063
+2025-10-10 12:16:48 | INFO | [epoch7] lr=0.001 train_loss=398.406310 | grad_total=2.788e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 9.22e+07, mlp_arr.0.weight: 6.98e+07, scalar_head.2.weight: 6.42e+07, mlp_arr.2.weight: 5.27e+07, gnn.1.lin.weight: 4.33e+03, gnn.0.proj.weight: 2.74e+03, gnn.0.lin.weight: 2.16e+03, gnn.0.proj.bias: 1.52e+03}
+2025-10-10 12:16:54 | INFO | [epoch7] val_loss=103920.990625
+2025-10-10 12:18:31 | INFO | [epoch8] lr=0.001 train_loss=406.077283 | grad_total=2.836e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 1.14e+08, mlp_arr.2.weight: 6.54e+07, scalar_head.0.weight: 6.13e+07, scalar_head.2.weight: 4.27e+07, gnn.1.lin.weight: 4.45e+03, gnn.0.proj.weight: 3.18e+03, gnn.0.lin.weight: 3.15e+03, gnn.1.ln.bias: 2.19e+03}
+2025-10-10 12:18:37 | INFO | [epoch8] val_loss=102100.651250
+2025-10-10 12:20:14 | INFO | [epoch9] lr=0.001 train_loss=407.512504 | grad_total=8.321e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 4.09e+08, scalar_head.2.weight: 2.85e+08, mlp_arr.0.weight: 8.01e+07, mlp_arr.2.weight: 5.85e+07, gnn.1.lin.weight: 1.15e+04, gnn.0.lin.weight: 8.39e+03, gnn.0.proj.weight: 7.53e+03, gnn.1.ln.bias: 5.16e+03}
+2025-10-10 12:20:19 | INFO | [epoch9] val_loss=101408.265625
+2025-10-10 12:21:56 | INFO | [epoch10] lr=0.001 train_loss=417.422228 | grad_total=6.277e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 3.01e+08, scalar_head.2.weight: 2.09e+08, mlp_arr.0.weight: 7.53e+07, mlp_arr.2.weight: 4.25e+07, gnn.1.lin.weight: 9.15e+03, gnn.0.lin.weight: 5.08e+03, gnn.0.proj.weight: 5.01e+03, gnn.1.ln.bias: 4.42e+03}
+2025-10-10 12:22:02 | INFO | [epoch10] val_loss=102809.835000
+2025-10-10 12:35:06 | INFO | === Log start 2025-10-10 12:35:06 ===
+2025-10-10 12:35:06 | INFO | === Model outline ===
+2025-10-10 12:35:06 | INFO | gnn -> ModuleList
+2025-10-10 12:35:06 | INFO |   gnn.0 -> GraphConv
+2025-10-10 12:35:06 | INFO |     gnn.0.lin -> Linear
+2025-10-10 12:35:06 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 12:35:06 | INFO |     gnn.0.act -> ReLU
+2025-10-10 12:35:06 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 12:35:06 | INFO |     gnn.0.proj -> Linear
+2025-10-10 12:35:06 | INFO |   gnn.1 -> GraphConv
+2025-10-10 12:35:06 | INFO |     gnn.1.lin -> Linear
+2025-10-10 12:35:06 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 12:35:06 | INFO |     gnn.1.act -> ReLU
+2025-10-10 12:35:06 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 12:35:06 | INFO |     gnn.1.proj -> Identity
+2025-10-10 12:35:06 | INFO | att_q -> Linear
+2025-10-10 12:35:06 | INFO | mlp_arr -> Sequential
+2025-10-10 12:35:06 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 12:35:06 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 12:35:06 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 12:35:06 | INFO | scalar_head -> Sequential
+2025-10-10 12:35:06 | INFO |   scalar_head.0 -> Linear
+2025-10-10 12:35:06 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 12:35:06 | INFO |   scalar_head.2 -> Linear
+2025-10-10 12:35:06 | INFO | z_norm -> LayerNorm
+2025-10-10 12:35:19 | INFO | === Log start 2025-10-10 12:35:19 ===
+2025-10-10 12:35:19 | INFO | === Model outline ===
+2025-10-10 12:35:19 | INFO | gnn -> ModuleList
+2025-10-10 12:35:19 | INFO |   gnn.0 -> GraphConv
+2025-10-10 12:35:19 | INFO |     gnn.0.lin -> Linear
+2025-10-10 12:35:19 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 12:35:19 | INFO |     gnn.0.act -> ReLU
+2025-10-10 12:35:19 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 12:35:19 | INFO |     gnn.0.proj -> Linear
+2025-10-10 12:35:19 | INFO |   gnn.1 -> GraphConv
+2025-10-10 12:35:19 | INFO |     gnn.1.lin -> Linear
+2025-10-10 12:35:19 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 12:35:19 | INFO |     gnn.1.act -> ReLU
+2025-10-10 12:35:19 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 12:35:19 | INFO |     gnn.1.proj -> Identity
+2025-10-10 12:35:19 | INFO | att_q -> Linear
+2025-10-10 12:35:19 | INFO | mlp_arr -> Sequential
+2025-10-10 12:35:19 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 12:35:19 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 12:35:19 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 12:35:19 | INFO | scalar_head -> Sequential
+2025-10-10 12:35:19 | INFO |   scalar_head.0 -> Linear
+2025-10-10 12:35:19 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 12:35:19 | INFO |   scalar_head.2 -> Linear
+2025-10-10 12:35:19 | INFO | z_norm -> LayerNorm
+2025-10-10 12:36:56 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 12:37:02 | INFO | [epoch1] val_loss=1754365685.760000
+2025-10-10 12:37:03 | INFO | [debug] same val batch | eval-mode: 1754231680.000000 | train-mode(no_grad): 1732886144.000000
+2025-10-10 12:38:39 | INFO | [epoch2] lr=0.001 train_loss=191369165.015267 | grad_total=1.305e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.43e+09, mlp_arr.2.weight: 4.85e+09, scalar_head.0.weight: 1.04e+09, scalar_head.2.weight: 7.25e+08, gnn.1.lin.weight: 3.41e+05, gnn.0.lin.weight: 1.73e+05, gnn.0.proj.weight: 1.72e+05, gnn.1.ln.bias: 1.51e+05}
+2025-10-10 12:38:45 | INFO | [epoch2] val_loss=314470.332500
+2025-10-10 12:40:22 | INFO | [epoch3] lr=0.001 train_loss=12062.032134 | grad_total=8.394e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 3.31e+08, scalar_head.2.weight: 2.31e+08, mlp_arr.0.weight: 1.82e+08, mlp_arr.2.weight: 9.55e+07, gnn.1.lin.weight: 1.21e+04, gnn.0.proj.weight: 8.02e+03, gnn.0.lin.weight: 7.43e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 12:40:28 | INFO | [epoch3] val_loss=103462.542813
+2025-10-10 12:42:04 | INFO | [epoch4] lr=0.001 train_loss=401.526846 | grad_total=2.478e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 1.47e+08, mlp_arr.2.weight: 6.95e+07, scalar_head.0.weight: 1.83e+07, scalar_head.2.weight: 1.27e+07, gnn.1.lin.weight: 7.90e+03, gnn.0.lin.weight: 5.46e+03, gnn.1.ln.bias: 4.50e+03, gnn.0.proj.weight: 4.49e+03}
+2025-10-10 12:42:10 | INFO | [epoch4] val_loss=103313.269687
+2025-10-10 12:43:44 | INFO | === Log start 2025-10-10 12:43:44 ===
+2025-10-10 12:43:44 | INFO | === Model outline ===
+2025-10-10 12:43:44 | INFO | gnn -> ModuleList
+2025-10-10 12:43:44 | INFO |   gnn.0 -> GraphConv
+2025-10-10 12:43:44 | INFO |     gnn.0.lin -> Linear
+2025-10-10 12:43:44 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 12:43:44 | INFO |     gnn.0.act -> ReLU
+2025-10-10 12:43:44 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 12:43:44 | INFO |     gnn.0.proj -> Linear
+2025-10-10 12:43:44 | INFO |   gnn.1 -> GraphConv
+2025-10-10 12:43:44 | INFO |     gnn.1.lin -> Linear
+2025-10-10 12:43:44 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 12:43:44 | INFO |     gnn.1.act -> ReLU
+2025-10-10 12:43:44 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 12:43:44 | INFO |     gnn.1.proj -> Identity
+2025-10-10 12:43:44 | INFO | att_q -> Linear
+2025-10-10 12:43:44 | INFO | mlp_arr -> Sequential
+2025-10-10 12:43:44 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 12:43:44 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 12:43:44 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 12:43:44 | INFO | scalar_head -> Sequential
+2025-10-10 12:43:44 | INFO |   scalar_head.0 -> Linear
+2025-10-10 12:43:44 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 12:43:44 | INFO |   scalar_head.2 -> Linear
+2025-10-10 12:43:44 | INFO | z_norm -> LayerNorm
+2025-10-10 12:45:20 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 12:45:26 | INFO | [epoch1] val_loss=1754365685.760000
+2025-10-10 12:45:28 | INFO | [debug] same val batch | eval-mode: 1754231680.000000 | train-mode(no_grad): 1732886144.000000
+2025-10-10 12:47:04 | INFO | [epoch2] lr=0.001 train_loss=191369165.015267 | grad_total=1.305e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.43e+09, mlp_arr.2.weight: 4.85e+09, scalar_head.0.weight: 1.04e+09, scalar_head.2.weight: 7.25e+08, gnn.1.lin.weight: 3.41e+05, gnn.0.lin.weight: 1.73e+05, gnn.0.proj.weight: 1.72e+05, gnn.1.ln.bias: 1.51e+05}
+2025-10-10 12:47:10 | INFO | [epoch2] val_loss=314470.332500
+2025-10-10 12:48:48 | INFO | [epoch3] lr=0.001 train_loss=12062.032134 | grad_total=8.394e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 3.31e+08, scalar_head.2.weight: 2.31e+08, mlp_arr.0.weight: 1.82e+08, mlp_arr.2.weight: 9.55e+07, gnn.1.lin.weight: 1.21e+04, gnn.0.proj.weight: 8.02e+03, gnn.0.lin.weight: 7.43e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 12:48:55 | INFO | [epoch3] val_loss=103462.542813
+2025-10-10 12:49:53 | INFO | === Log start 2025-10-10 12:49:53 ===
+2025-10-10 12:49:53 | INFO | === Model outline ===
+2025-10-10 12:49:53 | INFO | gnn -> ModuleList
+2025-10-10 12:49:53 | INFO |   gnn.0 -> GraphConv
+2025-10-10 12:49:53 | INFO |     gnn.0.lin -> Linear
+2025-10-10 12:49:53 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 12:49:53 | INFO |     gnn.0.act -> ReLU
+2025-10-10 12:49:53 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 12:49:53 | INFO |     gnn.0.proj -> Linear
+2025-10-10 12:49:53 | INFO |   gnn.1 -> GraphConv
+2025-10-10 12:49:53 | INFO |     gnn.1.lin -> Linear
+2025-10-10 12:49:53 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 12:49:53 | INFO |     gnn.1.act -> ReLU
+2025-10-10 12:49:53 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 12:49:53 | INFO |     gnn.1.proj -> Identity
+2025-10-10 12:49:53 | INFO | att_q -> Linear
+2025-10-10 12:49:53 | INFO | mlp_arr -> Sequential
+2025-10-10 12:49:53 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 12:49:53 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 12:49:53 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 12:49:53 | INFO | scalar_head -> Sequential
+2025-10-10 12:49:53 | INFO |   scalar_head.0 -> Linear
+2025-10-10 12:49:53 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 12:49:53 | INFO |   scalar_head.2 -> Linear
+2025-10-10 12:49:53 | INFO | z_norm -> LayerNorm
+2025-10-10 12:51:31 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 train_loss_arr=1760373248.000000, train_loss_sca=272464896.000000, train_loss_cls=214596.875000 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 12:51:37 | INFO | [epoch1] val_loss=1754365685.760000, val_loss_arr=1663625088.000000, val_loss_sca=180690720.000000, val_loss_cls=219513.031250
+2025-10-10 12:53:14 | INFO | [epoch2] lr=0.001 train_loss=191368144.658074 train_loss_arr=150253.390625, train_loss_sca=1513.541626, train_loss_cls=446.317230 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 12:53:20 | INFO | [epoch2] val_loss=313671.270000, val_loss_arr=289152.000000, val_loss_sca=40734.136719, val_loss_cls=1650.462280
+2025-10-10 12:54:58 | INFO | [epoch3] lr=0.001 train_loss=12098.600288 train_loss_arr=205.353119, train_loss_sca=366.569977, train_loss_cls=53.093613 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 12:55:04 | INFO | [epoch3] val_loss=102718.097187, val_loss_arr=85049.460938, val_loss_sca=28961.488281, val_loss_cls=1452.130737
+2025-10-10 12:56:41 | INFO | [epoch4] lr=0.001 train_loss=397.064080 train_loss_arr=114.818336, train_loss_sca=292.837250, train_loss_cls=36.929382 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 12:56:47 | INFO | [epoch4] val_loss=101580.745625, val_loss_arr=84676.781250, val_loss_sca=27411.265625, val_loss_cls=1456.347900
+2025-10-10 12:58:25 | INFO | [epoch5] lr=0.001 train_loss=402.402896 train_loss_arr=205.959473, train_loss_sca=586.977966, train_loss_cls=42.298058 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 12:58:31 | INFO | [epoch5] val_loss=103140.077813, val_loss_arr=84835.070312, val_loss_sca=30244.402344, val_loss_cls=1449.101562
+2025-10-10 13:00:15 | INFO | === Log start 2025-10-10 13:00:15 ===
+2025-10-10 13:00:15 | INFO | === Model outline ===
+2025-10-10 13:00:15 | INFO | gnn -> ModuleList
+2025-10-10 13:00:15 | INFO |   gnn.0 -> GraphConv
+2025-10-10 13:00:15 | INFO |     gnn.0.lin -> Linear
+2025-10-10 13:00:15 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 13:00:15 | INFO |     gnn.0.act -> ReLU
+2025-10-10 13:00:15 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 13:00:15 | INFO |     gnn.0.proj -> Linear
+2025-10-10 13:00:15 | INFO |   gnn.1 -> GraphConv
+2025-10-10 13:00:15 | INFO |     gnn.1.lin -> Linear
+2025-10-10 13:00:15 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 13:00:15 | INFO |     gnn.1.act -> ReLU
+2025-10-10 13:00:15 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 13:00:15 | INFO |     gnn.1.proj -> Identity
+2025-10-10 13:00:15 | INFO | att_q -> Linear
+2025-10-10 13:00:15 | INFO | mlp_arr -> Sequential
+2025-10-10 13:00:15 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 13:00:15 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 13:00:15 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 13:00:15 | INFO | scalar_head -> Sequential
+2025-10-10 13:00:15 | INFO |   scalar_head.0 -> Linear
+2025-10-10 13:00:15 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 13:00:15 | INFO |   scalar_head.2 -> Linear
+2025-10-10 13:00:15 | INFO | z_norm -> LayerNorm
+2025-10-10 13:01:52 | INFO | [epoch1] lr=0.001 train_loss=2243623552586.000488 train_loss_arr=1760373248.000000, train_loss_sca=272464896.000000, train_loss_cls=214596.875000 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 13:03:17 | INFO | [epoch1] val_loss=1754375625.278307, val_loss_arr=1663627392.000000, val_loss_sca=180638640.000000, val_loss_cls=229569.421875
+2025-10-10 13:04:55 | INFO | [epoch2] lr=0.001 train_loss=191368144.658074 train_loss_arr=150253.390625, train_loss_sca=1513.541626, train_loss_cls=446.317230 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 13:06:20 | INFO | [epoch2] val_loss=314470.742196, val_loss_arr=290303.250000, val_loss_sca=40354.531250, val_loss_cls=1868.939331
+2025-10-10 13:07:57 | INFO | [epoch3] lr=0.001 train_loss=12098.600288 train_loss_arr=205.353119, train_loss_sca=366.569977, train_loss_cls=53.093613 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 13:09:22 | INFO | [epoch3] val_loss=103233.488539, val_loss_arr=85625.515625, val_loss_sca=28644.181641, val_loss_cls=1613.425781
+2025-10-10 13:10:59 | INFO | [epoch4] lr=0.001 train_loss=397.064080 train_loss_arr=114.818336, train_loss_sca=292.837250, train_loss_cls=36.929382 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 13:12:24 | INFO | [epoch4] val_loss=102098.825973, val_loss_arr=85257.164062, val_loss_sca=27115.599609, val_loss_cls=1614.063965
+2025-10-10 13:14:02 | INFO | [epoch5] lr=0.001 train_loss=402.402896 train_loss_arr=205.959473, train_loss_sca=586.977966, train_loss_cls=42.298058 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 13:15:27 | INFO | [epoch5] val_loss=103654.259248, val_loss_arr=85407.703125, val_loss_sca=29939.740234, val_loss_cls=1607.418579
+2025-10-10 13:17:06 | INFO | [epoch6] lr=0.001 train_loss=394.974748 train_loss_arr=161.444427, train_loss_sca=363.012421, train_loss_cls=26.517044 | grad_total=5.226e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.32e+08, scalar_head.2.weight: 1.62e+08, mlp_arr.0.weight: 8.43e+07, mlp_arr.2.weight: 4.40e+07, gnn.1.lin.weight: 8.10e+03, gnn.0.lin.weight: 5.39e+03, gnn.0.proj.weight: 5.02e+03, gnn.1.ln.bias: 3.19e+03}
+2025-10-10 13:17:16 | INFO | === Log start 2025-10-10 13:17:16 ===
+2025-10-10 13:17:16 | INFO | === Model outline ===
+2025-10-10 13:17:16 | INFO | gnn -> ModuleList
+2025-10-10 13:17:16 | INFO |   gnn.0 -> GraphConv
+2025-10-10 13:17:16 | INFO |     gnn.0.lin -> Linear
+2025-10-10 13:17:16 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 13:17:16 | INFO |     gnn.0.act -> ReLU
+2025-10-10 13:17:16 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 13:17:16 | INFO |     gnn.0.proj -> Linear
+2025-10-10 13:17:16 | INFO |   gnn.1 -> GraphConv
+2025-10-10 13:17:16 | INFO |     gnn.1.lin -> Linear
+2025-10-10 13:17:16 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 13:17:16 | INFO |     gnn.1.act -> ReLU
+2025-10-10 13:17:16 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 13:17:16 | INFO |     gnn.1.proj -> Identity
+2025-10-10 13:17:16 | INFO | att_q -> Linear
+2025-10-10 13:17:16 | INFO | mlp_arr -> Sequential
+2025-10-10 13:17:16 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 13:17:16 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 13:17:16 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 13:17:16 | INFO | scalar_head -> Sequential
+2025-10-10 13:17:16 | INFO |   scalar_head.0 -> Linear
+2025-10-10 13:17:16 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 13:17:16 | INFO |   scalar_head.2 -> Linear
+2025-10-10 13:17:16 | INFO | z_norm -> LayerNorm
+2025-10-10 13:18:53 | INFO | [epoch1] lr=0.001 train_loss=2233390952610.517090 train_loss_arr=1760373248.000000, train_loss_sca=272464896.000000, train_loss_cls=214596.875000 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 13:20:18 | INFO | [epoch1] val_loss=1754375763.415730, val_loss_arr=1663627392.000000, val_loss_sca=180638640.000000, val_loss_cls=229569.421875
+2025-10-10 13:21:55 | INFO | [epoch2] lr=0.001 train_loss=190495317.711376 train_loss_arr=150253.390625, train_loss_sca=1513.541626, train_loss_cls=446.317230 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 13:23:21 | INFO | [epoch2] val_loss=314469.590239, val_loss_arr=290303.250000, val_loss_sca=40354.531250, val_loss_cls=1868.939331
+2025-10-10 13:24:58 | INFO | [epoch3] lr=0.001 train_loss=12045.633618 train_loss_arr=205.353119, train_loss_sca=366.569977, train_loss_cls=53.093613 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 13:26:23 | INFO | [epoch3] val_loss=103233.219101, val_loss_arr=85625.515625, val_loss_sca=28644.181641, val_loss_cls=1613.425781
+2025-10-10 13:28:00 | INFO | [epoch4] lr=0.001 train_loss=396.781218 train_loss_arr=114.818336, train_loss_sca=292.837250, train_loss_cls=36.929382 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 13:29:25 | INFO | [epoch4] val_loss=102098.571541, val_loss_arr=85257.164062, val_loss_sca=27115.599609, val_loss_cls=1614.063965
+2025-10-10 13:31:02 | INFO | [epoch5] lr=0.001 train_loss=403.232019 train_loss_arr=205.959473, train_loss_sca=586.977966, train_loss_cls=42.298058 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 13:32:27 | INFO | [epoch5] val_loss=103653.976914, val_loss_arr=85407.703125, val_loss_sca=29939.740234, val_loss_cls=1607.418579
+2025-10-10 13:34:04 | INFO | [epoch6] lr=0.001 train_loss=394.979358 train_loss_arr=161.444427, train_loss_sca=363.012421, train_loss_cls=26.517044 | grad_total=5.226e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.32e+08, scalar_head.2.weight: 1.62e+08, mlp_arr.0.weight: 8.43e+07, mlp_arr.2.weight: 4.40e+07, gnn.1.lin.weight: 8.10e+03, gnn.0.lin.weight: 5.39e+03, gnn.0.proj.weight: 5.02e+03, gnn.1.ln.bias: 3.19e+03}
+2025-10-10 13:35:30 | INFO | [epoch6] val_loss=103620.119294, val_loss_arr=85638.906250, val_loss_sca=29401.115234, val_loss_cls=1609.516235
+2025-10-10 13:49:24 | INFO | === Log start 2025-10-10 13:49:24 ===
+2025-10-10 13:49:24 | INFO | === Model outline ===
+2025-10-10 13:49:24 | INFO | gnn -> ModuleList
+2025-10-10 13:49:24 | INFO |   gnn.0 -> GraphConv
+2025-10-10 13:49:24 | INFO |     gnn.0.lin -> Linear
+2025-10-10 13:49:24 | INFO |     gnn.0.drop -> Dropout
+2025-10-10 13:49:24 | INFO |     gnn.0.act -> ReLU
+2025-10-10 13:49:24 | INFO |     gnn.0.ln -> LayerNorm
+2025-10-10 13:49:24 | INFO |     gnn.0.proj -> Linear
+2025-10-10 13:49:24 | INFO |   gnn.1 -> GraphConv
+2025-10-10 13:49:24 | INFO |     gnn.1.lin -> Linear
+2025-10-10 13:49:24 | INFO |     gnn.1.drop -> Dropout
+2025-10-10 13:49:24 | INFO |     gnn.1.act -> ReLU
+2025-10-10 13:49:24 | INFO |     gnn.1.ln -> LayerNorm
+2025-10-10 13:49:24 | INFO |     gnn.1.proj -> Identity
+2025-10-10 13:49:24 | INFO | att_q -> Linear
+2025-10-10 13:49:24 | INFO | mlp_arr -> Sequential
+2025-10-10 13:49:24 | INFO |   mlp_arr.0 -> Linear
+2025-10-10 13:49:24 | INFO |   mlp_arr.1 -> ReLU
+2025-10-10 13:49:24 | INFO |   mlp_arr.2 -> Linear
+2025-10-10 13:49:24 | INFO | scalar_head -> Sequential
+2025-10-10 13:49:24 | INFO |   scalar_head.0 -> Linear
+2025-10-10 13:49:24 | INFO |   scalar_head.1 -> ReLU
+2025-10-10 13:49:24 | INFO |   scalar_head.2 -> Linear
+2025-10-10 13:49:24 | INFO | z_norm -> LayerNorm
+2025-10-10 13:51:07 | INFO | [epoch1] lr=0.001 train_loss=2233390952610.517090 train_loss_arr=1760373248.000000, train_loss_sca=272464896.000000, train_loss_cls=214596.875000 | grad_total=2.733e+12 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 8.57e+11, scalar_head.0.weight: 7.98e+11, scalar_head.2.weight: 5.55e+11, mlp_arr.2.weight: 5.23e+11, gnn.1.lin.weight: 4.54e+07, gnn.1.ln.weight: 3.97e+07, gnn.1.ln.bias: 3.68e+07, gnn.0.lin.weight: 2.88e+07}
+2025-10-10 13:52:35 | INFO | [epoch1] val_loss=1754375763.415730, val_loss_arr=1663627392.000000, val_loss_sca=180638640.000000, val_loss_cls=229569.421875
+2025-10-10 13:54:20 | INFO | [epoch2] lr=0.001 train_loss=190495317.711376 train_loss_arr=150253.390625, train_loss_sca=1513.541626, train_loss_cls=446.317230 | grad_total=1.391e+10 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 6.35e+09, mlp_arr.2.weight: 4.83e+09, scalar_head.0.weight: 1.60e+09, scalar_head.2.weight: 1.12e+09, gnn.1.lin.weight: 3.33e+05, gnn.0.lin.weight: 1.77e+05, gnn.0.proj.weight: 1.71e+05, gnn.1.ln.bias: 1.45e+05}
+2025-10-10 13:55:50 | INFO | [epoch2] val_loss=314469.590239, val_loss_arr=290303.250000, val_loss_sca=40354.531250, val_loss_cls=1868.939331
+2025-10-10 13:57:33 | INFO | [epoch3] lr=0.001 train_loss=12045.633618 train_loss_arr=205.353119, train_loss_sca=366.569977, train_loss_cls=53.093613 | grad_total=5.474e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 2.12e+08, scalar_head.0.weight: 1.33e+08, mlp_arr.2.weight: 1.10e+08, scalar_head.2.weight: 9.25e+07, gnn.1.lin.weight: 1.17e+04, gnn.0.lin.weight: 7.64e+03, gnn.0.proj.weight: 6.57e+03, gnn.1.ln.bias: 5.08e+03}
+2025-10-10 13:59:04 | INFO | [epoch3] val_loss=103233.219101, val_loss_arr=85625.515625, val_loss_sca=28644.181641, val_loss_cls=1613.425781
+2025-10-10 14:00:47 | INFO | [epoch4] lr=0.001 train_loss=396.781218 train_loss_arr=114.818336, train_loss_sca=292.837250, train_loss_cls=36.929382 | grad_total=4.555e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 1.97e+08, scalar_head.2.weight: 1.37e+08, mlp_arr.0.weight: 7.63e+07, mlp_arr.2.weight: 4.48e+07, gnn.1.lin.weight: 6.45e+03, gnn.0.lin.weight: 4.40e+03, gnn.0.proj.weight: 4.27e+03, gnn.1.ln.bias: 2.68e+03}
+2025-10-10 14:02:18 | INFO | [epoch4] val_loss=102098.571541, val_loss_arr=85257.164062, val_loss_sca=27115.599609, val_loss_cls=1614.063965
+2025-10-10 14:04:01 | INFO | [epoch5] lr=0.001 train_loss=403.232019 train_loss_arr=205.959473, train_loss_sca=586.977966, train_loss_cls=42.298058 | grad_total=6.400e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.87e+08, scalar_head.2.weight: 2.00e+08, mlp_arr.0.weight: 1.02e+08, mlp_arr.2.weight: 5.15e+07, gnn.1.lin.weight: 9.48e+03, gnn.0.lin.weight: 7.37e+03, gnn.0.proj.weight: 5.54e+03, gnn.1.ln.bias: 4.69e+03}
+2025-10-10 14:05:31 | INFO | [epoch5] val_loss=103653.976914, val_loss_arr=85407.703125, val_loss_sca=29939.740234, val_loss_cls=1607.418579
+2025-10-10 14:07:15 | INFO | [epoch6] lr=0.001 train_loss=394.979358 train_loss_arr=161.444427, train_loss_sca=363.012421, train_loss_cls=26.517044 | grad_total=5.226e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 2.32e+08, scalar_head.2.weight: 1.62e+08, mlp_arr.0.weight: 8.43e+07, mlp_arr.2.weight: 4.40e+07, gnn.1.lin.weight: 8.10e+03, gnn.0.lin.weight: 5.39e+03, gnn.0.proj.weight: 5.02e+03, gnn.1.ln.bias: 3.19e+03}
+2025-10-10 14:08:45 | INFO | [epoch6] val_loss=103620.119294, val_loss_arr=85638.906250, val_loss_sca=29401.115234, val_loss_cls=1609.516235
+2025-10-10 14:10:28 | INFO | [epoch7] lr=0.001 train_loss=398.424402 train_loss_arr=126.951004, train_loss_sca=468.484283, train_loss_cls=20.588312 | grad_total=2.788e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 9.22e+07, mlp_arr.0.weight: 6.98e+07, scalar_head.2.weight: 6.42e+07, mlp_arr.2.weight: 5.27e+07, gnn.1.lin.weight: 4.33e+03, gnn.0.proj.weight: 2.74e+03, gnn.0.lin.weight: 2.16e+03, gnn.0.proj.bias: 1.52e+03}
+2025-10-10 14:11:59 | INFO | [epoch7] val_loss=104433.643697, val_loss_arr=85592.585938, val_loss_sca=31121.828125, val_loss_cls=1606.665649
+2025-10-10 14:13:42 | INFO | [epoch8] lr=0.001 train_loss=405.762084 train_loss_arr=130.397614, train_loss_sca=272.749451, train_loss_cls=35.126122 | grad_total=2.836e+08 gradNone=4 gradZero=0 | top8 {mlp_arr.0.weight: 1.14e+08, mlp_arr.2.weight: 6.54e+07, scalar_head.0.weight: 6.13e+07, scalar_head.2.weight: 4.27e+07, gnn.1.lin.weight: 4.45e+03, gnn.0.proj.weight: 3.18e+03, gnn.0.lin.weight: 3.15e+03, gnn.1.ln.bias: 2.19e+03}
+2025-10-10 14:15:12 | INFO | [epoch8] val_loss=102607.921436, val_loss_arr=84739.773438, val_loss_sca=29144.859375, val_loss_cls=1611.239258
+2025-10-10 14:16:55 | INFO | [epoch9] lr=0.001 train_loss=407.543866 train_loss_arr=133.675217, train_loss_sca=459.964264, train_loss_cls=25.362995 | grad_total=8.321e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 4.09e+08, scalar_head.2.weight: 2.85e+08, mlp_arr.0.weight: 8.01e+07, mlp_arr.2.weight: 5.85e+07, gnn.1.lin.weight: 1.15e+04, gnn.0.lin.weight: 8.39e+03, gnn.0.proj.weight: 7.53e+03, gnn.1.ln.bias: 5.16e+03}
+2025-10-10 14:18:26 | INFO | [epoch9] val_loss=101941.270190, val_loss_arr=85479.039062, val_loss_sca=26416.388672, val_loss_cls=1600.214722
+2025-10-10 14:20:09 | INFO | [epoch10] lr=0.001 train_loss=416.763679 train_loss_arr=98.823082, train_loss_sca=203.375916, train_loss_cls=36.319042 | grad_total=6.277e+08 gradNone=4 gradZero=0 | top8 {scalar_head.0.weight: 3.01e+08, scalar_head.2.weight: 2.09e+08, mlp_arr.0.weight: 7.53e+07, mlp_arr.2.weight: 4.25e+07, gnn.1.lin.weight: 9.15e+03, gnn.0.lin.weight: 5.08e+03, gnn.0.proj.weight: 5.01e+03, gnn.1.ln.bias: 4.42e+03}
+2025-10-10 14:21:40 | INFO | [epoch10] val_loss=103325.374386, val_loss_arr=85672.804688, val_loss_sca=28753.953125, val_loss_cls=1612.647217

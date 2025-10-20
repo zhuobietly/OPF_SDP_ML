@@ -1,32 +1,30 @@
-
 import os, sys, yaml, torch
 from pathlib import Path
-import random
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-CONFIG_PATH = PROJECT_ROOT /"configs" / "exp_toy.yaml"
-#path :/home/goatoine/Documents/Lanyue/models/GNN/configs/exp_tol.yaml
-from model_varients.registry import build as build_model
-from graph_builders.original import OriginalGraph
+import random
+CONFIG_PATH = PROJECT_ROOT /"configs" / "debug.yaml"
+
 try:
     from features.loads_phys_topo import LoadsPhysTopo
 except ModuleNotFoundError:
     from features.loads_phys_topo import LoadsPhysTopo
 
-from data_loader.dataset_opf import OPFGraphDataset, make_collate_fn
-from trainers.supervised import fit
-from trainers.evaluate import evaluate
 from gcn_utils.seed import set_seed
 from gcn_utils.global_normalize import normalize_inplace
 import pickle
 import torch 
 import numpy as np 
 import logging
-def filter_samples(samples, filter_str="original_0"):
-    filtered = [s for s in samples if filter_str in s.get("scenario_id", "")]
-    
-    return filtered
+from registries import build
+from torch.utils.data import DataLoader
+from data_loader.datasets.dataset_opf import OPFGraphDataset, make_collate_fn
+
+from data_loader import reader  # 这会触发 @register 装饰器
+from model_varients import gcn_new
+from trainers import task
+from trainers import loss 
 
 def setup_logging():
     # 配置日志格式
@@ -37,12 +35,6 @@ def setup_logging():
             logging.FileHandler('/home/goatoine/Documents/Lanyue/models/GNN/run_log/model_outputs.log'),  # 保存到文件
         ]
     )
-# === the kind of gcn model structure ===
-BUILDERS = {
-    "original": OriginalGraph,
-    # "original_plus_stats": OriginalPlusStats,
-    # "chordal": ChordalGraph,
-}
 
 def save_checkpoint(model: torch.nn.Module, path: str):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -57,183 +49,92 @@ def load_checkpoint(model_builder, model_args: dict, path: str, device: str = "c
     print(f"[CKPT] Loaded from {path}")
     return model
 
-def build_samples_debug_toy(num=80, minN=8, maxN=28, K=24):
-    #这个如果再用要+一个变量y_arr_regss
-    out = []
-    for i in range(num):
-        N = maxN
-        # 邻接矩阵
-        A = (torch.rand(N, N) > 0.82).float()
-        A = torch.triu(A, 1); A = A + A.t()
-        y_reg = torch.randn(K).abs() 
-        y_cls = torch.argmin(y_reg).long()
-        global_vec = torch.randn(16)
-        raw = {
-            "A": A,
-            "node_load": torch.randn(N, 2),
-            "degree": A.sum(dim=1, keepdim=True),
-            "global_vec": global_vec,
-            "y_reg": y_reg,
-            "y_cls": y_cls,
-        }
-        out.append(raw)
-    return out
+def infer_in_dim_from_ds(ds):
+    raw0 = ds.samples[0]                 # 直接拿原始样本，避免 batch/collate
+    if ds.build_features is not None:    # 和 __getitem__ 同一逻辑，但不建图
+        X0 = ds.build_features(raw0)
+    else:
+        X0 = raw0["X"]
+    return X0.shape[-1]
 
-def convert_samples_to_torch(samples):
-    """将 numpy samples 转换为 torch samples"""
-    torch_samples = []
-    for sample in samples:
-        torch_sample = {}
-        for key, value in sample.items():
-            if key == "A":
-                edge_index, edge_weight = value
-                torch_sample[key] = (torch.from_numpy(edge_index).long(), torch.from_numpy(edge_weight).float())
-            if key == "y_cls":
-                    torch_sample[key] = torch.tensor(value).long()
-            elif key == "y_reg":
-                    torch_sample[key] = torch.tensor(value).float()
-            elif isinstance(value, np.ndarray): # y_cls 转为 long
-                torch_sample[key] = torch.from_numpy(value).float()
-            else:
-                torch_sample[key] = value
-        torch_samples.append(torch_sample)
-    return torch_samples
+def split_by_ratio(samples, train=0.6, val=0.2, test=0.2, seed=42, shuffle=True):
+    assert abs(train + val + test - 1.0) < 1e-6
+    idx = list(range(len(samples)))
+    if shuffle:
+        rnd = random.Random(seed)
+        rnd.shuffle(idx)
+    n = len(samples)
+    i_tr = int(train * n)
+    i_va = int((train + val) * n)
+    tr_idx, va_idx, te_idx = idx[:i_tr], idx[i_tr:i_va], idx[i_va:]
+    # 切出子列表
+    get = lambda ids: [samples[i] for i in ids]
+    return get(tr_idx), get(va_idx), get(te_idx)
 
-def load_samples_from_npz(npz_path):
-    """从 npz 文件加载 samples"""
-    print(f"📖 Loading samples from {npz_path}")
-    data = np.load(npz_path, allow_pickle=True)
-    num_samples = int(data['num_samples'])
-    
-    samples = []
-    for i in range(num_samples):
-        sample = data[f'sample_{i}'].item()  # .item() 将 numpy 对象转回字典
-        samples.append(sample)
-    print(f"✅ Loaded {len(samples)} samples")
-    return samples
 def main():
     setup_logging()
     cfg = yaml.safe_load(open(CONFIG_PATH, "r"))
     set_seed(cfg.get("seed", 42))
-    # samples = build_samples_debug_toy()
-    sample_file = "/home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_new_samples.npz"
+    reader   = build("reader", cfg["data"]["reader"])
+    samples  = reader.load()                       # ← list[dict]，数量随 reader 变化
 
-    samples = load_samples_from_npz(sample_file)
-    
-    print(f"📊 总计: {len(samples)} 个样本")
-    # 转换为 torch tensor
-    samples = convert_samples_to_torch(samples)
-    if cfg.get("filter_str", None):
-        samples = filter_samples(samples, cfg["filter_str"])
-        print(f"🔍 过滤后: {len(samples)} 个样本 (包含 '{cfg['filter_str']}')") 
-    # 统计 y_cls 的类别分布
-    y_cls_values = [sample['y_cls'].item() for sample in samples]
-    unique, counts = np.unique(y_cls_values, return_counts=True)
-    print(f"📈 y_cls 类别分布: {dict(zip(unique, counts))}")
-    y_reg_values = [sample['y_reg'].item() for sample in samples]
-
-    # 绘制 y_reg 分布直方图
-    import matplotlib.pyplot as plt
-    plt.figure(figsize=(10, 6))
-    plt.hist(y_reg_values, bins=50, alpha=0.7, edgecolor='black')
-    plt.xlabel('y_reg 值')
-    plt.ylabel('频次')
-    plt.title('y_reg 值分布直方图')
-    plt.grid(True, alpha=0.3)
-    
-    # 保存图片
-    plt.savefig('/home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png', dpi=300, bbox_inches='tight')
-    print(f"📈 y_reg 分布图已保存到: /home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png")
-    plt.close()
-    #samples = load_from_csv_or_jld2(...)
-    # 3) Setup graph builder and feature pipeline
-    builder = BUILDERS[cfg["builder"]]()
+    # 2) 统一做比例切分（与你原来一致）
+    train_ratio = 0.6
+    val_ratio   = 0.2
+    test_ratio  = 1.0 - train_ratio - val_ratio
+    train_s, val_s, test_s = split_by_ratio(samples, train_ratio, val_ratio, test_ratio, seed=cfg["seed"], shuffle=True)
+    # 3) 保持你原来的 Dataset/Collate 用法
     pipeline = LoadsPhysTopo()
-    mode_name = cfg.get("global",{}).get("norm","zscore")
-    norm = normalize_inplace(samples, mode=mode_name, key="global_vec")
+    norm     = cfg["data"].get("norm", None)
 
-    # 4) split and generate Dataset (三份：train, val, test)
-    # notes that the samples are already shuffled
-    train_ratio = 0.6  # 60% 训练
-    val_ratio = 0.2    # 20% 验证  
-    test_ratio = 0.2   # 20% 测试
+    train_ds = OPFGraphDataset(train_s,  pipeline.node_features, norm)
+    val_ds   = OPFGraphDataset(val_s,   pipeline.node_features, norm)
+    test_ds  = OPFGraphDataset(test_s,  pipeline.node_features, norm)
 
-    train_split = int(train_ratio * len(samples))
-    val_split = int((train_ratio + val_ratio) * len(samples))
-
-    train_ds = OPFGraphDataset(samples[:train_split], builder.build, pipeline.node_features, norm)
-    val_ds   = OPFGraphDataset(samples[train_split:val_split], builder.build, pipeline.node_features, norm)
-    test_ds  = OPFGraphDataset(samples[val_split:], builder.build, pipeline.node_features, norm)
-
-    # simple model, that every graph is has the same size, so we can batch them directly
-    # collate_fn is used to merge a list of samples to a batch
     train_ds.collate_fn = make_collate_fn(train_ds)
-    val_ds.collate_fn = make_collate_fn(val_ds)
-    test_ds.collate_fn = make_collate_fn(test_ds)
+    val_ds.collate_fn   = make_collate_fn(val_ds)   
+    test_ds.collate_fn  = make_collate_fn(test_ds)
 
     print(f"[INFO] 数据集分割:")
     print(f"  训练集: {len(train_ds)} 样本")
     print(f"  验证集: {len(val_ds)} 样本") 
     print(f"  测试集: {len(test_ds)} 样本")
-
-    # 5) build model
-    in_dim = train_ds[0]["X"].shape[1]
-    model_args = {
-    "name": cfg["model"]["name"],
-    "in_dim": in_dim,
-    "hidden": cfg["model"].get("hidden", [128, 128]),
-    "out_dim": cfg["model"].get("out_dim", 24),
-    "dropout": cfg["model"].get("dropout", 0.2),
-    }
-    if "g_dim" in cfg["model"]:
-        model_args["g_dim"] = cfg["model"]["g_dim"]
-
-    model = build_model(**model_args) 
-
-    # ---- 调试建议：首次 batch 打印一下形状，确认输入无误 ----
-    first = train_ds[0]
-    print("[dbg] A_hat:", first["A_hat"].shape, "X:", first["X"].shape, "y_reg:", first["y_reg"].shape,"y_arr_reg:", first["y_arr_reg"].shape, "y_cls:", first["y_cls"].shape)
-
-    # 6) 训练
-    fit(
-        model,
-        train_ds,
-        val_ds,
-        epochs=cfg["train"].get("epochs", 5),
-        batch_size=cfg["train"].get("batch_size", 8),
-        lr=cfg["train"].get("lr", 3e-4),
-        device="cpu",
-        DEBUG_GRAD=True,   # ← 仅当需要时才记录梯度概况
-        PRINT_MODEL_ONCE=True,
-    )
-    # the metric of Y visualization
-    print("Train Done.")
-    # === 保存最终权重（本次训练得到的模型） ===
-    ckpt_path = "/home/goatoine/Documents/Lanyue/models/GNN/checkpoints/final_no_gvec.pt"
-    save_checkpoint(model, ckpt_path)
-
-    # === （演示）重新加载权重再做测试评估 ===
-    # 说明：这一步模拟“另一个进程/之后的时刻”评估；实际使用时，你可以仅保留 load+evaluate 的部分。
-    reloaded_model = load_checkpoint(build_model, model_args, ckpt_path, device="cpu")
+    train_loader = DataLoader(train_ds, batch_size=cfg["train"].get("batch_size", 8), shuffle=True,
+                              collate_fn=getattr(train_ds, "collate_fn", None))
+    val_loader   = DataLoader(val_ds, batch_size=cfg["train"].get("batch_size", 8), shuffle=False,
+                              collate_fn=getattr(val_ds, "collate_fn", None))
+    test_loader   = DataLoader(test_ds, batch_size=cfg["train"].get("batch_size", 8), shuffle=False,
+                              collate_fn=getattr(test_ds, "collate_fn", None))
+    # 试探 in_dim（X 的最后一维）
 
 
-    from trainers.evaluate import evaluate
-    
-    # ... 训练完成后：
-    test_metrics = evaluate(
-        model=model,
-        dataset=test_ds,
-        batch_size=cfg["train"].get("batch_size", 8),
-        device="cpu",
-        save_dir="/home/goatoine/Documents/Lanyue/models/GNN//result/figure",
-        # 可选：传类名；若不传则用 0..C-1
-        class_names=[str(i) for i in range(15)],  # 最新模型是15类
-    )
+    # 用法：
+    in_dim = infer_in_dim_from_ds(train_ds)
+     
+    # 1) 构建 model / loss / task
+    model = build("model", "gcn_basic",
+                in_dim=in_dim, hidden=64, layers=2,
+                out_array_dim=cfg["model"].get("out_array_dim", 15))
 
-    print("[TEST] acc:", f'{test_metrics["cls_accuracy_top1"]:.4f}')
-    print("[TEST] overall MAE/RMSE:", f'{test_metrics["scalar_reg_mae"]:.6f}', f'{test_metrics["scalar_reg_rmse"]:.6f}')
-    print("CM 图片已保存到: .../result/figure/confusion_matrix.png")
+    loss_fn = build("loss", "arr_cls")  # 或 "multihead_basic" 按需要换
 
+    task = build("task", "opf_basic_task",
+                model=model, loss_fn=loss_fn,
+                device="cuda" if torch.cuda.is_available() else "cpu",
+                lr=cfg.get("train", {}).get("lr", 1e-3))
+
+    # 2) 训练 + 验证（可选）
+    epochs = cfg.get("train", {}).get("epochs", 5)
+    for ep in range(epochs):
+        tr_loss = task.train_one_epoch(train_loader)
+        val_loss = task.validate(val_loader)
+        print(f"Epoch {ep} | loss={tr_loss:.4f} | {val_loss:.4f}")
+
+                # 你的 evaluate 里要的配置原样给它
+
+    # 3) 测试：走你现有的 evaluate.py
+    test_metrics = task.test_with_evaluator(test_loader, cfg)
+    print("[TEST]", test_metrics)
 
 if __name__ == "__main__":
     main()

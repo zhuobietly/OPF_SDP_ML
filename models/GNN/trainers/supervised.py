@@ -71,8 +71,8 @@ def _grad_stats(model):
         grads.append((gnorm, n))
     grads.sort(reverse=True, key=lambda x: x[0])
     total = sum(v for v, _ in grads)
-    top2 = grads[:2]
-    return total, none_cnt, zero_cnt, top2
+    top8 = grads[:8]
+    return total, none_cnt, zero_cnt, top8
 
 # ========== 训练/评估 ==========
 def train_epoch(model, loader, optimizer, loss_fn, device, ep, logger, debug=False):
@@ -98,7 +98,7 @@ def train_epoch(model, loader, optimizer, loss_fn, device, ep, logger, debug=Fal
             # pred_arr_reg, pred_y_reg, pred_y_cls = model(A, X)
             pred_y_reg = model(A, X)
 
-        loss = loss_fn(pred_y_reg, y_reg)
+        loss, loss_arr, loss_sca, loss_cls = loss_fn(pred_y_reg, y_reg,pred_arr_reg,y_arr_reg,y_cls)
 
         loss.backward()
 
@@ -111,18 +111,17 @@ def train_epoch(model, loader, optimizer, loss_fn, device, ep, logger, debug=Fal
 
         optimizer.step()
 
-        bs = y_reg.size(0)
-        total_loss_sum += loss.item() * bs
-        total_items += bs
+        total_loss_sum += loss.item()
+        total_items    += 1
 
     avg_loss = total_loss_sum / max(1, total_items)
 
     lr0 = optimizer.param_groups[0].get("lr", None) if optimizer.param_groups else None
-    msg = f"[epoch{ep}] lr={lr0} train_loss={avg_loss:.6f}"
+    msg = f"[epoch{ep}] lr={lr0} train_loss={avg_loss:.6f} train_loss_arr={loss_arr:.6f}, train_loss_sca={loss_sca:.6f}, train_loss_cls={loss_cls:.6f}"
     if debug and last_grad_info is not None:
-        total, none_cnt, zero_cnt, top2 = last_grad_info
-        top_str = ", ".join([f"{n}: {v:.2e}" for v, n in top2])
-        msg += f" | grad_total={total:.3e} gradNone={none_cnt} gradZero={zero_cnt} | top2 {{{top_str}}}"
+        total, none_cnt, zero_cnt, top8 = last_grad_info
+        top_str = ", ".join([f"{n}: {v:.2e}" for v, n in top8])
+        msg += f" | grad_total={total:.3e} gradNone={none_cnt} gradZero={zero_cnt} | top8 {{{top_str}}}"
     logger.info(msg)
     return avg_loss
 
@@ -137,21 +136,69 @@ def eval_epoch(model, loader, loss_fn, device, ep, logger):
             A, X = batch["A_hat"].to(device), batch["X"].to(device)
             y_reg, y_arr_reg, y_cls = batch["y_reg"].to(device), batch["y_arr_reg"].to(device), batch["y_cls"].to(device)
             gvec = batch["gvec"].to(device)
-            pred_arr_reg, pred_y_reg, pred_y_cls = model(A, X)
+            pred_arr_reg, pred_y_reg, pred_y_cls = model(A, X, gvec)
         else:
             A, X = batch["A_hat"].to(device), batch["X"].to(device)
-            y_reg, y_arr_reg, y_cls = batch["y_reg"].to(device), batch["y_arr_reg"].to(device), batch["y_cls"].to(device)
+            # y_reg, y_arr_reg, y_cls = batch["y_reg"].to(device), batch["y_arr_reg"].to(device), batch["y_cls"].to(device)
+            y_reg = batch["y_reg"].to(device)
+            # pred_arr_reg, pred_y_reg, pred_y_cls = model(A, X)
             pred_y_reg = model(A, X)
 
-        loss = loss_fn(pred_y_reg, y_reg)
-        bs = y_reg.size(0)
-        total_loss_sum += loss.item() * bs
-        total_items += bs
+        loss,loss_arr, loss_sca, loss_cls = loss_fn(pred_y_reg, y_reg,pred_arr_reg,y_arr_reg,y_cls)
+        total_loss_sum += loss.item()
+        total_items    += 1
 
     avg_loss = total_loss_sum / max(1, total_items)
-    logger.info(f"[epoch{ep}] val_loss={avg_loss:.6f}")
+    logger.info(f"[epoch{ep}] val_loss={avg_loss:.6f}, val_loss_arr={loss_arr:.6f}, val_loss_sca={loss_sca:.6f}, val_loss_cls={loss_cls:.6f}")
     return avg_loss
 
+
+# def fit(model, train_ds, val_ds, epochs=50, batch_size=8, lr=3e-4, device="cpu",
+#         plot_path="./models/GNN/runners/loss_curve.png",
+#         log_path="logs/train.log",
+#         DEBUG_GRAD=False,   # ← 仅当需要时才记录梯度概况
+#         PRINT_MODEL_ONCE=False,  # ← 仅当需要时打印模型/子模块
+#         PRINT_PREFIX=None   # 例如 "att_q"
+#         ):
+#     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True,
+#                               collate_fn=getattr(train_ds, "collate_fn", None))
+#     val_loader   = DataLoader(val_ds, batch_size=batch_size, shuffle=False,
+#                               collate_fn=getattr(val_ds, "collate_fn", None))
+
+#     model.to(device)
+#     opt = torch.optim.Adam(model.parameters(), lr=lr)
+#     loss_fn = multitask_loss
+#     best = float("inf")
+
+#     logger = setup_training_logger(log_path)
+
+#     if PRINT_MODEL_ONCE:
+#         logger.info("=== Model outline ===")
+#         show_modules(logger, model, prefix=PRINT_PREFIX)
+
+#     train_losses, val_losses = [], []
+
+#     for ep in range(1, epochs + 1):
+#         tr = train_epoch(model, train_loader, opt, loss_fn, device, ep, logger, debug=DEBUG_GRAD)
+#         va = eval_epoch(model, val_loader, loss_fn, device, ep, logger)
+
+#         train_losses.append(tr); val_losses.append(va)
+#         log(f"Epoch {ep:03d} | train {tr:.4f} | val {va:.4f}")  
+#         if va < best: best = va
+
+#     # ---- 绘图（最后 6 个点，长度不足时自动适配）----
+#     k = min(6, len(train_losses))
+#     xs = list(range(len(train_losses) - k + 1, len(train_losses) + 1))
+#     plt.figure()
+#     plt.plot(xs, train_losses[-k:], label="train_loss")
+#     plt.plot(xs, val_losses[-k:], label="val_loss")
+#     plt.xlabel("Epoch"); plt.ylabel("Loss"); plt.title("Training vs Validation Loss")
+#     plt.legend(); plt.grid(True); plt.tight_layout()
+#     Path(os.path.dirname(plot_path)).mkdir(parents=True, exist_ok=True)
+#     plt.savefig(plot_path, dpi=180)
+#     print(f"✅ Loss curve saved to {plot_path}")
+
+#     return {"val_mse": best}
 def fit(model, train_ds, val_ds, epochs=50, batch_size=8, lr=3e-4, device="cpu",
         plot_path="./models/GNN/runners/loss_curve.png",
         log_path="logs/train.log",
@@ -180,9 +227,8 @@ def fit(model, train_ds, val_ds, epochs=50, batch_size=8, lr=3e-4, device="cpu",
     for ep in range(1, epochs + 1):
         tr = train_epoch(model, train_loader, opt, loss_fn, device, ep, logger, debug=DEBUG_GRAD)
         va = eval_epoch(model, val_loader, loss_fn, device, ep, logger)
-
         train_losses.append(tr); val_losses.append(va)
-        log(f"Epoch {ep:03d} | train {tr:.4f} | val {va:.4f}")  
+        log(f"Epoch {ep:03d} | train {tr:.4f} | val {va:.4f}")
         if va < best: best = va
 
     # ---- 绘图（最后 6 个点，长度不足时自动适配）----

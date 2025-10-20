@@ -2,7 +2,7 @@ import torch
 from .base import FeaturePipeline
 
 class LoadsPhysTopo(FeaturePipeline):
-    def node_features(self, graph_dict, raw):
+    def node_features(self, raw):
         Xs = []
         # to add more features, just append to Xs
         if "node_load" in raw: Xs.append(raw["node_load"].float())

@@ -8,7 +8,21 @@ import torch
 from torch.utils.data import DataLoader
 import numpy as np
 import matplotlib.pyplot as plt
-
+def evaluate_scalar(preds_list, tgts_list, cfg):
+    """
+    preds_list: list[{"pred_y_reg": tensor(B,)}]
+    tgts_list:  list[{"y_reg": tensor(B,)}]
+    你原来画图/记录怎么写，这里照常写，比如：
+      - 拼成一根长向量
+      - 画散点图、误差直方图
+      - 保存到 cfg 里的某个目录
+    """
+    import torch, matplotlib.pyplot as plt, os
+    y_pred = torch.cat([d["pred_y_reg"].reshape(-1) for d in preds_list], 0).cpu().numpy()
+    y_true = torch.cat([d["y_reg"].reshape(-1)     for d in tgts_list], 0).cpu().numpy()
+    # ... 你的画图 & 指标计算 ...
+    # return 一个 dict 作为指标
+    return {"mae": float(abs(y_pred - y_true).mean())}
 
 def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> np.ndarray:
     """Compute confusion matrix without sklearn: shape [C, C], rows=true, cols=pred."""

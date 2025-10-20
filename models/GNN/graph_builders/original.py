@@ -15,14 +15,6 @@ class OriginalGraph(GraphBuilder):
             edge_attr = torch.as_tensor(edge_weight, dtype=torch.float32)
             return {"edge_index": ei, "edge_attr": edge_attr, "global": {"kind": "original"}}
 
-        # 情况 2：稠密邻接矩阵 (N,N)
-        if isinstance(A, torch.Tensor) and A.dim() == 2:
-            rows, cols = A.nonzero(as_tuple=True)
-            ei = torch.stack([rows, cols], dim=0)  # [2,E]
-            # 如果你想保留权重, 取消下一行注释; 不要权重就沿用 None
-            # edge_attr = A[rows, cols].to(torch.float32)
-            return {"edge_index": ei.contiguous(), "edge_attr": None, "global": {"kind": "original"}}
-
         # 情况 3：已经是 edge_index
         if isinstance(A, torch.Tensor):
             # 期望 A 形状就是 [2,E]

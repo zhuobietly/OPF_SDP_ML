@@ -1,0 +1,91 @@
+# exp_debug.yaml  —— 最小可运行配置（用于整体流程 debug）
+
+seed: 42
+
+# ======================
+# 数据读取（Reader 版本化）
+# ======================
+data:
+  # 选用的 Reader 名称（在你注册的 reader 里换 opf_v1 / opf_v2 即切版本）
+  reader: "opf_v1"
+  # DataLoader 线程数（根据机器改）
+  num_workers: 4
+
+  # 归一化（如果暂时不用，保持 null）
+  norm: null 
+
+# ===============
+# 训练超参数
+# ===============
+train:
+  batch_size: 32
+  epochs: 10
+  lr: 1.0e-3
+
+  # 下面三项先按需开关；不需要就保留默认
+  amp: false           # 混合精度
+  grad_clip: null      # 例如 1.0
+  accum_steps: 1       # 梯度累积步数
+
+  # 学习率调度器（先关掉；需要时换成 steplr / cosine）
+  scheduler: null
+  # scheduler:
+  #   name: "steplr"
+  #   step_size: 10
+  #   gamma: 0.5
+
+  # 早停（验证指标是 val_mae；不需要就设为 null）
+  early_stop: null
+  # early_stop:
+  #   patience: 5
+  #   mode: "min"
+  #   min_delta: 1.0e-4
+
+# ==================
+# 模型（GCNGlobal）
+# ==================
+model:
+  name: "gcn_basic"
+  # in_dim 会在 run_one.py 里通过一个 batch 自动探测（X.shape[-1]），
+  # 如果你想写死，也可以加：in_dim: 3
+  hidden: 64
+  layers: 2
+  readout: "mean"          # mean | sum | max
+
+  # 输出头：按需打开（只做标量回归 → 打开 out_scalar，其它置 null）
+  out_scalar: None        # 标量回归头（pred_y_reg）
+  out_array_dim: 15      # 数组回归头维度（比如 48）；没有就留 null
+
+  dropout: 0.1
+
+# ==================
+# 损失（按需切换）
+# ==================
+loss:
+  # 只做标量回归：用 scalar_mse
+  #name: "scalar_mse"
+  # 多头示例（存在哪个头就参与哪个项）：可改成
+  name: "arr_cls"
+
+# ==================
+# 任务 / 日志 / 模型保存
+# ==================
+task:
+  name: "opf_basic_task"
+
+paths:
+  # 运行目录（日志/ckpt/曲线）
+  run_dir: "/home/goatoine/Documents/Lanyue/models/GNN/runs/exp_debug"
+  ckpt_dir: "/home/goatoine/Documents/Lanyue/models/GNN/runs/exp_debug/ckpt"
+  log_csv: "/home/goatoine/Documents/Lanyue/models/GNN/runs/exp_debug/train.csv"
+
+  # 是否保存最优 / 按周期保存
+  save_best: true
+  save_every: 5   # 每 N 个 epoch 存一次；不需要可设 null
+
+# ==================
+# 测试评估（走你的 evaluate.py）
+# ==================
+evaluator:
+  name: "arr_cls"
+  output_dir: "/home/goatoine/Documents/Lanyue/models/GNN/result/basic"
