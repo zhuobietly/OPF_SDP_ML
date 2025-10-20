@@ -2,6 +2,7 @@
 import torch
 from torch.utils.data import Dataset
 import numpy as np
+from gcn_utils import normalize
 
 def edge_to_dense_A(edge_index, edge_weight, N, dtype=torch.float32, device="cpu"):
     """

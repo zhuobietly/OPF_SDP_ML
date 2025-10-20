@@ -12,7 +12,6 @@ except ModuleNotFoundError:
     from features.loads_phys_topo import LoadsPhysTopo
 
 from gcn_utils.seed import set_seed
-from gcn_utils.global_normalize import normalize_inplace
 import pickle
 import torch 
 import numpy as np 
@@ -21,10 +20,11 @@ from registries import build
 from torch.utils.data import DataLoader
 from data_loader.datasets.dataset_opf import OPFGraphDataset, make_collate_fn
 
-from data_loader import reader  # 这会触发 @register 装饰器
+from data_loader import reader  
 from model_varients import gcn_new
 from trainers import task
 from trainers import loss 
+from gcn_utils.normalize import GlobalNormalizer, normalize_inplace
 
 def setup_logging():
     # 配置日志格式
@@ -50,8 +50,8 @@ def load_checkpoint(model_builder, model_args: dict, path: str, device: str = "c
     return model
 
 def infer_in_dim_from_ds(ds):
-    raw0 = ds.samples[0]                 # 直接拿原始样本，避免 batch/collate
-    if ds.build_features is not None:    # 和 __getitem__ 同一逻辑，但不建图
+    raw0 = ds.samples[0]                 
+    if ds.build_features is not None:    
         X0 = ds.build_features(raw0)
     else:
         X0 = raw0["X"]
@@ -76,16 +76,17 @@ def main():
     cfg = yaml.safe_load(open(CONFIG_PATH, "r"))
     set_seed(cfg.get("seed", 42))
     reader   = build("reader", cfg["data"]["reader"])
-    samples  = reader.load()                       # ← list[dict]，数量随 reader 变化
+    samples  = reader.load() 
+    norm_style     = cfg["data"].get("norm", None)                     
+    norm = normalize_inplace(samples, mode=norm_style, key="node_load") if norm_style else None
 
-    # 2) 统一做比例切分（与你原来一致）
     train_ratio = 0.6
     val_ratio   = 0.2
     test_ratio  = 1.0 - train_ratio - val_ratio
     train_s, val_s, test_s = split_by_ratio(samples, train_ratio, val_ratio, test_ratio, seed=cfg["seed"], shuffle=True)
-    # 3) 保持你原来的 Dataset/Collate 用法
+
     pipeline = LoadsPhysTopo()
-    norm     = cfg["data"].get("norm", None)
+    
 
     train_ds = OPFGraphDataset(train_s,  pipeline.node_features, norm)
     val_ds   = OPFGraphDataset(val_s,   pipeline.node_features, norm)

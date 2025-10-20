@@ -18,7 +18,7 @@ from data_loader.dataset_opf import OPFGraphDataset, make_collate_fn
 from trainers.supervised import fit
 from trainers.evaluate import evaluate
 from gcn_utils.seed import set_seed
-from gcn_utils.global_normalize import normalize_inplace
+from gcn_utils.normalize import normalize_inplace
 import pickle
 import torch 
 import numpy as np 

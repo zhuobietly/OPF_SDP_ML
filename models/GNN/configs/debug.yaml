@@ -12,7 +12,7 @@ data:
   num_workers: 4
 
   # 归一化（如果暂时不用，保持 null）
-  norm: null 
+  norm: zscore  # zscore | minmax | robust | none
 
 # ===============
 # 训练超参数
