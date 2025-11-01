@@ -149,12 +149,31 @@ class ArrClsEvaluator(BaseEvaluator):
             # 混淆矩阵
             nc = 15
             cm = _conf_mat(Ytrue, yhat, nc)
-            fig = plt.figure()
-            plt.imshow(cm, interpolation="nearest")
+            fig = plt.figure(figsize=(10, 8))  # 增大图片尺寸以容纳数字
+            plt.imshow(cm, interpolation="nearest", cmap='Blues')
+
+            # 计算百分比
+            cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+
+            # 添加数字和百分比标注
+            for i in range(cm.shape[0]):
+                for j in range(cm.shape[1]):
+                    plt.text(j, i, f'{cm[i, j]}\n({cm_percent[i, j]:.1f}%)',
+                            ha='center', va='center',
+                            color='white' if cm[i, j] > cm.max() / 2 else 'black',
+                            fontsize=9)
+
             plt.title("Confusion Matrix")
             plt.xlabel("Predicted")
             plt.ylabel("True")
             plt.colorbar()
+
+            # 添加坐标轴标签
+            tick_marks = np.arange(nc)
+            plt.xticks(tick_marks, range(nc))
+            plt.yticks(tick_marks, range(nc))
+
+            plt.tight_layout()
             _plot_save(fig, os.path.join(out_dir, "cls_confusion_matrix.png"))
             metrics["classify"].update(_cls_report(cm))
 

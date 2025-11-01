@@ -1,0 +1,71 @@
+nohup: ignoring input
+📖 Loading samples from /home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_1029_samples.npz
+✅ Loaded 22395 samples
+📊 总计: 22395 个样本
+🔧 After deduplication: 297 samples (from 4455)
+📈 y_cls class distribution: {0: 1, 1: 6, 3: 1, 4: 1, 5: 2, 6: 10, 7: 25, 8: 28, 9: 9, 10: 2, 11: 32, 12: 3, 13: 112, 14: 65}
+📊 y_reg statistics:
+  Min: 0.000000
+  Max: 1.266923
+  Mean: 0.410940
+  Std: 0.199087
+📈 y_reg distribution plot saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png
+🔧 After feature filtering: kept ['A_grid', 'node_load', 'y_cls', 'y_arr_reg']
+🔍 Normalizing node_load: shape torch.Size([297, 2746, 2])
+🔍 MultiDimNormalizer fit: original shape torch.Size([297, 2746, 2]) -> reshaped torch.Size([815562, 2])
+🔍 num_features: 2, original_data_shape: torch.Size([2746, 2])
+[INFO] 数据集分割:
+  训练集: 178 样本
+  验证集: 59 样本
+  测试集: 60 样本
+Epoch 0 | loss=0.4328 | 0.3060
+Epoch 1 | loss=0.2677 | 0.2517
+Epoch 2 | loss=0.2289 | 0.2316
+Epoch 3 | loss=0.1833 | 0.2097
+Epoch 4 | loss=0.1760 | 0.2142
+Epoch 5 | loss=0.1708 | 0.2088
+Epoch 6 | loss=0.1905 | 0.2073
+Epoch 7 | loss=0.1692 | 0.2097
+Epoch 8 | loss=0.1705 | 0.2061
+Epoch 9 | loss=0.1820 | 0.2073
+Epoch 10 | loss=0.1799 | 0.2070
+Epoch 11 | loss=0.1722 | 0.2082
+Epoch 12 | loss=0.1774 | 0.2057
+Epoch 13 | loss=0.1728 | 0.2057
+Epoch 14 | loss=0.1728 | 0.2042
+Epoch 15 | loss=0.1666 | 0.2070
+Epoch 16 | loss=0.1693 | 0.2041
+Epoch 17 | loss=0.1855 | 0.2012
+Epoch 18 | loss=0.1745 | 0.2029
+Epoch 19 | loss=0.1652 | 0.2059
+Epoch 20 | loss=0.1732 | 0.2039
+Epoch 21 | loss=0.1725 | 0.2005
+Epoch 22 | loss=0.1776 | 0.2024
+Epoch 23 | loss=0.1750 | 0.1990
+Epoch 24 | loss=0.1864 | 0.2013
+Epoch 25 | loss=0.1764 | 0.1964
+Epoch 26 | loss=0.1712 | 0.2003
+Epoch 27 | loss=0.1616 | 0.1946
+Epoch 28 | loss=0.1725 | 0.1969
+Epoch 29 | loss=0.1716 | 0.1955
+Epoch 30 | loss=0.1652 | 0.1949
+Epoch 31 | loss=0.1629 | 0.1954
+Epoch 32 | loss=0.1697 | 0.1954
+Epoch 33 | loss=0.1869 | 0.1952
+Epoch 34 | loss=0.1639 | 0.1969
+Epoch 35 | loss=0.1710 | 0.1944
+Epoch 36 | loss=0.1654 | 0.1929
+Epoch 37 | loss=0.1617 | 0.1927
+Epoch 38 | loss=0.1677 | 0.1935
+Epoch 39 | loss=0.1601 | 0.1914
+Epoch 40 | loss=0.1605 | 0.1918
+Epoch 41 | loss=0.1615 | 0.1944
+Epoch 42 | loss=0.1676 | 0.1904
+Epoch 43 | loss=0.1678 | 0.1919
+Epoch 44 | loss=0.1802 | 0.1935
+Epoch 45 | loss=0.1735 | 0.1897
+Epoch 46 | loss=0.1627 | 0.1906
+Epoch 47 | loss=0.1582 | 0.1893
+Epoch 48 | loss=0.1765 | 0.1901
+Epoch 49 | loss=0.1696 | 0.1922
+[TEST] {'array': {'MAE': 0.17899994552135468, 'RMSE': 0.33172738552093506}, 'classify': {'acc': 0.11666666666666667, 'cross_entropy': 2.562525987625122, 'accuracy': 0.11666666666666667, 'precision_macro': 0.0077777777777776474, 'recall_macro': 0.06666666666665715, 'f1_macro': 0.013930348258693574, 'precision_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11666666666666471], 'recall_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9999999999998571], 'f1_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2089552238804036]}}

@@ -9,6 +9,7 @@ class GraphConv(nn.Module):
         self.drop = nn.Dropout(dropout)
         self.ln = nn.LayerNorm(out_dim)
     def forward(self, A_hat, X):
+        #A_hat[2,1,1],A:[Batch,N,N], X :[Batch,1,N,F]?
         H = torch.matmul(A_hat, X)           # (B,N,F)
         H = self.lin(H)
         return self.drop(self.act(self.ln(H)))

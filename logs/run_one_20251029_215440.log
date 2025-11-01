@@ -1,0 +1,33 @@
+nohup: ignoring input
+/home/goatoine/Documents/Lanyue/models/GNN/evaluation/evaluators.py:156: RuntimeWarning: invalid value encountered in divide
+  cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+📖 Loading samples from /home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_1029_samples.npz
+✅ Loaded 22395 samples
+📊 总计: 22395 个样本
+🔧 After deduplication: 297 samples (from 4455)
+📈 y_cls class distribution: {0: 1, 1: 6, 3: 1, 4: 1, 5: 2, 6: 10, 7: 25, 8: 28, 9: 9, 10: 2, 11: 32, 12: 3, 13: 112, 14: 65}
+📊 y_reg statistics:
+  Min: 0.000000
+  Max: 1.266923
+  Mean: 0.410940
+  Std: 0.199087
+📈 y_reg distribution plot saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png
+🔧 After feature filtering: kept ['A_grid', 'node_load', 'y_cls', 'y_arr_reg']
+🔍 Normalizing node_load: shape torch.Size([297, 2746, 2])
+🔍 MultiDimNormalizer fit: original shape torch.Size([297, 2746, 2]) -> reshaped torch.Size([815562, 2])
+🔍 num_features: 2, original_data_shape: torch.Size([2746, 2])
+[INFO] 数据集分割:
+  训练集: 178 样本
+  验证集: 59 样本
+  测试集: 60 样本
+Epoch 0 | loss=0.6162 | 0.5890
+Epoch 1 | loss=0.5781 | 0.5562
+Epoch 2 | loss=0.5463 | 0.5261
+Loss curves saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/basic/loss_curves.png
+
+📊 Loss Statistics:
+Final Training Loss: 0.546311
+Final Validation Loss: 0.526131
+Best Validation Loss: 0.526131 (Epoch 3)
+Loss data saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/basic/loss_data.csv
+[TEST] {'array': {'MAE': 0.5464655160903931, 'RMSE': 0.81195467710495}, 'classify': {'acc': 0.0, 'cross_entropy': 2.935518503189087, 'accuracy': 0.0, 'precision_macro': 0.0, 'recall_macro': 0.0, 'f1_macro': 0.0, 'precision_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'recall_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'f1_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}

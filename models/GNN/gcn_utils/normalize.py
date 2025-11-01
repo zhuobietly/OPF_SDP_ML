@@ -39,7 +39,6 @@ class GlobalNormalizer:
         return x
 
 class MultiDimNormalizer:
-    """支持多维数据的标准化器，最后一维是特征维度，其他维度展开成样本"""
     
     def __init__(self, mode: NormalizationMode = "zscore", eps: float = 1e-8):
         self.mode = mode
@@ -133,7 +132,7 @@ def normalize_inplace(samples: Sequence[dict[str, Any]], *,
     if not has_any:
         return None
     
-    g_list = []
+    data_list = []
     original_shapes = []
     for i, s in enumerate(samples):
         if key not in s:
@@ -144,28 +143,27 @@ def normalize_inplace(samples: Sequence[dict[str, Any]], *,
         # 确保数据是 float32 并保持原始形状
         data = torch.as_tensor(s[key], dtype=torch.float32)
         original_shapes.append(data.shape)
-        g_list.append(data)  # 不再flatten，保持原始形状
-    
-    if not g_list:
+        data_list.append(data)  # 不再flatten，保持原始形状
+
+    if not data_list:
         return None
     
     # 堆叠所有样本：[N_samples, ...] 
-    all_g = torch.stack(g_list, 0)
-    print(f"🔍 Normalizing {key}: shape {all_g.shape}")
+    all_data = torch.stack(data_list, 0)
+    print(f"🔍 Normalizing {key}: shape {all_data.shape}")
     
     # 使用多维标准化器 - 最后一维是特征维度
-    norm = MultiDimNormalizer(mode).fit(all_g)
-    
+    norm = MultiDimNormalizer(mode).fit(all_data)
+
     # 对每个样本应用变换
     j = 0
     for s in samples:
         if key not in s: 
             continue
-        
-        # 变换数据 - 输入单个样本的形状
-        sample_data = all_g[j]  # 原始形状
-        transformed = norm.transform(sample_data.unsqueeze(0))  # 加batch维度
-        s[key] = transformed  # 去掉batch维度
+
+        sample_data = all_data[j]  
+        transformed = norm.transform(sample_data.unsqueeze(0))  
+        s[key] = transformed  
         j += 1
     
     return norm

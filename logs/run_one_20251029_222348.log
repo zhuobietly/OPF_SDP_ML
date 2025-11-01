@@ -1,0 +1,80 @@
+nohup: ignoring input
+/home/goatoine/Documents/Lanyue/models/GNN/evaluation/evaluators.py:156: RuntimeWarning: invalid value encountered in divide
+  cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+📖 Loading samples from /home/goatoine/Documents/Lanyue/data/data_for_GCN/data_basic_GCN/case2746wop_1029_samples.npz
+✅ Loaded 22395 samples
+📊 总计: 22395 个样本
+🔧 After deduplication: 297 samples (from 4455)
+📈 y_cls class distribution: {0: 1, 1: 6, 3: 1, 4: 1, 5: 2, 6: 10, 7: 25, 8: 28, 9: 9, 10: 2, 11: 32, 12: 3, 13: 112, 14: 65}
+📊 y_reg statistics:
+  Min: 0.000000
+  Max: 1.266923
+  Mean: 0.410940
+  Std: 0.199087
+📈 y_reg distribution plot saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/y_reg_distribution.png
+🔧 After feature filtering: kept ['A_grid', 'node_load', 'y_cls', 'y_arr_reg']
+🔍 Normalizing node_load: shape torch.Size([297, 2746, 2])
+🔍 MultiDimNormalizer fit: original shape torch.Size([297, 2746, 2]) -> reshaped torch.Size([815562, 2])
+🔍 num_features: 2, original_data_shape: torch.Size([2746, 2])
+[INFO] 数据集分割:
+  训练集: 178 样本
+  验证集: 59 样本
+  测试集: 60 样本
+Epoch 0 | loss=19.1650 | 18.2432
+Epoch 1 | loss=17.5222 | 16.7725
+Epoch 2 | loss=16.1085 | 15.3384
+Epoch 3 | loss=14.6291 | 13.9587
+Epoch 4 | loss=13.2475 | 12.6555
+Epoch 5 | loss=12.0659 | 11.4554
+Epoch 6 | loss=10.7779 | 10.3952
+Epoch 7 | loss=9.6299 | 9.5169
+Epoch 8 | loss=8.9033 | 8.8386
+Epoch 9 | loss=8.2068 | 8.3472
+Epoch 10 | loss=7.8160 | 7.9903
+Epoch 11 | loss=7.3358 | 7.7044
+Epoch 12 | loss=7.0511 | 7.4646
+Epoch 13 | loss=6.8182 | 7.2564
+Epoch 14 | loss=6.5875 | 7.0855
+Epoch 15 | loss=6.5028 | 6.9588
+Epoch 16 | loss=6.2952 | 6.8579
+Epoch 17 | loss=6.2282 | 6.7873
+Epoch 18 | loss=6.1301 | 6.7297
+Epoch 19 | loss=6.0718 | 6.6909
+Epoch 20 | loss=6.0439 | 6.6711
+Epoch 21 | loss=6.0624 | 6.6537
+Epoch 22 | loss=6.0946 | 6.6384
+Epoch 23 | loss=5.9526 | 6.6174
+Epoch 24 | loss=5.9260 | 6.6030
+Epoch 25 | loss=5.8512 | 6.5940
+Epoch 26 | loss=5.8186 | 6.5865
+Epoch 27 | loss=5.9615 | 6.5853
+Epoch 28 | loss=5.8345 | 6.5785
+Epoch 29 | loss=5.9077 | 6.5695
+Epoch 30 | loss=5.8834 | 6.5596
+Epoch 31 | loss=5.8788 | 6.5488
+Epoch 32 | loss=5.9640 | 6.5417
+Epoch 33 | loss=5.9015 | 6.5311
+Epoch 34 | loss=5.8473 | 6.5244
+Epoch 35 | loss=5.8251 | 6.5231
+Epoch 36 | loss=5.7557 | 6.5163
+Epoch 37 | loss=5.8011 | 6.5166
+Epoch 38 | loss=5.8383 | 6.5171
+Epoch 39 | loss=5.7846 | 6.5106
+Epoch 40 | loss=5.8349 | 6.5035
+Epoch 41 | loss=5.7396 | 6.4958
+Epoch 42 | loss=5.8386 | 6.4949
+Epoch 43 | loss=5.8572 | 6.5066
+Epoch 44 | loss=5.7953 | 6.4984
+Epoch 45 | loss=5.7997 | 6.4992
+Epoch 46 | loss=5.8013 | 6.4924
+Epoch 47 | loss=5.8006 | 6.4907
+Epoch 48 | loss=5.7735 | 6.4932
+Epoch 49 | loss=5.7934 | 6.4840
+Loss curves saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/basic/loss_curves.png
+
+📊 Loss Statistics:
+Final Training Loss: 5.793400
+Final Validation Loss: 6.484017
+Best Validation Loss: 6.484017 (Epoch 50)
+Loss data saved to: /home/goatoine/Documents/Lanyue/models/GNN/result/basic/loss_data.csv
+[TEST] {'array': {'MAE': 0.4291541576385498, 'RMSE': 0.6958514451980591}, 'classify': {'acc': 0.43333333333333335, 'cross_entropy': 2.389457941055298, 'accuracy': 0.43333333333333335, 'precision_macro': 0.028888888888888405, 'recall_macro': 0.06666666666666411, 'f1_macro': 0.040310077519350784, 'precision_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4333333333333261, 0.0], 'recall_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9999999999999616, 0.0], 'f1_per_class': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6046511627902618, 0.0]}}

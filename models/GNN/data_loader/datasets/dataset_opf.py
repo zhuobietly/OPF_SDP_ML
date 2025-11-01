@@ -32,10 +32,9 @@ class OPFGraphDataset(Dataset):
     - 其他键（X、各类 y_*、extra 等）不判断名字，原样透传
     - 可选：按需要用 build_graph/build_features 生成 X（保持你原逻辑）
     """
-    def __init__(self, samples, build_features=None, norm=None, device="cpu"):
+    def __init__(self, samples, build_features=None,  device="cpu"):
         self.samples = samples
-        self.build_features = build_features
-        self.norm = norm          
+        self.build_features = build_features     
         self.device = torch.device(device)
 
     def __len__(self):
@@ -47,8 +46,6 @@ class OPFGraphDataset(Dataset):
         # 1) deal with the feature part
         if self.build_features is not None:
             X = self.build_features(raw)
-            if not torch.is_tensor(X):
-                X = torch.as_tensor(X, dtype=torch.float32)
             X = X.to(self.device).float()
             out["X"] = X
             N = X.shape[0]
