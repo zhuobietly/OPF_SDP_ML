@@ -27,10 +27,11 @@ class MultiheadBasic:
 
 @register("loss", "arr_cls")
 class ArrCls:
-    def __init__(self, w_arr=1.0, w_cls=3.0, tau=0.2):
+    def __init__(self, w_arr=1.0, w_cls=3.0, tau=1.0, center=True): 
         self.w_arr = w_arr
         self.w_cls = w_cls
         self.tau = tau
+        self.center = bool(center)
 
     def __call__(self, out, batch):
         loss = 0.0
@@ -42,10 +43,17 @@ class ArrCls:
         else:
             loss_arr = 0.0
 
-        # --- 分类部分（基于 pred_arr_reg 最小值索引）---
         if "pred_arr_reg" in out and "y_cls" in batch:
-            logits = -out["pred_arr_reg"] / self.tau  # softmin logits
-            loss_cls = F.cross_entropy(logits, batch["y_cls"])
+            pred = out["pred_arr_reg"]
+            if self.center:
+                pred_center = pred - pred.mean(dim=1, keepdim=True)
+                logits = -pred_center / self.tau
+            else:
+                logits = -pred / self.tau
+            
+            y = batch["y_cls"].to(dtype=torch.long, device=logits.device)
+            
+            loss_cls = _manual_ce_with_class_weights(logits, y, class_weights=None)
             loss += self.w_cls * loss_cls
         else:
             loss_cls = 0.0
@@ -98,34 +106,37 @@ def _cb_class_weights_from_counts(counts: torch.Tensor, beta: float,
         w[pos_mask] = w[pos_mask] * scale
     return w
 
-def _manual_ce_with_class_weights(logits: torch.Tensor, target: torch.Tensor, class_weights: torch.Tensor ):
+def _manual_ce_with_class_weights(logits: torch.Tensor, target: torch.Tensor, class_weights: torch.Tensor):
     """
-      CE_i = -log softmax(logits_i)[y_i]
-      loss = mean( w_{y_i} * CE_i )
+      1. Compute softmax probabilities p_{b,k}
+      2. Convert target to one-hot vector y_{b,k}^{one-hot}
+      3. CE_b = -sum_k (y_{b,k}^{one-hot} * log(p_{b,k}))
+      4. Weighted: loss = mean(w_{y_b} * CE_b)
     """
-    # 数值稳定的 log-softmax
-    z = logits - logits.max(dim=1, keepdim=True).values       # [B, C]
-    logZ = torch.log(torch.exp(z).sum(dim=1, keepdim=True))   # [B, 1]
-    log_probs = z - logZ                                      # [B, C]
-    nll = -log_probs[torch.arange(target.shape[0], device=target.device), target]  # [B]
-
+    B, K = logits.shape
+    z = logits - logits.max(dim=1, keepdim=True).values       # [B, K]
+    exp_z = torch.exp(z)                                       # [B, K]
+    p = exp_z / exp_z.sum(dim=1, keepdim=True)                # [B, K] softmax 
+    
+    log_p = torch.log(p.clamp_min(1e-8))                      # [B, K]
+    
+    y_one_hot = torch.nn.functional.one_hot(target, num_classes=K).float()  # [B, K]
+    
+    nll = -(y_one_hot * log_p).sum(dim=1)                     # [B]
+    
     if class_weights is not None:
         w = class_weights.to(logits.device)[target]           # [B]
         loss = (w * nll).mean()
     else:
         loss = nll.mean()
+    
     return loss
 
 @register("loss", "arr_cls_cbce")
 class ArrClsCBCEManual:
-    """
-    数组回归 + Class-Balanced 加权的手写 CE（兼容 n_c=0）：
-      - 数组回归：L1(pred_arr_reg, y_arr_reg) * w_arr
-      - 分类：若 out 有 "logits" 用之；否则 logits = -pred_arr_reg / tau
-              再做手写 CE，并按 CB 权重加权 * w_cls
-    """
     def __init__(self, w_arr: float = 1.0, w_cls: float = 1.0,
                  tau: float = 1.0,
+                 center: bool = True,  
                  beta: float = 0.999,
                  class_counts = None,                 # 训练集每类计数（list / tensor），允许含 0
                  normalize_weights: bool = True,
@@ -133,6 +144,7 @@ class ArrClsCBCEManual:
         self.w_arr = float(w_arr)
         self.w_cls = float(w_cls)
         self.tau = float(tau)
+        self.center = bool(center)  # ✅ 保存 center 参数
         self.beta = float(beta)
         self.zero_count_mode = zero_count_mode
         self.normalize_weights = normalize_weights
@@ -156,7 +168,15 @@ class ArrClsCBCEManual:
 
         # --- 分类（手写 CE + 类权重） ---
         if "y_cls" in batch and self.w_cls != 0.0:
-            logits = -out["pred_arr_reg"] / self.tau
+            pred = out["pred_arr_reg"]
+            
+            # ✅ 添加 center 逻辑
+            if self.center:
+                pred_center = pred - pred.mean(dim=1, keepdim=True)
+                logits = -pred_center / self.tau
+            else:
+                logits = -pred / self.tau
+            
             y = batch["y_cls"].to(dtype=torch.long, device=logits.device)
             cw = self.class_weights.to(logits.device) if self.class_weights is not None else None
             loss_cls = _manual_ce_with_class_weights(logits, y, cw)
@@ -164,4 +184,54 @@ class ArrClsCBCEManual:
 
         return loss
 
-    
+@register("loss", "arr_cls_cbce_1")
+class ArrClsCBCEManual:
+    def __init__(self, w_arr: float = 1.0, w_cls: float = 1.0,
+                 tau: float = 1.0,
+                 center: bool = True,  
+                 beta: float = 0.999,
+                 class_counts = None,                 # 训练集每类计数（list / tensor），允许含 0
+                 normalize_weights: bool = True,
+                 zero_count_mode: str = "zero"):      # 'zero' | 'min1' | 'eps'
+        self.w_arr = float(w_arr)
+        self.w_cls = float(w_cls)
+        self.tau = float(tau)
+        self.center = bool(center)  # ✅ 保存 center 参数
+        self.beta = float(beta)
+        self.zero_count_mode = zero_count_mode
+        self.normalize_weights = normalize_weights
+
+        if class_counts is None:
+            self.class_weights = None
+        else:
+            counts = torch.as_tensor(class_counts, dtype=torch.long)
+            self.class_weights = _cb_class_weights_from_counts(
+                counts, beta=self.beta,
+                normalize=self.normalize_weights,
+                zero_count_mode=self.zero_count_mode)
+
+    def __call__(self, out, batch):
+        loss = 0.0
+
+        # --- 数组回归（可选） ---
+        if "pred_arr_reg" in out and "y_arr_reg" in batch and self.w_arr != 0.0:
+            loss_arr = F.l1_loss(out["pred_arr_reg"], batch["y_arr_reg"])
+            loss = loss + self.w_arr * loss_arr
+
+        # --- 分类（手写 CE + 类权重） ---
+        if "y_cls" in batch and self.w_cls != 0.0:
+            pred = out["logits"]
+            
+            # ✅ 添加 center 逻辑
+            if self.center:
+                pred_center = pred - pred.mean(dim=1, keepdim=True)
+                logits = -pred_center / self.tau
+            else:
+                logits = -pred / self.tau
+            
+            y = batch["y_cls"].to(dtype=torch.long, device=logits.device)
+            cw = self.class_weights.to(logits.device) if self.class_weights is not None else None
+            loss_cls = _manual_ce_with_class_weights(logits, y, cw)
+            loss = loss + self.w_cls * loss_cls
+
+        return loss

@@ -5,7 +5,7 @@
 seed: 42
 builder: original
 data:
-  reader: "opf_vB"       # 换成 "opf_v2" 就是另一种读取逻辑
+  reader: "opf_vB"     
   data_dir: "/path/to/data"
 model:
   name: "GCN" #model type: GCN, GAT, GraphSAGE, GIN

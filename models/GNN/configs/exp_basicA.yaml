@@ -8,7 +8,7 @@ data:
   reader: "opf_vA"       # 换成 "opf_v2" 就是另一种读取逻辑
   data_dir: "/path/to/data"
 model:
-  name: "GCN" #model type: GCN, GAT, GraphSAGE, GIN
+  name: "GCN_basicA" #model type: GCN, GAT, GraphSAGE, GIN
   hidden: [64, 64]
   dropout: 0.2
   out_dim: 15

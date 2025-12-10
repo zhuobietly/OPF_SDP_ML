@@ -8,6 +8,31 @@ from .eval_utils import (
     _save_json, _plot_save, _save_metrics, _save_preds_targets,
     _logsumexp, _conf_mat, _cls_report
 )
+scenario_id_list_15 = [
+            "0.0_Chordal_MD",
+            "2.0_Chordal_MD", 
+            "3.0_Chordal_MD",
+            "4.0_Chordal_MD",
+            "5.0_Chordal_MD",
+            "0.0_Chordal_AMD",
+            "2.0_Chordal_AMD",
+            "3.0_Chordal_AMD",
+            "4.0_Chordal_AMD",
+            "5.0_Chordal_AMD",
+            "0.0_Chordal_MFI",
+            "2.0_Chordal_MFI",
+            "3.0_Chordal_MFI",
+            "4.0_Chordal_MFI",
+            "5.0_Chordal_MFI",
+        ]
+scenario_id_list_6 = [
+    "3.0_Chordal_MD",
+    "4.0_Chordal_MD",
+    "3.0_Chordal_AMD",
+    "4.0_Chordal_AMD",
+    "3.0_Chordal_MFI",
+    "4.0_Chordal_MFI",
+]
 
 class BaseEvaluator(object):
     def __init__(self, output_dir="./outputs", device=None):
@@ -43,6 +68,10 @@ class BaseEvaluator(object):
         return self._finalize(output_dir)
 
 
+
+
+
+
 @register("evaluator", "arr_cls")
 class ArrClsEvaluator(BaseEvaluator):
     """
@@ -54,13 +83,18 @@ class ArrClsEvaluator(BaseEvaluator):
     """
     def __init__(self, output_dir, device=None, *,
                  tau: float = 1.0, center: bool = True,
-                 report_ce: bool = True, save_plots: bool = True):
+                 report_ce: bool = True, save_plots: bool = True, num_classes: int = None):
         super().__init__(output_dir, device)
         self.tau = float(tau)
         self.center = bool(center)
         self.report_ce = bool(report_ce)
         self.save_plots = bool(save_plots)
-
+        self.num_classes = num_classes
+        if self.num_classes ==6:
+            self.labels = scenario_id_list_6
+        elif self.num_classes ==15:
+            self.labels = scenario_id_list_15
+        
     def _reset(self):
         self._arr_p: List[torch.Tensor] = []
         self._arr_t: List[torch.Tensor] = []
@@ -92,7 +126,7 @@ class ArrClsEvaluator(BaseEvaluator):
             Z = -P_center / self.tau
         else:
             Z = -P / self.tau
-
+        Z = Z - Z.max(axis=1, keepdims=True)
         yhat = Z.argmax(axis=1)
         Ytrue = torch.cat(self._ytrue, dim=0).numpy() if self._ytrue else T.argmin(axis=1)
         acc = float((yhat == Ytrue).mean())
@@ -117,15 +151,15 @@ class ArrClsEvaluator(BaseEvaluator):
             per_dim_mae = np.mean(np.abs(diff), axis=0)
             fig = plt.figure(figsize=(12, 6))
             bars = plt.bar(range(len(per_dim_mae)), per_dim_mae)
-            plt.xlabel("Dimension")
+            plt.xlabel("strategy")
             plt.ylabel("MAE")
             plt.title("Per-dimension MAE")
+            plt.xticks(range(len(self.labels)), self.labels, rotation=45, ha='right')  
             plt.grid(True, alpha=0.3)
             for i, bar in enumerate(bars):
                 height = bar.get_height()
                 plt.text(bar.get_x() + bar.get_width()/2., height + 0.001,
-                         f'{height:.3f}', ha='center', va='bottom', fontsize=8)
-
+                        f'{height:.3f}', ha='center', va='bottom', fontsize=8)
             plt.tight_layout()
             _plot_save(fig, os.path.join(out_dir, "arr_per_dim_mae.png"))
             
@@ -137,18 +171,18 @@ class ArrClsEvaluator(BaseEvaluator):
             plt.xlabel("Dimension")
             plt.ylabel("RMSE")
             plt.title("Per-dimension RMSE")
+            plt.xticks(range(len(self.labels)), self.labels, rotation=45, ha='right')  # ✅ 使用标签
             plt.grid(True, alpha=0.3)
             for i, bar in enumerate(bars):
                 height = bar.get_height()
                 plt.text(bar.get_x() + bar.get_width()/2., height + 0.001,
-                         f'{height:.3f}', ha='center', va='bottom', fontsize=8)
+                        f'{height:.3f}', ha='center', va='bottom', fontsize=8)
             plt.tight_layout()
             _plot_save(fig, os.path.join(out_dir, "arr_per_dim_rmse.png"))
             
             
             # 混淆矩阵
-            nc = 15
-            cm = _conf_mat(Ytrue, yhat, nc)
+            cm = _conf_mat(Ytrue, yhat, self.num_classes)
             fig = plt.figure(figsize=(10, 8))  # 增大图片尺寸以容纳数字
             plt.imshow(cm, interpolation="nearest", cmap='Blues')
 
@@ -161,7 +195,7 @@ class ArrClsEvaluator(BaseEvaluator):
                     plt.text(j, i, f'{cm[i, j]}\n({cm_percent[i, j]:.1f}%)',
                             ha='center', va='center',
                             color='white' if cm[i, j] > cm.max() / 2 else 'black',
-                            fontsize=9)
+                            fontsize=7)
 
             plt.title("Confusion Matrix")
             plt.xlabel("Predicted")
@@ -169,9 +203,164 @@ class ArrClsEvaluator(BaseEvaluator):
             plt.colorbar()
 
             # 添加坐标轴标签
+            nc = self.num_classes if self.num_classes else cm.shape[0]
             tick_marks = np.arange(nc)
-            plt.xticks(tick_marks, range(nc))
-            plt.yticks(tick_marks, range(nc))
+            plt.xticks(tick_marks, self.labels[:nc], rotation=45, ha='right')  
+            plt.yticks(tick_marks, self.labels[:nc])  
+
+
+            plt.tight_layout()
+            _plot_save(fig, os.path.join(out_dir, "cls_confusion_matrix.png"))
+            metrics["classify"].update(_cls_report(cm))
+
+        # --- 保存结果 ---
+        _save_metrics(metrics, out_dir)
+        _save_preds_targets(P, T, out_dir)
+        return metrics
+
+
+
+@register("evaluator", "arr_cls_1")
+class ArrClsEvaluator(BaseEvaluator):
+    """
+    数组回归 + 分类：
+      * 不使用 mask
+      * 分类由回归数组派生：
+          logits = -(y_arr_reg_pred - center) / tau
+      * 计算 MAE / RMSE / 分类准确率 / 可选交叉熵
+    """
+    def __init__(self, output_dir, device=None, *,
+                 tau: float = 1.0, center: bool = True,
+                 report_ce: bool = True, save_plots: bool = True, num_classes: int = None):
+        super().__init__(output_dir, device)
+        self.tau = float(tau)
+        self.center = bool(center)
+        self.report_ce = bool(report_ce)
+        self.save_plots = bool(save_plots)
+        self.num_classes = num_classes
+        if self.num_classes ==6:
+            self.labels = scenario_id_list_6
+        elif self.num_classes ==15:
+            self.labels = scenario_id_list_15
+        
+    def _reset(self):
+        self._arr_p: List[torch.Tensor] = []
+        self.logits_p : List[torch.Tensor] = []
+        self._arr_t: List[torch.Tensor] = []
+        self._ytrue: List[torch.Tensor] = []
+
+    def _accumulate(self, batch, model_out):
+        P = model_out["pred_arr_reg"].detach().cpu()
+        T = batch["y_arr_reg"].detach().cpu()
+        L = model_out["logits"].detach().cpu()
+        self._arr_p.append(P)
+        self._arr_t.append(T)
+        self.logits_p.append(L)
+        if "y_cls" in batch:
+            self._ytrue.append(batch["y_cls"].detach().cpu())
+
+    def _finalize(self, out_dir: str):
+        P = torch.cat(self._arr_p, dim=0).numpy()  # [N,K]
+        T = torch.cat(self._arr_t, dim=0).numpy()
+        L = torch.cat(self.logits_p, dim=0).numpy()
+        N, K = P.shape
+
+        # --- 数组回归 ---
+        diff = P - T
+        mae = float(np.mean(np.abs(diff)))
+        rmse = float(np.sqrt(np.mean(diff ** 2)))
+
+        metrics = {"array": {"MAE": mae, "RMSE": rmse}, "classify": {}}
+
+        # --- 分类 logits ---
+        if self.center:
+            
+            L_center = L - L.mean(axis=1, keepdims=True)
+            Z = -L_center / self.tau
+        else:
+            Z = -P / self.tau
+        Z = Z - Z.max(axis=1, keepdims=True)
+        yhat = Z.argmax(axis=1)
+        Ytrue = torch.cat(self._ytrue, dim=0).numpy() if self._ytrue else T.argmin(axis=1)
+        acc = float((yhat == Ytrue).mean())
+        metrics["classify"]["acc"] = acc
+
+        # --- 可选 CE ---
+        if self.report_ce and len(Ytrue) == N:
+            ce = float(np.mean(-Z[np.arange(N), Ytrue] + _logsumexp(Z, axis=1)))
+            metrics["classify"]["cross_entropy"] = ce
+
+        # --- 绘图 ---
+        if self.save_plots:
+            # 误差直方图
+            fig = plt.figure()
+            plt.hist(diff.reshape(-1), bins=40)
+            plt.xlabel("Element-wise Error (pred - true)")
+            plt.ylabel("Count")
+            plt.title("Array Regression Error")
+            _plot_save(fig, os.path.join(out_dir, "arr_error_hist.png"))
+
+            # every dimension MAE
+            per_dim_mae = np.mean(np.abs(diff), axis=0)
+            fig = plt.figure(figsize=(12, 6))
+            bars = plt.bar(range(len(per_dim_mae)), per_dim_mae)
+            plt.xlabel("strategy")
+            plt.ylabel("MAE")
+            plt.title("Per-dimension MAE")
+            plt.xticks(range(len(self.labels)), self.labels, rotation=45, ha='right')  
+            plt.grid(True, alpha=0.3)
+            for i, bar in enumerate(bars):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + 0.001,
+                        f'{height:.3f}', ha='center', va='bottom', fontsize=8)
+            plt.tight_layout()
+            _plot_save(fig, os.path.join(out_dir, "arr_per_dim_mae.png"))
+            
+            
+            #every dimension RMSE
+            per_dim_rmse = np.sqrt(np.mean(diff ** 2, axis=0))
+            fig = plt.figure(figsize=(12, 6))
+            bars = plt.bar(range(len(per_dim_rmse)), per_dim_rmse)
+            plt.xlabel("Dimension")
+            plt.ylabel("RMSE")
+            plt.title("Per-dimension RMSE")
+            plt.xticks(range(len(self.labels)), self.labels, rotation=45, ha='right')  # ✅ 使用标签
+            plt.grid(True, alpha=0.3)
+            for i, bar in enumerate(bars):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + 0.001,
+                        f'{height:.3f}', ha='center', va='bottom', fontsize=8)
+            plt.tight_layout()
+            _plot_save(fig, os.path.join(out_dir, "arr_per_dim_rmse.png"))
+            
+            
+            # 混淆矩阵
+            cm = _conf_mat(Ytrue, yhat, self.num_classes)
+            fig = plt.figure(figsize=(10, 8))  # 增大图片尺寸以容纳数字
+            plt.imshow(cm, interpolation="nearest", cmap='Blues')
+
+            # 计算百分比
+            cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
+
+            # 添加数字和百分比标注
+            for i in range(cm.shape[0]):
+                for j in range(cm.shape[1]):
+                    plt.text(j, i, f'{cm[i, j]}\n({cm_percent[i, j]:.1f}%)',
+                            ha='center', va='center',
+                            color='white' if cm[i, j] > cm.max() / 2 else 'black',
+                            fontsize=7)
+
+            plt.title("Confusion Matrix")
+            plt.xlabel("Predicted")
+            plt.ylabel("True")
+            plt.colorbar()
+
+            # 添加坐标轴标签
+            nc = self.num_classes if self.num_classes else cm.shape[0]
+            tick_marks = np.arange(nc)
+            plt.xticks(tick_marks, self.labels[:nc], rotation=45, ha='right')  
+            plt.yticks(tick_marks, self.labels[:nc])  
+
 
             plt.tight_layout()
             _plot_save(fig, os.path.join(out_dir, "cls_confusion_matrix.png"))

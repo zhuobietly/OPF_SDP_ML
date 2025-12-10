@@ -41,7 +41,7 @@ class ModelLogger:
             n: p.detach().clone() for n, p in self.model.named_parameters() if p.requires_grad
         }
 
-    def log_gradients(self, step: int):
+    def log_gradients(self, epoch, step: int):
         lr = None
         if self.optimizer is not None:
             try:
@@ -58,4 +58,4 @@ class ModelLogger:
                 update_norm = float("nan")
                 if name in self._pre_params:
                     update_norm = (p.detach() - self._pre_params[name]).norm().item()
-                writer.writerow([step, name, grad_norm, update_norm, p.detach().norm().item(), lr])
+                writer.writerow([epoch, step, name, grad_norm, update_norm, p.detach().norm().item(), lr])
